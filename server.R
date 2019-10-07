@@ -17,7 +17,9 @@ server <- function(input, output, session) {
   search_output <- reactiveValues(search_results = NA, found_something = FALSE, item_selection = "", citation = NA)
 
   ## Read ESIR item data from URL----
-  df <- read.csv(url("http://ykkunkels.com/wp-content/uploads/2019/05/ESM-item-repository-submission-CCP_SIGMA_ANU_HIEKKARANTA.csv"), sep = ",")
+  # df <- read.csv(url("http://ykkunkels.com/wp-content/uploads/2019/05/ESM-item-repository-submission-CCP_SIGMA_ANU_HIEKKARANTA.csv"), sep = ",")
+  df <- read.csv(url("https://osf.io/zye6n/download"), sep = ",") # Fetches the "ESIR-test.csv" file from OSF
+  
   
   ## Format .csv and add proper column names----
   # df <- df[(-(1:3)), (-(1:1))]

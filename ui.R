@@ -117,7 +117,17 @@ ui <- dashboardPage(skin = "green",
       
       ), # closing right colum
     
+    h5("Please note that this is a beta version of the ESM Item Repository which is still undergoing final testing before its official release.", 
+       style = "font-style: normal; letter-spacing: 0px; line-height: 10pt; position: fixed; bottom: 45px; left: 100;"),
+    
+    br(),
+    
     h5("When insights and content from the repository are used, the repository should be cited as: Kirtley, O. J., Hiekkaranta, A. P., Kunkels, Y. K., Verhoeven, D., Van Nierop, M., & Myin-Germeys, I. (2019, April 2). The Experience Sampling Method (ESM) Item Repository. Retrieved from osf.io/kg376, DOI 10.17605/OSF.IO/KG376.", 
+       style = "font-style: normal; letter-spacing: 0px; line-height: 10pt; position: fixed; bottom: 15px; left: 100;"),
+    
+    br(),
+    
+    h5('Citations for individual ESM items can be found in the "Item citation:" box if available', 
        style = "font-style: normal; letter-spacing: 0px; line-height: 10pt; position: fixed; bottom: 0; left: 100;")
     
     ), # closing tabItem()
