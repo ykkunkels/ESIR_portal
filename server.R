@@ -252,6 +252,10 @@ server <- function(input, output, session) {
     paste("Item citation:", as.character(df[search_output$item_selection, "citation"])[search_input$match_no])
   })
   
+  output$existing_ref <- renderText({
+    paste("Existing reference:", as.character(df[search_output$item_selection, "existing_ref"])[search_input$match_no])
+  })
+  
   output$item_contact <- renderText({
     paste("Contact:", as.character(df[search_output$item_selection, "contact"])[search_input$match_no])
   })
