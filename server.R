@@ -19,10 +19,7 @@ server <- function(input, output, session) {
 
   ## Read ESIR item data from URL----
   # df <- read.csv(url("http://ykkunkels.com/wp-content/uploads/2019/05/ESM-item-repository-submission-CCP_SIGMA_ANU_HIEKKARANTA.csv"), sep = ",")
-  df <- read.csv(url("https://osf.io/zye6n/download"), sep = ",") # Fetches the "ESIR-test.csv" file from OSF
-  
-  ## Make everything lowercase
-  df[] <- lapply(df, tolower)
+  df <- read.csv(url("https://osf.io/e497c/download"), sep = ",") # Fetches the "ESIR-test.csv" file from OSF
   
   ## Format .csv and add proper column names----
   # df <- df[(-(1:3)), (-(1:1))]
@@ -79,7 +76,8 @@ server <- function(input, output, session) {
       
       search_input$match_no <- 1
       
-      search_input$search_text <- tolower(input$search_text) #! all input text as lower-case 
+      search_input$search_text <- tolower(input$search_text) #! all input text as lower-case
+      # search_input$search_text <- input$search_text
       
 
       
