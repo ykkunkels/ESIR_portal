@@ -11,6 +11,7 @@ server <- function(input, output, session) {
   ## Load and / or Install required packages
   if(!require('shiny')){install.packages('shiny', dep = TRUE)};library('shiny')
   if(!require('shinyjs')){install.packages('shinyjs', dep = TRUE)};library('shinyjs')
+
   
   ## Define & initialise reactiveValues objects----
   search_input <- reactiveValues(search_text = NA, match_no = 1)
@@ -20,6 +21,8 @@ server <- function(input, output, session) {
   # df <- read.csv(url("http://ykkunkels.com/wp-content/uploads/2019/05/ESM-item-repository-submission-CCP_SIGMA_ANU_HIEKKARANTA.csv"), sep = ",")
   df <- read.csv(url("https://osf.io/zye6n/download"), sep = ",") # Fetches the "ESIR-test.csv" file from OSF
   
+  ## Make everything lowercase
+  df[] <- lapply(df, tolower)
   
   ## Format .csv and add proper column names----
   # df <- df[(-(1:3)), (-(1:1))]
@@ -76,7 +79,9 @@ server <- function(input, output, session) {
       
       search_input$match_no <- 1
       
-      search_input$search_text <- input$search_text
+      search_input$search_text <- tolower(input$search_text) #! all input text as lower-case 
+      
+
       
       ## Add population columns----
       for(i in 1:nrow(df)){
