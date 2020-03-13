@@ -18,13 +18,10 @@ server <- function(input, output, session) {
   search_output <- reactiveValues(search_results = NA, found_something = FALSE, item_selection = "", citation = NA)
 
   ## Read ESIR item data from URL----
-  # df <- read.csv(url("http://ykkunkels.com/wp-content/uploads/2019/05/ESM-item-repository-submission-CCP_SIGMA_ANU_HIEKKARANTA.csv"), sep = ",")
   df <- read.csv(url("https://osf.io/e497c/download"), sep = ",") # Fetches the "ESIR-test.csv" file from OSF
   
   ## Format .csv and add proper column names----
-  # df <- df[(-(1:3)), (-(1:1))]
   df <- df[(-(1:3)), ]
-  # df <- df[(-(1:2)), ] #!debug
   
   colnames(df) <- c("item_ID", "label", "english", "description", "comment", "response_scale_discrete", "response_scale_vas", 
                     "branched_from", "branched_response", "beep_level", "beeps_per_day", "morning", "evening", 
@@ -36,7 +33,6 @@ server <- function(input, output, session) {
   df[, "item_ID"] <- 1:nrow(df) #fill the item_ID column
   
     ## Observe start for buttonnav disable----
-    # observeEvent(if(input$topic_select == "start"){
     observeEvent(if(length(search_output$item_selection) == 1){
       
       shinyjs::disable("first")
@@ -50,7 +46,6 @@ server <- function(input, output, session) {
     })
   
   ## Observe start for buttonnav enable----
-  # observeEvent(if(input$topic_select != "start" & length(search_output$item_selection) > 1){
   observeEvent(if(length(search_output$item_selection) > 1){
     
     shinyjs::show("first")
@@ -77,9 +72,7 @@ server <- function(input, output, session) {
       search_input$match_no <- 1
       
       search_input$search_text <- tolower(input$search_text) #! all input text as lower-case
-      # search_input$search_text <- input$search_text
       
-
       
       ## Add population columns----
       for(i in 1:nrow(df)){
@@ -275,6 +268,7 @@ server <- function(input, output, session) {
   output$flow <- renderText({c('<img src="',
                                "http://ykkunkels.com/wp-content/uploads/2019/05/Contributors-Workflow-Phase-1_v2_small.jpg",
                                '">')})
+
   
 }
 
