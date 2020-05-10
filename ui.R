@@ -23,8 +23,9 @@ ui <- dashboardPage(skin = "green",
                                  menuItem("Home", tabName = "home_tab", icon = icon("file-text")),
                                  menuItem("Welcome", tabName = "welcome_tab", icon = icon("door-open")),
                                  menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
+                                 menuItem("Feedback", tabName = "feedback_tab", icon = icon("comment")),
                                  div(htmlOutput("logo"), style="position: relative;"),
-                                 h5("version 1.0.0", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
+                                 h5("version 1.1.0", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
                                     position: fixed; bottom: 0; left: 100;")
                      ) 
                     ),
@@ -45,7 +46,7 @@ ui <- dashboardPage(skin = "green",
         ## Input: Search topic select
         selectInput("topic_select", "Select search topic:",
                     c("Item ID" = "item_ID",
-                      "Dutch" = "label",
+                      "Native language" = "label",
                       "English" = "english",
                       "Description" = "description",
                       "Dataset" = "dataset",
@@ -66,8 +67,17 @@ ui <- dashboardPage(skin = "green",
         actionButton(inputId= "all", label = "Show all items"),
         
         ## Input: Reset button
-        actionButton(inputId= "reset", label = "Clear")#,
-      
+        actionButton(inputId= "reset", label = "Clear"),
+        
+        
+        br(), br(),
+        
+        ## Download text
+        h4("Download your selection as .csv file"),
+        
+        ## Input: Download button
+        downloadButton("downloadData", "Download")
+        
       ), #closing left column  
 
       
@@ -144,6 +154,28 @@ ui <- dashboardPage(skin = "green",
             
             h4("Funding acknowledgements: Olivia Kirtley and Anu Hiekkaranta’s work on the project is supported by postdoctoral and PhD fellowships, respectively, from an FWO Odysseus grant to Inez Myin-Germeys (FWO GOF8416N). Yoram Kunkels’ work on this project is supported by the European Research Council (ERC-CoG-2015; TRANS-ID; No 681466 to Marieke Wichers).", 
                style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"),
+            
+            
+    ), # closing tabItem()
+    
+    tabItem(tabName = "feedback_tab",
+            
+            h2("Feedback"),
+            
+            br(),
+            
+            h4("Please leave your feedback on how we could further improve the Repository", 
+               style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"),
+            
+            br(),br(),
+            
+            ## Input: feedback
+            textAreaInput(inputId = "feedback_text",height = '400px', width = '400px', label = "Please leave your feedback",  
+                          placeholder = "Enter feedback here"),
+            
+            ## Input: Action button
+            actionButton(inputId= "send", label = "Send feedback"),
+            
             
             
     ) # closing tabItem()

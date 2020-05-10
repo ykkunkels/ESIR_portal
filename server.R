@@ -1,7 +1,7 @@
 
 #######################################
 #### ESIR Portal in Shiny - Server ####
-#### YKK - 13/5/2019              ####
+#### YKK - 09/5/2020              ####
 ####~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~####
 
 
@@ -11,14 +11,15 @@ server <- function(input, output, session) {
   ## Load and / or Install required packages
   if(!require('shiny')){install.packages('shiny', dep = TRUE)};library('shiny')
   if(!require('shinyjs')){install.packages('shinyjs', dep = TRUE)};library('shinyjs')
+  if(!require('mailR')){install.packages('mailR', dep = TRUE)};library('mailR')
 
   
   ## Define & initialise reactiveValues objects----
   search_input <- reactiveValues(search_text = NA, match_no = 1)
   search_output <- reactiveValues(search_results = NA, found_something = FALSE, item_selection = "", citation = NA)
-
+  
   ## Read ESIR item data from URL----
-  df <- read.csv(url("https://osf.io/e497c/download"), sep = ",") # Fetches the "ESIR-test.csv" file from OSF
+  df <- read.csv(url("https://osf.io/ncj4f/download"), sep = ",") # Fetches the "ESIR-test.csv" file from OSF
   
   ## Format .csv and add proper column names----
   df <- df[(-(1:3)), ]
@@ -88,6 +89,7 @@ server <- function(input, output, session) {
         search_output$item_selection <- which(grepl(search_input$search_text, 
                                                     as.character(df[, input$topic_select])) == TRUE)
         
+        
         ## Multiple matches exception----
         ## Warning text
         if(length(search_output$item_selection) > 1){
@@ -156,10 +158,43 @@ server <- function(input, output, session) {
       shinyjs::hide("last")
       
     })
+  
+  
+  ## Observe: send feedback button click---- 
+  observeEvent(input$send, {
     
+    updateTextInput(session, inputId = "feedback_text", label = "Search the Repository", value="")
+
+    sender <- "postmaster@esmitemrepository.com"
+    recipients <- c("admin@esmitemrepository.com")
+    subject_title <- "Feedback for ESM Item Repository"
+    email_body <- input$feedback_text
+    
+    send.mail(from = sender,
+              to = recipients,
+              subject = subject_title,
+              body = email_body,
+              smtp = list(host.name = "send.one.com", port = 587, 
+                          user.name="postmaster@esmitemrepository.com", passwd="thankyou", ssl=TRUE),
+              authenticate = TRUE,
+              send = TRUE)
+    
+  })
   
   
-    ## Observe: Item navigation button clicks---- 
+  ## Downloadable csv of selected dataset ----
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste0("ESM_Item_Rep_selection", ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(df[search_output$item_selection, ], file, row.names = FALSE)
+    }
+  )
+
+  
+  
+  ## Observe: Item navigation button clicks---- 
   observeEvent(input$first, {
     
     search_input$match_no <- 1
@@ -220,7 +255,7 @@ server <- function(input, output, session) {
   })
   
   output$item_show <- renderText({
-    paste("Dutch:", as.character(df[search_output$item_selection, "label"])[search_input$match_no])
+    paste("Native language:", as.character(df[search_output$item_selection, "label"])[search_input$match_no])
   })
   
   output$item_english <- renderText({
