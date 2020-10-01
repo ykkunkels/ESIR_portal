@@ -25,7 +25,7 @@ ui <- dashboardPage(skin = "green",
                                  menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                  menuItem("Feedback", tabName = "feedback_tab", icon = icon("comment")),
                                  div(htmlOutput("logo"), style="position: relative;"),
-                                 h5("version 1.1.0", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
+                                 h5("version 1.1.1", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
                                     position: fixed; bottom: 0; left: 100;")
                      ) 
                     ),
@@ -82,8 +82,18 @@ ui <- dashboardPage(skin = "green",
         ## Download text
         h4("Download your selection as .csv file"),
         
-        ## Input: Download button
-        downloadButton("downloadData", "Download")
+        ## Input: Download button for .CSV
+        downloadButton("downloadData", "Download .CSV file"),
+        
+        br(), br(),
+        
+        ## Download text
+        h4("Download your selection as Excel file"),
+        
+        ## Input: Download button for .XLSX
+        downloadButton("downloadData_Excel", "Download Excel file")
+        
+        
         
       ), #closing left column  
 

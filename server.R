@@ -12,6 +12,7 @@ server <- function(input, output, session) {
   if(!require('shiny')){install.packages('shiny', dep = TRUE)};library('shiny')
   if(!require('shinyjs')){install.packages('shinyjs', dep = TRUE)};library('shinyjs')
   if(!require('mailR')){install.packages('mailR', dep = TRUE)};library('mailR')
+  if(!require('xlsx')){install.packages('xlsx', dep = TRUE)};library('xlsx')
 
   
   ## Define & initialise reactiveValues objects----
@@ -19,10 +20,7 @@ server <- function(input, output, session) {
   search_output <- reactiveValues(search_results = NA, found_something = FALSE, item_selection = "", citation = NA)
   
   ## Read ESIR item data from URL----
-  df <- read.csv(url("https://osf.io/5ba2c/download"), sep = ",") # Fetches the "ESIR-test.csv" file from OSF
-  df <- sapply(df, iconv, "UTF-8", "WINDOWS-1252")
-  df <- as.data.frame(df)
-  # df <- read.csv("D:/Bibliotheek/Studie/PhD/Publishing/ESM Item Rep/DATA/ESM Respository BDR_YKK.csv")
+  df <- read.csv(url("https://osf.io/5ba2c/download"), sep = ",", encoding = "UTF-8", stringsAsFactors = FALSE) # Fetches the "ESIR-test.csv" file from OSF
   
   ## Format .csv and add proper column names----
   df <- df[(-(1:3)), ]
@@ -192,6 +190,16 @@ server <- function(input, output, session) {
     },
     content = function(file) {
       write.csv(df[search_output$item_selection, ], file, row.names = FALSE)
+    }
+  )
+  
+  ## Downloadable csv of selected dataset ----
+  output$downloadData_Excel <- downloadHandler(
+    filename = function() {
+      paste0("ESM_Item_Rep_selection", ".xlsx", sep = "")
+    },
+    content = function(file) {
+      write.xlsx(df[search_output$item_selection, ], file, row.names = FALSE)
     }
   )
 
