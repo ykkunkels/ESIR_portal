@@ -46,7 +46,7 @@ ui <- dashboardPage(skin = "green",
         ## Input: Search topic select
         selectInput("topic_select", "Select search topic:",
                     c("Item ID" = "item_ID",
-                      "Native language" = "label",
+                      "Original language" = "label",
                       "English" = "english",
                       "Description" = "description",
                       "Dataset" = "dataset",
@@ -57,17 +57,24 @@ ui <- dashboardPage(skin = "green",
                       "Contact" = "contact")),
   
         ## Input: Search query
-        textAreaInput(inputId = "search_text",height = '40px', label = "Search the Repository",  
-                      placeholder = "Enter search query here"),
+        textAreaInput(inputId = "search_text",height = '40px', label = "Enter search term",  
+                      placeholder = "Enter search term here"),
         
         ## Input: Action button
-        actionButton(inputId= "go", label = "Find relevant items"),
+        actionButton(inputId= "go", label = "Search items"),
         
         ## Input: All button
         actionButton(inputId= "all", label = "Show all items"),
         
         ## Input: Reset button
         actionButton(inputId= "reset", label = "Clear"),
+        
+        br(),
+        
+        h5("To download the complete dataset from the portal,", 
+           style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"),
+        h5("press the 'Show all items' button and then press 'Download'.", 
+           style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"),
         
         
         br(), br(),
@@ -181,7 +188,11 @@ ui <- dashboardPage(skin = "green",
     ) # closing tabItem()
             
     
-    ) # closing tabItems()
+    ), # closing tabItems()
+  
+  
+  h5("We do not take responsibility for the quality of items within the repository. Inclusion of items within the repository does not indicate our endorsement of them.", 
+     style = "font-style: normal; letter-spacing: 0px; line-height: 10pt; position: fixed; bottom: 0; left: 100;")
       
     )
   )

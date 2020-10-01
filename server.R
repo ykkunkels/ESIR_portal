@@ -19,7 +19,10 @@ server <- function(input, output, session) {
   search_output <- reactiveValues(search_results = NA, found_something = FALSE, item_selection = "", citation = NA)
   
   ## Read ESIR item data from URL----
-  df <- read.csv(url("https://osf.io/ncj4f/download"), sep = ",") # Fetches the "ESIR-test.csv" file from OSF
+  df <- read.csv(url("https://osf.io/5ba2c/download"), sep = ",") # Fetches the "ESIR-test.csv" file from OSF
+  df <- sapply(df, iconv, "UTF-8", "WINDOWS-1252")
+  df <- as.data.frame(df)
+  # df <- read.csv("D:/Bibliotheek/Studie/PhD/Publishing/ESM Item Rep/DATA/ESM Respository BDR_YKK.csv")
   
   ## Format .csv and add proper column names----
   df <- df[(-(1:3)), ]
@@ -255,7 +258,7 @@ server <- function(input, output, session) {
   })
   
   output$item_show <- renderText({
-    paste("Native language:", as.character(df[search_output$item_selection, "label"])[search_input$match_no])
+    paste("Original language:", as.character(df[search_output$item_selection, "label"])[search_input$match_no])
   })
   
   output$item_english <- renderText({
