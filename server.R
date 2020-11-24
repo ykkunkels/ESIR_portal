@@ -13,7 +13,7 @@ server <- function(input, output, session) {
   if(!require('shinyjs')){install.packages('shinyjs', dep = TRUE)};library('shinyjs')
   if(!require('mailR')){install.packages('mailR', dep = TRUE)};library('mailR')
   if(!require('xlsx')){install.packages('xlsx', dep = TRUE)};library('xlsx')
-
+  if(!require('textreadr')){install.packages('textreadr', dep = TRUE)};library('textreadr')
   
   ## Define & initialise reactiveValues objects----
   search_input <- reactiveValues(search_text = NA, match_no = 1)
@@ -314,8 +314,39 @@ server <- function(input, output, session) {
   output$flow <- renderText({c('<img src="',
                                "http://ykkunkels.com/wp-content/uploads/2019/05/Contributors-Workflow-Phase-1_v2_small.jpg",
                                '">')})
+  
+  output$blog <- renderText({c('<img src="',
+                               "http://ykkunkels.com/wp-content/uploads/2020/10/blog.jpg",
+                               '">')})
 
   
+  ## Read blog from .docx
+  blog_1_url <- "http://ykkunkels.com/wp-content/uploads/2020/10/ESIR_Blog_post_1_2020108.docx"
+  blog_1_file <- download(blog_1_url)
+  blog_1 <- read_docx(blog_1_file)
+  
+  output$blog_1_title <- renderText({
+    HTML(blog_1[1])
+  })
+  
+  output$blog_1_p1 <- renderText({
+    HTML(paste(blog_1[2], blog_1[3], sep = "<br/>"))
+    HTML(blog_1[4:5])
+  })
+  
+  output$blog_1_p2 <- renderText({
+    HTML(blog_1[6:7])
+  })
+  
+  output$blog_1_p3 <- renderText({
+    HTML(blog_1[8:9])
+  })
+
+  output$blog_1_refs <- renderText({
+    HTML(blog_1[10:22])
+  })
+  
+
 }
 
 
