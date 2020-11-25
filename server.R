@@ -13,7 +13,6 @@ server <- function(input, output, session) {
   if(!require('shinyjs')){install.packages('shinyjs', dep = TRUE)};library('shinyjs')
   if(!require('mailR')){install.packages('mailR', dep = TRUE)};library('mailR')
   if(!require('xlsx')){install.packages('xlsx', dep = TRUE)};library('xlsx')
-  if(!require('textreadr')){install.packages('textreadr', dep = TRUE)};library('textreadr')
   
   ## Define & initialise reactiveValues objects----
   search_input <- reactiveValues(search_text = NA, match_no = 1)
@@ -21,6 +20,7 @@ server <- function(input, output, session) {
   
   ## Read ESIR item data from URL----
   df <- read.csv(url("https://osf.io/5ba2c/download"), sep = ",", encoding = "UTF-8", stringsAsFactors = FALSE) # Fetches the "ESIR-test.csv" file from OSF
+  # df <- read.csv(url("https://osf.io/pdn4f/download"), sep = ",", encoding = "UTF-8", stringsAsFactors = FALSE) # Fetches the "ESIR-test.csv" file from OSF
   
   ## Format .csv and add proper column names----
   df <- df[(-(1:3)), ]
@@ -33,6 +33,16 @@ server <- function(input, output, session) {
                     "reliability", "validity", "development", "item_use", "item_instructions", "item_other")
   
   df[, "item_ID"] <- 1:nrow(df) #fill the item_ID column
+  
+  #! Use when negatives cannot b hard-coded in data.
+  # df[which(df[, c("children")] != "yes"), "children"] <- "no"
+  # df[which(df[, c("adolescents")] != "yes"), "adolescents"] <- "no"
+  # df[which(df[, c("adults")] != "yes"), "adults"] <- "no"
+  # df[which(df[, c("elderly")] != "yes"), "elderly"] <- "no"
+  # df[which(df[, c("gen_pop")] != "yes"), "gen_pop"] <- "no"
+  # df[which(df[, c("outpatient")] != "yes"), "outpatient"] <- "no"
+  # df[which(df[, c("inpatient")] != "yes"), "inpatient"] <- "no"
+  
   
     ## Observe start for buttonnav disable----
     observeEvent(if(length(search_output$item_selection) == 1){
@@ -286,9 +296,13 @@ server <- function(input, output, session) {
   })
   
   output$item_population <- renderText({
-    c(paste("Population:"),
-    paste(colnames(df[search_output$item_selection, c(15:19)])[which(grepl("YES", as.character(unlist(df[search_output$item_selection[search_input$match_no], c(15:19)]))) == TRUE)]))
+    
+    if(!is.na(search_output$item_selection[search_input$match_no])){
+      c(paste(c("Children:", "| Adolescents:", "| Adults:", "| Elderly:", "| General population:", "| Outpatient:", "| Inpatient:"), as.character(df[search_output$item_selection[search_input$match_no], c("children", "adolescents", "adults", "elderly", "gen_pop", "outpatient", "inpatient")])))
+    }
+
   })
+
 
   output$item_citation <- renderText({
     paste("Item citation:", as.character(df[search_output$item_selection, "citation"])[search_input$match_no])
@@ -315,38 +329,7 @@ server <- function(input, output, session) {
                                "http://ykkunkels.com/wp-content/uploads/2019/05/Contributors-Workflow-Phase-1_v2_small.jpg",
                                '">')})
   
-  output$blog <- renderText({c('<img src="',
-                               "http://ykkunkels.com/wp-content/uploads/2020/10/blog.jpg",
-                               '">')})
-
   
-  ## Read blog from .docx
-  blog_1_url <- "http://ykkunkels.com/wp-content/uploads/2020/10/ESIR_Blog_post_1_2020108.docx"
-  blog_1_file <- download(blog_1_url)
-  blog_1 <- read_docx(blog_1_file)
-  
-  output$blog_1_title <- renderText({
-    HTML(blog_1[1])
-  })
-  
-  output$blog_1_p1 <- renderText({
-    HTML(paste(blog_1[2], blog_1[3], sep = "<br/>"))
-    HTML(blog_1[4:5])
-  })
-  
-  output$blog_1_p2 <- renderText({
-    HTML(blog_1[6:7])
-  })
-  
-  output$blog_1_p3 <- renderText({
-    HTML(blog_1[8:9])
-  })
-
-  output$blog_1_refs <- renderText({
-    HTML(blog_1[10:22])
-  })
-  
-
 }
 
 

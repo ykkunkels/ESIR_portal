@@ -22,11 +22,10 @@ ui <- dashboardPage(skin = "green",
                      sidebarMenu(menuItem("Menu"),
                                  menuItem("Home", tabName = "home_tab", icon = icon("file-text")),
                                  menuItem("Welcome", tabName = "welcome_tab", icon = icon("door-open")),
-                                 menuItem("Blog", tabName = "blog_tab", icon = icon("rss")),
                                  menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                  menuItem("Feedback", tabName = "feedback_tab", icon = icon("comment")),
                                  div(htmlOutput("logo"), style="position: relative;"),
-                                 h5("version 1.1.1", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
+                                 h5("version 1.1.3", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
                                     position: fixed; bottom: 0; left: 100;")
                      ) 
                     ),
@@ -159,22 +158,7 @@ ui <- dashboardPage(skin = "green",
             
             ), # closing tabItem()
     
-    tabItem(tabName = "blog_tab",
-            
-            h3(textOutput("blog_1_title")), br(),
-            
-            p(textOutput("blog_1_p1")), 
-            br(),
-            p(textOutput("blog_1_p2")), 
-            br(),
-            h6(textOutput("blog_1_p3")), 
-            br(),
-            h6(textOutput("blog_1_refs")), 
-            br(),
-            
-            
-            
-    ), # closing tabItem()
+
     
     tabItem(tabName = "acknowledgements_tab",
             
