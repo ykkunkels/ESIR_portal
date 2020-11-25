@@ -298,7 +298,7 @@ server <- function(input, output, session) {
   output$item_population <- renderText({
     
     if(!is.na(search_output$item_selection[search_input$match_no])){
-      c(paste(c("Children:", "| Adolescents:", "| Adults:", "| Elderly:", "| General population:", "| Outpatient:", "| Inpatient:"), as.character(df[search_output$item_selection[search_input$match_no], c("children", "adolescents", "adults", "elderly", "gen_pop", "outpatient", "inpatient")])))
+      c(paste(c("Children:", "| Adolescents:", "| Adults:", "| Elderly:", "| General:", "| Outpatient:", "| Inpatient:"), as.character(df[search_output$item_selection[search_input$match_no], c("children", "adolescents", "adults", "elderly", "gen_pop", "outpatient", "inpatient")])))
     }
 
   })

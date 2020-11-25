@@ -25,7 +25,7 @@ ui <- dashboardPage(skin = "green",
                                  menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                  menuItem("Feedback", tabName = "feedback_tab", icon = icon("comment")),
                                  div(htmlOutput("logo"), style="position: relative;"),
-                                 h5("version 1.1.3", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
+                                 h5("version 1.1.4", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
                                     position: fixed; bottom: 0; left: 100;")
                      ) 
                     ),
@@ -101,6 +101,12 @@ ui <- dashboardPage(skin = "green",
       ## Right column - Main panel
       column(8, 
              
+             ## Add Style tags
+             tags$head(tags$style("#item_show{min-height: 50px; max-height: 50px; overflow-y:scroll; white-space: pre-wrap;}")), 
+             tags$head(tags$style("#item_english{min-height: 50px; max-height: 50px; overflow-y:scroll; white-space: pre-wrap;}")), 
+             tags$head(tags$style("#item_citation{min-height: 60px; max-height: 60px; overflow-y:scroll; white-space: pre-wrap;}")), 
+             tags$head(tags$style("#existing_ref{min-height: 60px; max-height: 60px; overflow-y:scroll; white-space: pre-wrap;}")), 
+        
         ## Output: Text----
         verbatimTextOutput(outputId = "item_selection", placeholder = FALSE),
         
@@ -122,10 +128,9 @@ ui <- dashboardPage(skin = "green",
         
         verbatimTextOutput(outputId = "item_contact", placeholder = FALSE),
       
-      br(), br(),
+
       htmlOutput(outputId = "warningtext"),
-      
-      
+
       ## Previous and next buttons
       # enable_buttonnav <- reactiveValues(ok = FALSE),
       
