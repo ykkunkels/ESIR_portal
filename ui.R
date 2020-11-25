@@ -102,10 +102,12 @@ ui <- dashboardPage(skin = "green",
       column(8, 
              
              ## Add Style tags
-             tags$head(tags$style("#item_show{min-height: 50px; max-height: 50px; overflow-y:scroll; white-space: pre-wrap;}")), 
-             tags$head(tags$style("#item_english{min-height: 50px; max-height: 50px; overflow-y:scroll; white-space: pre-wrap;}")), 
+             tags$head(tags$style("#item_show{min-height: 40px; max-height: 40px; overflow-y:scroll; white-space: pre-wrap;}")), 
+             tags$head(tags$style("#item_english{min-height: 40px; max-height: 40px; overflow-y:scroll; white-space: pre-wrap;}")), 
+             tags$head(tags$style("#item_description{min-height: 40px; max-height: 40px; overflow-y:scroll; white-space: pre-wrap;}")), 
              tags$head(tags$style("#item_citation{min-height: 60px; max-height: 60px; overflow-y:scroll; white-space: pre-wrap;}")), 
              tags$head(tags$style("#existing_ref{min-height: 60px; max-height: 60px; overflow-y:scroll; white-space: pre-wrap;}")), 
+             tags$head(tags$style("#item_contact{min-height: 40px; max-height: 40px; overflow-y:scroll; white-space: pre-wrap;}")), 
         
         ## Output: Text----
         verbatimTextOutput(outputId = "item_selection", placeholder = FALSE),
