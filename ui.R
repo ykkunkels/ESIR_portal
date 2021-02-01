@@ -22,10 +22,11 @@ ui <- dashboardPage(skin = "green",
                      sidebarMenu(menuItem("Menu"),
                                  menuItem("Home", tabName = "home_tab", icon = icon("file-text")),
                                  menuItem("Welcome", tabName = "welcome_tab", icon = icon("door-open")),
+                                 menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
                                  menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                  menuItem("Feedback", tabName = "feedback_tab", icon = icon("comment")),
                                  div(htmlOutput("logo"), style="position: relative;"),
-                                 h5("version 1.1.4", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
+                                 h5("version 1.1.5", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
                                     position: fixed; bottom: 0; left: 100;")
                      ) 
                     ),
