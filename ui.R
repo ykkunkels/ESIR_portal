@@ -24,7 +24,6 @@ ui <- dashboardPage(skin = "green",
                                  menuItem("Welcome", tabName = "welcome_tab", icon = icon("door-open")),
                                  menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
                                  menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
-                                 menuItem("Feedback", tabName = "feedback_tab", icon = icon("comment")),
                                  div(htmlOutput("logo"), style="position: relative;"),
                                  h5("version 1.1.5", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
                                     position: fixed; bottom: 0; left: 100;")
@@ -183,35 +182,13 @@ ui <- dashboardPage(skin = "green",
                style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"),
             
             
-    ), # closing tabItem()
-    
-    tabItem(tabName = "feedback_tab",
-            
-            h2("Feedback"),
-            
-            br(),
-            
-            h4("Please leave your feedback on how we could further improve the Repository", 
-               style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"),
-            
-            br(),br(),
-            
-            ## Input: feedback
-            textAreaInput(inputId = "feedback_text",height = '400px', width = '400px', label = "Please leave your feedback",  
-                          placeholder = "Enter feedback here"),
-            
-            ## Input: Action button
-            actionButton(inputId= "send", label = "Send feedback"),
-            
-            
-            
     ) # closing tabItem()
-            
     
+
     ), # closing tabItems()
   
   
-  h5("We do not take responsibility for the quality of items within the repository. Inclusion of items within the repository does not indicate our endorsement of them.", 
+  h5("We do not take responsibility for the quality of items within the repository. Inclusion of items within the repository does not indicate our endorsement of them. All items within the repository are subject to a Creative Commons Attribution Non-Commerical License (CC BY-NC).", 
      style = "font-style: normal; letter-spacing: 0px; line-height: 10pt; position: fixed; bottom: 0; left: 100;")
       
     )

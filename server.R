@@ -171,28 +171,6 @@ server <- function(input, output, session) {
     })
   
   
-  ## Observe: send feedback button click---- 
-  observeEvent(input$send, {
-    
-    updateTextInput(session, inputId = "feedback_text", label = "Search the Repository", value="")
-
-    sender <- "postmaster@esmitemrepository.com"
-    recipients <- c("admin@esmitemrepository.com")
-    subject_title <- "Feedback for ESM Item Repository"
-    email_body <- input$feedback_text
-    
-    send.mail(from = sender,
-              to = recipients,
-              subject = subject_title,
-              body = email_body,
-              smtp = list(host.name = "send.one.com", port = 587, 
-                          user.name="postmaster@esmitemrepository.com", passwd="thankyou", ssl=TRUE),
-              authenticate = TRUE,
-              send = TRUE)
-    
-  })
-  
-  
   ## Downloadable csv of selected dataset ----
   output$downloadData <- downloadHandler(
     filename = function() {
