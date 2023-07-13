@@ -1,11 +1,11 @@
 
 ###################################
 #### ESIR Portal in Shiny - UI ####
-#### YKK - 13/05/2019          ####
+#### YKK - 24/02/2023          ####
 ####~*~*~*~*~*~*~*~*~*~*~*~*~*~####
 
 
-## Load and / or Install required packages
+## Load and / or Install required packages----
 if(!require('shiny')){install.packages('shiny', dep = TRUE)};library('shiny')
 if(!require('shinyjs')){install.packages('shinyjs', dep = TRUE)};library('shinyjs')
 if(!require('shinydashboard')){install.packages('shinydashboard', dep = TRUE)};library('shinydashboard')
@@ -24,9 +24,8 @@ ui <- dashboardPage(skin = "green",
                                  menuItem("Welcome", tabName = "welcome_tab", icon = icon("door-open")),
                                  menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
                                  menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
-                                 menuItem("Feedback", tabName = "feedback_tab", icon = icon("comment")),
                                  div(htmlOutput("logo"), style="position: relative;"),
-                                 h5("version 1.1.5", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
+                                 h5("version 1.1.7", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
                                     position: fixed; bottom: 0; left: 100;")
                      ) 
                     ),
@@ -38,7 +37,7 @@ ui <- dashboardPage(skin = "green",
     # First tab content
     tabItem(tabName = "home_tab",
          
-    ## Left column - main panel   
+    ## Left column - main panel----
     column(4,   
            
         ## Use: shinyjs
@@ -99,7 +98,7 @@ ui <- dashboardPage(skin = "green",
       ), #closing left column  
 
       
-      ## Right column - Main panel
+      ## Right column - Main panel----
       column(8, 
              
              ## Add Style tags
@@ -135,7 +134,6 @@ ui <- dashboardPage(skin = "green",
       htmlOutput(outputId = "warningtext"),
 
       ## Previous and next buttons
-      # enable_buttonnav <- reactiveValues(ok = FALSE),
       
       fluidRow(
         column(width = 1, hidden(actionButton(inputId = "first", label = "<<<"))),
@@ -152,22 +150,20 @@ ui <- dashboardPage(skin = "green",
    
     ), # closing tabItem()
     
+    # Welcome tab content----
     tabItem(tabName = "welcome_tab",
             
             h2("Welcome to the ESM Item Repository"),
 
-            h4("We are Olivia Kirtley (KU Leuven), Anu Hiekkaranta (KU Leuven),", a("Yoram K. Kunkels", href = "http://www.ykkunkels.com/", target = "_blank"), "(University Medical Center Groningen), Martine van Nierop (KU Leuven), Davinia Verhoeven (KU Leuven), and Inez Myin-Germeys (KU Leuven) and we aim to support the further development of Experience Sampling Methodology (ESM) research by creating an open repository of existing ESM items", a("(https://osf.io/kg376/)", href = "https://osf.io/kg376/", target = "_blank"), ". To achieve this, we need your help in collecting as many items as possible!", 
-                style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"),
+            h4("We are Olivia Kirtley (KU Leuven), Anu Hiekkaranta (KU Leuven),", a("Yoram K. Kunkels", href = "http://www.ykkunkels.com/", target = "_blank"), "(University Medical Center Groningen / Technical University of Eindhoven), Gudrun Eisele (KU Leuven), Steffie Schoefs (KU Leuven), Nian Kemme (KU Leuven), Johan Le Grange (KU Leuven), Benjamin Simsa (KU Leuven), Tessa Biesemans (KU Leuven), and Inez Myin-Germeys (KU Leuven) and we aim to support the further development of Experience Sampling Methodology (ESM) research by creating an open repository of existing ESM items", a("(https://osf.io/kg376/)", href = "https://osf.io/kg376/", target = "_blank"), ". To achieve this, we need your help in collecting as many items as possible! Please submit completed documents to: tessa.biesemans@kuleuven.be", 
+                style = "font-style: normal; letter-spacing: 1px; line-height: 125%;"),
             
             div(htmlOutput("flow"), style="height: auto; width: auto; position: fixed;"),
-            
-            h4("Please submit docs to: martine.vannierop@kuleuven.be", 
-               style = "font-style: normal; letter-spacing: 1px; line-height: 26pt; position: fixed; bottom: 0; left: 100;")
             
             ), # closing tabItem()
     
 
-    
+    # Acknowledgements tab content----
     tabItem(tabName = "acknowledgements_tab",
             
             h2("Acknowledgements and citation help"),
@@ -183,31 +179,9 @@ ui <- dashboardPage(skin = "green",
                style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"),
             
             
-    ), # closing tabItem()
-    
-    tabItem(tabName = "feedback_tab",
-            
-            h2("Feedback"),
-            
-            br(),
-            
-            h4("Please leave your feedback on how we could further improve the Repository", 
-               style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"),
-            
-            br(),br(),
-            
-            ## Input: feedback
-            textAreaInput(inputId = "feedback_text",height = '400px', width = '400px', label = "Please leave your feedback",  
-                          placeholder = "Enter feedback here"),
-            
-            ## Input: Action button
-            actionButton(inputId= "send", label = "Send feedback"),
-            
-            
-            
     ) # closing tabItem()
-            
     
+
     ), # closing tabItems()
   
   

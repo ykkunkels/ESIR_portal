@@ -1,17 +1,16 @@
 
 #######################################
 #### ESIR Portal in Shiny - Server ####
-#### YKK - 09/5/2020              ####
+#### YKK - 24/02/2023              ####
 ####~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~####
 
 
 ## SERVER ----
 server <- function(input, output, session) {
   
-  ## Load and / or Install required packages
+  ## Load and / or Install required packages----
   if(!require('shiny')){install.packages('shiny', dep = TRUE)};library('shiny')
   if(!require('shinyjs')){install.packages('shinyjs', dep = TRUE)};library('shinyjs')
-  if(!require('mailR')){install.packages('mailR', dep = TRUE)};library('mailR')
   if(!require('xlsx')){install.packages('xlsx', dep = TRUE)};library('xlsx')
   
   ## Define & initialise reactiveValues objects----
@@ -19,8 +18,9 @@ server <- function(input, output, session) {
   search_output <- reactiveValues(search_results = NA, found_something = FALSE, item_selection = "", citation = NA)
   
   ## Read ESIR item data from URL----
-  df <- read.csv(url("https://osf.io/5ba2c/download"), sep = ",", encoding = "UTF-8", stringsAsFactors = FALSE) # Fetches the "ESIR-test.csv" file from OSF
-  # df <- read.csv(url("https://osf.io/pdn4f/download"), sep = ",", encoding = "UTF-8", stringsAsFactors = FALSE) # Fetches the "ESIR-test.csv" file from OSF
+  # df <- read.csv(url("https://osf.io/5ba2c/download"), sep = ",", stringsAsFactors = FALSE) # Fetches the "ESIR.csv" file from OSF
+  
+  df <- read.csv("DATA_ESM_Item_Repository_1804_fixed_full.csv", sep = ",", stringsAsFactors = FALSE)
   
   ## Format .csv and add proper column names----
   df <- df[(-(1:3)), ]
@@ -33,16 +33,7 @@ server <- function(input, output, session) {
                     "reliability", "validity", "development", "item_use", "item_instructions", "item_other")
   
   df[, "item_ID"] <- 1:nrow(df) #fill the item_ID column
-  
-  #! Use when negatives cannot b hard-coded in data.
-  # df[which(df[, c("children")] != "yes"), "children"] <- "no"
-  # df[which(df[, c("adolescents")] != "yes"), "adolescents"] <- "no"
-  # df[which(df[, c("adults")] != "yes"), "adults"] <- "no"
-  # df[which(df[, c("elderly")] != "yes"), "elderly"] <- "no"
-  # df[which(df[, c("gen_pop")] != "yes"), "gen_pop"] <- "no"
-  # df[which(df[, c("outpatient")] != "yes"), "outpatient"] <- "no"
-  # df[which(df[, c("inpatient")] != "yes"), "inpatient"] <- "no"
-  
+
   
     ## Observe start for buttonnav disable----
     observeEvent(if(length(search_output$item_selection) == 1){
@@ -171,29 +162,7 @@ server <- function(input, output, session) {
     })
   
   
-  ## Observe: send feedback button click---- 
-  observeEvent(input$send, {
-    
-    updateTextInput(session, inputId = "feedback_text", label = "Search the Repository", value="")
-
-    sender <- "postmaster@esmitemrepository.com"
-    recipients <- c("admin@esmitemrepository.com")
-    subject_title <- "Feedback for ESM Item Repository"
-    email_body <- input$feedback_text
-    
-    send.mail(from = sender,
-              to = recipients,
-              subject = subject_title,
-              body = email_body,
-              smtp = list(host.name = "send.one.com", port = 587, 
-                          user.name="postmaster@esmitemrepository.com", passwd="thankyou", ssl=TRUE),
-              authenticate = TRUE,
-              send = TRUE)
-    
-  })
-  
-  
-  ## Downloadable csv of selected dataset ----
+  ## Downloadable .csv of selected dataset ----
   output$downloadData <- downloadHandler(
     filename = function() {
       paste0("ESM_Item_Rep_selection", ".csv", sep = "")
@@ -203,7 +172,7 @@ server <- function(input, output, session) {
     }
   )
   
-  ## Downloadable csv of selected dataset ----
+  ## Downloadable .xlsx of selected dataset ----
   output$downloadData_Excel <- downloadHandler(
     filename = function() {
       paste0("ESM_Item_Rep_selection", ".xlsx", sep = "")
@@ -329,7 +298,4 @@ server <- function(input, output, session) {
                                "http://ykkunkels.com/wp-content/uploads/2019/05/Contributors-Workflow-Phase-1_v2_small.jpg",
                                '">')})
   
-  
 }
-
-
