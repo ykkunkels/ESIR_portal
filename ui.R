@@ -185,7 +185,7 @@ ui <- dashboardPage(skin = "green",
     ), # closing tabItems()
   
   
-  h5("We do not take responsibility for the quality of items within the repository. Inclusion of items within the repository does not indicate our endorsement of them.", 
+  h5("We do not take responsibility for the quality of items within the repository. Inclusion of items within the repository does not indicate our endorsement of them. All items within the repository are subject to a Creative Commons Attribution Non-Commerical License (CC BY-NC).", 
      style = "font-style: normal; letter-spacing: 0px; line-height: 10pt; position: fixed; bottom: 0; left: 100;")
       
     )

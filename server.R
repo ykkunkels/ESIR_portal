@@ -162,7 +162,11 @@ server <- function(input, output, session) {
     })
   
   
+<<<<<<< HEAD
   ## Downloadable .csv of selected dataset ----
+=======
+  ## Downloadable csv of selected dataset ----
+>>>>>>> a9d66e4326d6797d9380927755851626738a3dd1
   output$downloadData <- downloadHandler(
     filename = function() {
       paste0("ESM_Item_Rep_selection", ".csv", sep = "")
