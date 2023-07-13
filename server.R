@@ -1,28 +1,22 @@
 
-#######################################
-#### ESIR Portal in Shiny - Server ####
-#### YKK - 24/02/2023              ####
-####~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~####
-
+############################
+### ESIR Portal in Shiny ###
+### server version 1.1.8 ###
+### YKK - 13/07/2023     ###
+###~*~*~*~*~*~*~*~*~*~*~*###
 
 ## SERVER ----
 server <- function(input, output, session) {
-  
-  ## Load and / or Install required packages----
-  if(!require('shiny')){install.packages('shiny', dep = TRUE)};library('shiny')
-  if(!require('shinyjs')){install.packages('shinyjs', dep = TRUE)};library('shinyjs')
-  if(!require('xlsx')){install.packages('xlsx', dep = TRUE)};library('xlsx')
-  
-  ## Define & initialise reactiveValues objects----
+
+  ## Initialise values, read and format data----
+  ## Define & initialise reactiveValues objects
   search_input <- reactiveValues(search_text = NA, match_no = 1)
   search_output <- reactiveValues(search_results = NA, found_something = FALSE, item_selection = "", citation = NA)
   
-  ## Read ESIR item data from URL----
-  # df <- read.csv(url("https://osf.io/5ba2c/download"), sep = ",", stringsAsFactors = FALSE) # Fetches the "ESIR.csv" file from OSF
+  ## Read ESIR item data from URL
+  df <- read.csv(url("https://osf.io/5ba2c/download"), sep = ",", stringsAsFactors = FALSE) # Fetches the "ESIR.csv" file from OSF
   
-  df <- read.csv("DATA_ESM_Item_Repository_1804_fixed_full.csv", sep = ",", stringsAsFactors = FALSE)
-  
-  ## Format .csv and add proper column names----
+  ## Format .csv and add proper column names
   df <- df[(-(1:3)), ]
   
   colnames(df) <- c("item_ID", "label", "english", "description", "comment", "response_scale_discrete", "response_scale_vas", 
@@ -35,93 +29,47 @@ server <- function(input, output, session) {
   df[, "item_ID"] <- 1:nrow(df) #fill the item_ID column
 
   
-    ## Observe start for buttonnav disable----
-    observeEvent(if(length(search_output$item_selection) == 1){
-      
-      shinyjs::disable("first")
-      shinyjs::disable("previous")
-      shinyjs::disable("previous_10")
-      shinyjs::disable("nextb")
-      shinyjs::disable("nextb_10")
-      shinyjs::disable("last")
-      
-    }, {
-    })
-  
-  ## Observe start for buttonnav enable----
-  observeEvent(if(length(search_output$item_selection) > 1){
-    
-    shinyjs::show("first")
-    shinyjs::enable("first")
-    shinyjs::show("previous")
-    shinyjs::enable("previous")
-    shinyjs::show("previous_10")
-    shinyjs::enable("previous_10")
-    shinyjs::show("match_no")
-    shinyjs::show("nextb")
-    shinyjs::enable("nextb")
-    shinyjs::show("nextb_10")
-    shinyjs::enable("nextb_10")
-    shinyjs::show("last")
-    shinyjs::enable("last")
-    
-  }, {
-  })
-    
-  
-    ## Observe: go button click---- 
+    ## Search, Show all, and Clear buttons----
+    ## Observe: go button click
     observeEvent(input$go, {
       
       search_input$match_no <- 1
+      search_input$search_text <- tolower(input$search_text)
       
-      search_input$search_text <- tolower(input$search_text) #! all input text as lower-case
-      
-      
-      ## Add population columns----
+      ## Add population columns
       for(i in 1:nrow(df)){
-        
         df[i, "population"] <- paste(colnames(df[, c(15:19)])[which(df[i, c(15:19)] == "YES")], collapse = ", ")
-        
       }
       
-      
-      ## Search through item .csv to fetch items including user search input----
+      ## Search through item .csv to fetch items including user search input
       if(any(grepl(search_input$search_text, as.character(df[, input$topic_select])) == TRUE)){
         
         search_output$item_selection <- which(grepl(search_input$search_text, 
                                                     as.character(df[, input$topic_select])) == TRUE)
         
+            ## Multiple matches exception
+            if(length(search_output$item_selection) > 1){
+              
+              output$warningtext <- renderUI({
+                s1 <- paste("We found", length(search_output$item_selection),"matches")
+                s2 <- paste("Use the buttons below to navigate your matches")
+                HTML(paste(s1, s2, sep = '<br/>'))
+              })
+              
+            }else{
+              output$warningtext <- renderText({
+                paste("")
+              })
+            }
         
-        ## Multiple matches exception----
-        ## Warning text
-        if(length(search_output$item_selection) > 1){
-          
-          output$warningtext <- renderUI({
-            s1 <- paste("We found", length(search_output$item_selection),"matches")
-            s2 <- paste("Use the buttons below to navigate your matches")
-            HTML(paste(s1, s2, sep = '<br/>'))
-          })
-          
-        }else{
-          output$warningtext <- renderText({
-            paste("")
-          })
-        }
-        
-      }else{
-        
-        search_output$item_selection <- NA
-        
-      } 
-      
-    })
+      }else{search_output$item_selection <- NA}
+    }) # closing observeEvent(input$go, ...)
   
   
-  ## Observe: all button click---- 
+  ## Observe: all button click
   observeEvent(input$all, {
     
     search_input$match_no <- 1
-    
     search_output$item_selection <- (1:nrow(df))
     
     output$warningtext <- renderUI({
@@ -129,12 +77,10 @@ server <- function(input, output, session) {
       s2 <- paste("Use the buttons below to navigate your matches")
       HTML(paste(s1, s2, sep = '<br/>'))
     })
-    
-    
-  })
+  }) # closing observeEvent(input$all, ...)
 
   
-    ## Observe: reset button click---- 
+    ## Observe: reset button click
     observeEvent(input$reset, {
       
       updateTextInput(session, inputId = "search_text", label = "Search the Repository", value="")
@@ -159,91 +105,66 @@ server <- function(input, output, session) {
       shinyjs::disable("last")
       shinyjs::hide("last")
       
+    }) # closing observeEvent(input$reset, ...)
+
+  
+    ## Shinyjs show and disable navigation buttons
+    ## Observe start for buttonnav disable
+    observeEvent(if(length(search_output$item_selection) == 1){
+      
+      shinyjs::disable("first")
+      shinyjs::disable("previous")
+      shinyjs::disable("previous_10")
+      shinyjs::disable("nextb")
+      shinyjs::disable("nextb_10")
+      shinyjs::disable("last")
+      
+    }, {
     })
-  
-  
-<<<<<<< HEAD
-  ## Downloadable .csv of selected dataset ----
-=======
-  ## Downloadable csv of selected dataset ----
->>>>>>> a9d66e4326d6797d9380927755851626738a3dd1
-  output$downloadData <- downloadHandler(
-    filename = function() {
-      paste0("ESM_Item_Rep_selection", ".csv", sep = "")
-    },
-    content = function(file) {
-      write.csv(df[search_output$item_selection, ], file, row.names = FALSE)
-    }
-  )
-  
-  ## Downloadable .xlsx of selected dataset ----
-  output$downloadData_Excel <- downloadHandler(
-    filename = function() {
-      paste0("ESM_Item_Rep_selection", ".xlsx", sep = "")
-    },
-    content = function(file) {
-      write.xlsx(df[search_output$item_selection, ], file, row.names = FALSE)
-    }
-  )
-
-  
-  
-  ## Observe: Item navigation button clicks---- 
-  observeEvent(input$first, {
     
-    search_input$match_no <- 1
-    
-  })
-
-  observeEvent(input$previous_10, {
-    
-    if(search_input$match_no  > 10){
+    ## Observe start for buttonnav enable
+    observeEvent(if(length(search_output$item_selection) > 1){
       
-      search_input$match_no <- (search_input$match_no - 10)
+      shinyjs::show("first");
+      shinyjs::enable("first")
+      shinyjs::show("previous")
+      shinyjs::enable("previous")
+      shinyjs::show("previous_10")
+      shinyjs::enable("previous_10")
+      shinyjs::show("match_no")
+      shinyjs::show("nextb")
+      shinyjs::enable("nextb")
+      shinyjs::show("nextb_10")
+      shinyjs::enable("nextb_10")
+      shinyjs::show("last")
+      shinyjs::enable("last")
       
-    }
+    }, {
+    })  
     
-  })
-    
+    ## Observe: Item navigation button clicks---- 
+    observeEvent(input$first, {search_input$match_no <- 1})
+  
+    observeEvent(input$previous_10, {
+      if(search_input$match_no  > 10){search_input$match_no <- (search_input$match_no - 10)}
+    })
+      
     observeEvent(input$previous, {
-      
-      if(search_input$match_no  > 1){
-        
-        search_input$match_no <- (search_input$match_no - 1)
-        
-      }
-      
+      if(search_input$match_no  > 1){search_input$match_no <- (search_input$match_no - 1)}
     })
-    
+      
     observeEvent(input$nextb, {
-      
-      if(search_input$match_no < length(search_output$item_selection)){
-        
-        search_input$match_no <- (search_input$match_no + 1)
-        
-      }
-      
+      if(search_input$match_no < length(search_output$item_selection)){search_input$match_no <- (search_input$match_no + 1)}
     })
-    
+      
     observeEvent(input$nextb_10, {
-      
-      if(search_input$match_no < (length(search_output$item_selection) - 9)){
-        
-        search_input$match_no <- (search_input$match_no + 10)
-        
-      }
-      
+      if(search_input$match_no < (length(search_output$item_selection) - 9)){search_input$match_no <- (search_input$match_no + 10)}
     })
-    
-    observeEvent(input$last, {
       
-      search_input$match_no <- length(search_output$item_selection)
-      
-    })
-    
+    observeEvent(input$last, {search_input$match_no <- length(search_output$item_selection)})
     
   
-  ## Output: text
+  ## Output: text----
   output$item_selection <- renderText({
     paste("Item ID:", search_output$item_selection)[search_input$match_no]
   })
@@ -269,13 +190,12 @@ server <- function(input, output, session) {
   })
   
   output$item_population <- renderText({
-    
     if(!is.na(search_output$item_selection[search_input$match_no])){
-      c(paste(c("Children:", "| Adolescents:", "| Adults:", "| Elderly:", "| General:", "| Outpatient:", "| Inpatient:"), as.character(df[search_output$item_selection[search_input$match_no], c("children", "adolescents", "adults", "elderly", "gen_pop", "outpatient", "inpatient")])))
+      c(paste(c("Children:", "| Adolescents:", "| Adults:", "| Elderly:", "| General:", "| Outpatient:", "| Inpatient:"), 
+              as.character(df[search_output$item_selection[search_input$match_no], 
+                              c("children", "adolescents", "adults", "elderly", "gen_pop", "outpatient", "inpatient")])))
     }
-
   })
-
 
   output$item_citation <- renderText({
     paste("Item citation:", as.character(df[search_output$item_selection, "citation"])[search_input$match_no])
@@ -294,12 +214,37 @@ server <- function(input, output, session) {
   })
 
 
-  output$logo <- renderText({c('<img src="',
-                                "http://ykkunkels.com/wp-content/uploads/2019/05/Repository_logo.png",
-                                '">')})
+  ## Download handlers----
+  ## Downloadable csv of selected dataset
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      paste0("ESM_Item_Rep_selection", ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(df[search_output$item_selection, ], file, row.names = FALSE)
+    }
+  )
   
-  output$flow <- renderText({c('<img src="',
-                               "http://ykkunkels.com/wp-content/uploads/2019/05/Contributors-Workflow-Phase-1_v2_small.jpg",
-                               '">')})
+  ## Downloadable .xlsx of selected dataset
+  output$downloadData_Excel <- downloadHandler(
+    filename = function() {
+      paste0("ESM_Item_Rep_selection", ".xlsx", sep = "")
+    },
+    content = function(file) {
+      write.xlsx(df[search_output$item_selection, ], file, row.names = FALSE)
+    }
+  )
   
-}
+  
+  ## Output: Images----
+  output$logo <- renderUI({
+    src_logo <- "http://ykkunkels.com/wp-content/uploads/2019/05/Repository_logo.png"
+    div(id = "logo", tags$img(src = src_logo, width = "100%", height = "auto"))
+  })
+  
+output$flow <- renderUI({
+    src_flow <- "http://ykkunkels.com/wp-content/uploads/2019/05/Contributors-Workflow-Phase-1_v2_small.jpg"
+    div(id = "flow", tags$img(src = src_flow, width = "85%", height = "auto"))
+  })
+  
+} # closing server
