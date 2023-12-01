@@ -26,8 +26,15 @@ ui <- dashboardPage(skin = "green",
                                   menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
                                   menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                   uiOutput("logo"),
-                                  h5("version 1.1.8", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
-                                    position: relative; left: 30px;")
+                                  h5("[version 1.1.8] We do not take responsibility for the", br(), 
+                                     "quality of items within the repository. Inclusion of", br(), 
+                                     "items within the repository does not indicate", br(), 
+                                     "our endorsement of the. All items within the", br(), 
+                                     "repository are subject to a Creative Commons", br(), 
+                                     "Attribution Non-Commerical License (CC BY-NC).",
+                                     style = "font-style: normal; font-size: 80%; color: #b5c8d4; letter-spacing: 0.2px; line-height: 10pt;
+                                    position: relative; left: 18px;")
+                                  
                       ) # closing sidebarMenu
                     ), # closing dashboardSidebar
   
@@ -156,10 +163,7 @@ ui <- dashboardPage(skin = "green",
             
     ) # closing tabItem()
   ), # closing tabItems()
-  
-  h5("We do not take responsibility for the quality of items within the repository. Inclusion of items within the repository does not indicate our endorsement of them. All items within the repository are subject to a Creative Commons Attribution Non-Commerical License (CC BY-NC).", 
-     style = "font-style: normal; letter-spacing: 0px; line-height: 10pt; position: fixed; bottom: 0; left: 100;")
-      
+     
     ) # closing dashboardBody
   ) # closing dashboardPage
 
