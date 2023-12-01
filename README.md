@@ -8,7 +8,7 @@ We are an open science initiative dedicated to fostering the advancement of Expe
 
 **Why**
 
-Exploring psychological phenomena in real-life settings is on the rise, driven by advances in Experience Sampling Methodology (ESM). However, the lack of standardized testing for ESM items introduces challenges, leading to diverse development practices and limited transparency.
+Exploring psychological phenomena in real-life settings is on the rise, driven by advances in ESM. However, the lack of standardized testing for ESM items introduces challenges, leading to diverse development practices and limited transparency.
 
 Our initiative, the ESM Item Repository, addresses this gap. We aim to establish a centralized platform for ESM items, promoting transparency and reproducibility in psychological research.
 
