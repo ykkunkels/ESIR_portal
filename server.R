@@ -5,6 +5,7 @@
 ### MP, YKK - 13/07/2023 ###
 ###~*~*~*~*~*~*~*~*~*~*~*###
 
+
 ## SERVER ----
 server <- function(input, output, session) {
 
@@ -243,7 +244,7 @@ server <- function(input, output, session) {
   })
   
 output$flow <- renderUI({
-    src_flow <- "http://ykkunkels.com/wp-content/uploads/2019/05/Contributors-Workflow-Phase-1_v2_small.jpg"
+    src_flow <- "http://ykkunkels.com/wp-content/uploads/2023/11/Contributors-Workflow-Phase-1_v2_small.jpg"
     div(id = "flow", tags$img(src = src_flow, width = "85%", height = "auto"))
   })
   
