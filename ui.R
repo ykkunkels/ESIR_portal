@@ -1,10 +1,11 @@
 
 ############################
 ### ESIR Portal in Shiny ###
-### UI version 1.1.8     ###
-### YKK - 13/07/2023     ###
+### UI version 1.1.9     ###
+### MP, YKK - 06/12/2023 ###
 ### Changelog:           ###
-###  > Formatting        ###
+###  > Welcome tab       ###
+###  > Disclaimer text   ###
 ###~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
@@ -26,7 +27,7 @@ ui <- dashboardPage(skin = "green",
                                   menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
                                   menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                   uiOutput("logo"),
-                                  h5("[version 1.1.8] We do not take responsibility for the", br(), 
+                                  h5("[version 1.1.9] We do not take responsibility for the", br(), 
                                      "quality of items within the repository. Inclusion of", br(), 
                                      "items within the repository does not indicate", br(), 
                                      "our endorsement of the. All items within the", br(), 
