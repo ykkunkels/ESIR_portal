@@ -1,10 +1,11 @@
 
 ############################
 ### ESIR Portal in Shiny ###
-### UI version 1.1.8     ###
-### YKK - 13/07/2023     ###
+### UI version 1.1.9     ###
+### MP, YKK - 06/12/2023 ###
 ### Changelog:           ###
-###  > Formatting        ###
+###  > Welcome tab       ###
+###  > Disclaimer text   ###
 ###~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
@@ -26,8 +27,15 @@ ui <- dashboardPage(skin = "green",
                                   menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
                                   menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                   uiOutput("logo"),
-                                  h5("version 1.1.8", style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;
-                                    position: relative; left: 30px;")
+                                  h5("[version 1.1.9] We do not take responsibility for the", br(), 
+                                     "quality of items within the repository. Inclusion of", br(), 
+                                     "items within the repository does not indicate", br(), 
+                                     "our endorsement of the. All items within the", br(), 
+                                     "repository are subject to a Creative Commons", br(), 
+                                     "Attribution Non-Commerical License (CC BY-NC).",
+                                     style = "font-style: normal; font-size: 80%; color: #b5c8d4; letter-spacing: 0.2px; line-height: 10pt;
+                                    position: relative; left: 18px;")
+                                  
                       ) # closing sidebarMenu
                     ), # closing dashboardSidebar
   
@@ -132,9 +140,11 @@ ui <- dashboardPage(skin = "green",
     # Welcome tab content----
     tabItem(tabName = "welcome_tab",
             
-            h2("Welcome to the ESM Item Repository"),
-            h4("We are Olivia Kirtley (KU Leuven), Anu Hiekkaranta (KU Leuven),", a("Yoram K. Kunkels", href = "http://www.ykkunkels.com/", target = "_blank"), "(University Medical Center Groningen / Technical University of Eindhoven), Gudrun Eisele (KU Leuven), Steffie Schoefs (KU Leuven), Nian Kemme (KU Leuven), Johan Le Grange (KU Leuven), Benjamin Simsa (KU Leuven), Tessa Biesemans (KU Leuven), and Inez Myin-Germeys (KU Leuven) and we aim to support the further development of Experience Sampling Methodology (ESM) research by creating an open repository of existing ESM items", a("(https://osf.io/kg376/)", href = "https://osf.io/kg376/", target = "_blank"), ". To achieve this, we need your help in collecting as many items as possible! Please submit completed documents to: tessa.biesemans@kuleuven.be", 
+            h2("Welcome to the ESM Item Repository!"),
+            h4("We are Olivia Kirtley (KU Leuven),", a("Yoram K. Kunkels", href = "http://www.ykkunkels.com/", target = "_blank"), "(Centraal Bureau voor de Statistiek), Gudrun Eisele (KU Leuven), Steffie Schoefs (KU Leuven), Nian Kemme (KU Leuven), Tessa Biesemans (KU Leuven), Laura Van Heck (KU Leuven), Milla Pihlajamäki (KU Leuven), Benjamin Kunc (KU Leuven), and Inez Myin-Germeys (KU Leuven). We aim to support the further development of Experience Sampling Methodology (ESM) research with an open repository of existing ESM items", a("(https://osf.io/kg376/)", href = "https://osf.io/kg376/", target = "_blank"), ".", 
                 style = "font-style: normal; letter-spacing: 1px; line-height: 125%;"),
+            h4("To achieve this, we need your help in collecting as many items as possible! Please submit completed documents to: tessa.biesemans@kuleuven.be", 
+               style = "font-style: normal; letter-spacing: 1px; line-height: 125%;"),
             
             uiOutput("flow"),
             
@@ -154,10 +164,7 @@ ui <- dashboardPage(skin = "green",
             
     ) # closing tabItem()
   ), # closing tabItems()
-  
-  h5("We do not take responsibility for the quality of items within the repository. Inclusion of items within the repository does not indicate our endorsement of them. All items within the repository are subject to a Creative Commons Attribution Non-Commerical License (CC BY-NC).", 
-     style = "font-style: normal; letter-spacing: 0px; line-height: 10pt; position: fixed; bottom: 0; left: 100;")
-      
+     
     ) # closing dashboardBody
   ) # closing dashboardPage
 
