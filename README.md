@@ -1,6 +1,6 @@
 # Welcome to the ESM Item Repository Shiny app! 
 
-<sub><sup>1-12-2023 YKK + BK</sup></sub>
+<sub><sup>30-1-2024 YKK + BK</sup></sub>
 
 **What**
 
@@ -26,7 +26,7 @@ Key Objectives:
 
 If you want to contribute items to the ESM repository, all you have to do is to follow these steps:
 
-<img src="C:/Users/benja/OneDrive/Desktop/Shiny App/ESIR_portal/Contributors-Workflow-Phase-1_v2_small.jpg" alt="Repository Contributor's workflow">
+<img src="C:/Users/u0167110/Desktop/Shiny App/ESIR_portal/ESIR_portal/Contributors-Workflow-Phase-1_v2_small.jpg" alt="Repository Contributor's workflow">
 
 
 **How the app works**
