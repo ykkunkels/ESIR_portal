@@ -2,7 +2,7 @@
 #############################
 ### ESIR Portal in Shiny  ###
 ### server version 1.1.10 ###
-### MP - 06/02/2023       ###
+### MP, YKK - 06/02/2023  ###
 ###~*~*~*~*~*~*~*~*~*~*~*~###
 
 ## SERVER ----
@@ -11,21 +11,10 @@ server <- function(input, output, session) {
   ## Initialise values, read and format data----
   ## Define & initialise reactiveValues objects
   search_input <- reactiveValues(search_text = NA, match_no = 1)
-  search_output <-
-    reactiveValues(
-      search_results = NA,
-      found_something = FALSE,
-      item_selection = "",
-      citation = NA
-    )
+  search_output <- reactiveValues(search_results = NA, found_something = FALSE, item_selection = "", citation = NA)
   
   ## Read ESIR item data from URL
-  df <-
-    read.csv(
-      url("https://osf.io/5ba2c/download"),
-      sep = ",",
-      stringsAsFactors = FALSE
-    ) # Fetches the "ESIR.csv" file from OSF
+  df <- read.csv(url("https://osf.io/5ba2c/download"), sep = ",", stringsAsFactors = FALSE) # Fetches the "ESIR.csv" file from OSF
   
   ## Format .csv and add proper column names
   df <- df[(-(1:3)), ]
@@ -43,98 +32,65 @@ server <- function(input, output, session) {
   ## Search, Show all, and Clear buttons----
   ## Observe: go button click
     observeEvent(input$go, {
-    search_input$match_no <- 1
-    search_input$search_text <- tolower(input$search_text)
-    
-    ## Add population columns
-    for (i in 1:nrow(df)) {
-      df[i, "population"] <-
-        paste(colnames(df[, c(15:19)])[which(df[i, c(15:19)] == "YES")], collapse = ", ")
-    }
-    
-    ## Define columns to search when "All" is selected
-    all_columns <-
-      c(
-        "item_ID",
-        "label",
-        "english",
-        "description",
-        "dataset",
-        "beeps_per_day",
-        "population",
-        "citation",
-        "existing_ref",
-        "contact"
-      )
-    
-    ## Search through specified columns
-    if (input$topic_select == "all") {
-      # Search across specified columns
-      if (any(sapply(df[, all_columns], function(x)
-        any(
-          grepl(search_input$search_text, as.character(x))
-        )))) {
-        search_output$item_selection <-
-          which(apply(df[, all_columns], 1, function(x)
+        search_input$match_no <- 1
+        search_input$search_text <- tolower(input$search_text)
+        
+        ## Add population columns
+        for (i in 1:nrow(df)) {df[i, "population"] <- paste(colnames(df[, c(15:19)])[which(df[i, c(15:19)] == "YES")], collapse = ", ")}
+        
+        ## Define columns to search when "All" is selected
+        all_columns <- c("item_ID", "label", "english", "description", "dataset", "beeps_per_day", "population", "citation", "existing_ref", "contact")
+        
+        ## Search through specified columns
+        if (input$topic_select == "all") {
+          # Search across specified columns
+          if (any(sapply(df[, all_columns], function(x)
             any(
               grepl(search_input$search_text, as.character(x))
-            )))
-        
-        ## Multiple matches exception
-        if (length(search_output$item_selection) > 1) {
-          output$warningtext <- renderUI({
-            s1 <-
-              paste("We found",
-                    length(search_output$item_selection),
-                    "matches")
-            s2 <-
-              paste("Use the buttons below to navigate your matches")
-            HTML(paste(s1, s2, sep = '<br/>'))
-          })
-          
-        } else {
-          output$warningtext <- renderText({
-            paste("")
-          })
+            )))) {
+            search_output$item_selection <-
+              which(apply(df[, all_columns], 1, function(x)
+                any(
+                  grepl(search_input$search_text, as.character(x))
+                )))
+            
+            ## Multiple matches exception
+            if (length(search_output$item_selection) > 1) {
+              output$warningtext <- renderUI({
+                  s1 <- paste("We found", length(search_output$item_selection), "matches")
+                  s2 <- paste("Use the buttons below to navigate your matches")
+                  HTML(paste(s1, s2, sep = '<br/>'))
+              })
+              
+            }else {
+              output$warningtext <- renderText({paste("")})
+             }
+            
+          }else {
+            search_output$item_selection <- NA
+            output$warningtext <- renderText({paste("")})
+           }
+        }else {
+          # Search in the selected column
+          if (any(grepl(search_input$search_text, as.character(df[, input$topic_select])) == TRUE)) {
+            search_output$item_selection <- which(grepl(search_input$search_text, as.character(df[, input$topic_select])) == TRUE)
+            
+            ## Multiple matches exception
+            if (length(search_output$item_selection) > 1) {
+                  output$warningtext <- renderUI({
+                    s1 <- paste("We found", length(search_output$item_selection), "matches")
+                    s2 <- paste("Use the buttons below to navigate your matches")
+                    HTML(paste(s1, s2, sep = '<br/>'))
+                  })
+              
+            } else {
+              output$warningtext <- renderText({paste("")})
+            }
+          } else {
+            search_output$item_selection <- NA
+            output$warningtext <- renderText({paste("")})
+          }
         }
-        
-      } else {
-        search_output$item_selection <- NA
-        output$warningtext <- renderText({
-          paste("")
-        })
-      }
-    } else {
-      # Search in the selected column
-      if (any(grepl(search_input$search_text, as.character(df[, input$topic_select])) == TRUE)) {
-        search_output$item_selection <-
-          which(grepl(search_input$search_text,
-                      as.character(df[, input$topic_select])) == TRUE)
-        
-        ## Multiple matches exception
-        if (length(search_output$item_selection) > 1) {
-          output$warningtext <- renderUI({
-            s1 <-
-              paste("We found",
-                    length(search_output$item_selection),
-                    "matches")
-            s2 <-
-              paste("Use the buttons below to navigate your matches")
-            HTML(paste(s1, s2, sep = '<br/>'))
-          })
-          
-        } else {
-          output$warningtext <- renderText({
-            paste("")
-          })
-        }
-      } else {
-        search_output$item_selection <- NA
-        output$warningtext <- renderText({
-          paste("")
-        })
-      }
-    }
   }) # closing observeEvent(input$go, ...)
   
   
@@ -159,9 +115,7 @@ server <- function(input, output, session) {
       search_output$item_selection <- NA
       search_input$match_no <- 1
       
-      output$warningtext <- renderText({
-        paste("")
-      })
+      output$warningtext <- renderText({paste("")})
       
       shinyjs::disable("first")
       shinyjs::hide("first")

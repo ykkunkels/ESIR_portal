@@ -1,7 +1,7 @@
 
 ############################
 ### ESIR Portal in Shiny ###
-### UI version 1.1.9     ###
+### UI version 1.1.10    ###
 ### MP, YKK - 06/12/2023 ###
 ### Changelog:           ###
 ###  > Welcome tab       ###
