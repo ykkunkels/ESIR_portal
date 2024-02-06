@@ -1,12 +1,13 @@
 
-############################
-### ESIR Portal in Shiny ###
-### UI version 1.1.10    ###
-### MP, YKK - 06/12/2023 ###
-### Changelog:           ###
-###  > Welcome tab       ###
-###  > Disclaimer text   ###
-###~*~*~*~*~*~*~*~*~*~*~*###
+######################################
+### ESIR Portal in Shiny           ###
+### UI version 1.1.10              ###
+### MP, YKK - 06/12/2023           ###
+### Changelog:                     ###
+###  > Welcome tab                 ###
+###  > Disclaimer text             ###
+###  > Added 'All' functionality   ###
+###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
 if(!require('shiny')){install.packages('shiny', dep = TRUE)};library('shiny')
