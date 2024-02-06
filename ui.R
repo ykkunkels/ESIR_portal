@@ -1,12 +1,13 @@
 
-############################
-### ESIR Portal in Shiny ###
-### UI version 1.1.9     ###
-### MP, YKK - 06/12/2023 ###
-### Changelog:           ###
-###  > Welcome tab       ###
-###  > Disclaimer text   ###
-###~*~*~*~*~*~*~*~*~*~*~*###
+######################################
+### ESIR Portal in Shiny           ###
+### UI version 1.1.10              ###
+### MP, YKK - 06/12/2023           ###
+### Changelog:                     ###
+###  > Welcome tab                 ###
+###  > Disclaimer text             ###
+###  > Added 'All' functionality   ###
+###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
 if(!require('shiny')){install.packages('shiny', dep = TRUE)};library('shiny')
@@ -27,10 +28,10 @@ ui <- dashboardPage(skin = "green",
                                   menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
                                   menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                   uiOutput("logo"),
-                                  h5("[version 1.1.9] We do not take responsibility for the", br(), 
+                                  h5("[version 1.1.10] We do not take responsibility for the", br(), 
                                      "quality of items within the repository. Inclusion of", br(), 
                                      "items within the repository does not indicate", br(), 
-                                     "our endorsement of the. All items within the", br(), 
+                                     "our endorsement of them. All items within the", br(), 
                                      "repository are subject to a Creative Commons", br(), 
                                      "Attribution Non-Commerical License (CC BY-NC).",
                                      style = "font-style: normal; font-size: 80%; color: #b5c8d4; letter-spacing: 0.2px; line-height: 10pt;
@@ -54,7 +55,8 @@ ui <- dashboardPage(skin = "green",
         
         ## Input: Search topic select
         selectInput("topic_select", "Select search topic:",
-                    c("Item ID" = "item_ID",
+                    c("All" = "all",
+                      "Item ID" = "item_ID",
                       "Original language" = "label",
                       "English" = "english",
                       "Description" = "description",
