@@ -1,12 +1,10 @@
 
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.10              ###
-### MP, YKK - 06/12/2023           ###
+### UI version 1.1.11              ###
+### MP, YKK - 07/12/2023           ###
 ### Changelog:                     ###
-###  > Welcome tab                 ###
-###  > Disclaimer text             ###
-###  > Added 'All' functionality   ###
+###  > Added confetti              ###
 ###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
@@ -14,6 +12,11 @@ if(!require('shiny')){install.packages('shiny', dep = TRUE)};library('shiny')
 if(!require('shinydashboard')){install.packages('shinydashboard', dep = TRUE)};library('shinydashboard')
 if(!require('shinyjs')){install.packages('shinyjs', dep = TRUE)};library('shinyjs')
 if(!require('xlsx')){install.packages('xlsx', dep = TRUE)};library('xlsx')
+
+# Temp libraries
+if(!require('devtools')){install.packages('devtools', dep = TRUE)};library('devtools')
+devtools::install_github("ArthurData/confetti")
+library(confetti)
 
 # UI ----
 ui <- dashboardPage(skin = "green",
@@ -35,7 +38,14 @@ ui <- dashboardPage(skin = "green",
                                      "repository are subject to a Creative Commons", br(), 
                                      "Attribution Non-Commerical License (CC BY-NC).",
                                      style = "font-style: normal; font-size: 80%; color: #b5c8d4; letter-spacing: 0.2px; line-height: 10pt;
-                                    position: relative; left: 18px;")
+                                    position: relative; left: 18px;"),
+                                  
+                                  # Temp: confetti actionbuttons
+                                  useConfetti(),
+                                  actionButton(
+                                    inputId = "confetti_start",
+                                    label =  "Confetti"
+                                  )
                                   
                       ) # closing sidebarMenu
                     ), # closing dashboardSidebar
@@ -124,7 +134,7 @@ ui <- dashboardPage(skin = "green",
             verbatimTextOutput(outputId = "item_contact", placeholder = FALSE),
 
             htmlOutput(outputId = "warningtext"),
-
+            
             ## Previous and next buttons
             fluidRow(
               column(width = 1, hidden(actionButton(inputId = "first", label = "<<<"))),
@@ -134,7 +144,10 @@ ui <- dashboardPage(skin = "green",
               column(width = 1, hidden(actionButton(inputId = "nextb", label = ">"))),
               column(width = 1, hidden(actionButton(inputId = "nextb_10", label = ">>"))),
               column(width = 1, hidden(actionButton(inputId = "last", label = ">>>")))
-            ) # closing fluidRow
+            ), # closing fluidRow
+            
+            ## Temp: celebrate_image
+            uiOutput("celebrate_1000")
       
       ), # closing right colum
     ), # closing tabItem()
