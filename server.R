@@ -288,7 +288,7 @@ output$flow <- renderUI({
 
 ## Temp: celebrate_image
 output$celebrate_1000 <- renderUI({
-  src_celeb <- "http://ykkunkels.com/wp-content/uploads/2024/02/celebrate_1000_v2.jpg"
+  src_celeb <- "http://ykkunkels.com/wp-content/uploads/2024/02/celebrate_1000_v3.jpg"
   div(id = "celebrate_1000", tags$img(src = src_celeb, width = "1025px", height = "250px"))
 })
   

@@ -38,14 +38,7 @@ ui <- dashboardPage(skin = "green",
                                      "repository are subject to a Creative Commons", br(), 
                                      "Attribution Non-Commerical License (CC BY-NC).",
                                      style = "font-style: normal; font-size: 80%; color: #b5c8d4; letter-spacing: 0.2px; line-height: 10pt;
-                                    position: relative; left: 18px;"),
-                                  
-                                  # Temp: confetti actionbuttons
-                                  useConfetti(),
-                                  actionButton(
-                                    inputId = "confetti_start",
-                                    label =  "Confetti"
-                                  )
+                                    position: relative; left: 18px;")
                                   
                       ) # closing sidebarMenu
                     ), # closing dashboardSidebar
@@ -105,7 +98,18 @@ ui <- dashboardPage(skin = "green",
         
         ## Input: Download button for .XLSX
         h4("Download your selection as Excel file"),
-        downloadButton("downloadData_Excel", "Download Excel file")
+        downloadButton("downloadData_Excel", "Download Excel file"),
+        
+        br(), br(),
+        
+        ## Temp: confetti actionbuttons
+        h4("We now have more than 1000 items!"),
+        h5("Celebrate with us by throwing some confetti:"),
+        useConfetti(),
+        actionButton(
+          inputId = "confetti_start",
+          label =  "Throw confetti!"
+        )
         
       ), #closing left column  
 
