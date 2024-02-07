@@ -1,8 +1,8 @@
 
 #############################
 ### ESIR Portal in Shiny  ###
-### server version 1.1.10 ###
-### MP, YKK - 06/02/2023  ###
+### server version 1.1.11 ###
+### MP, YKK - 07/02/2023  ###
 ###~*~*~*~*~*~*~*~*~*~*~*~###
 
 
@@ -239,6 +239,19 @@ server <- function(input, output, session) {
   output$match_no <- renderText({
     search_input$match_no
   })
+  
+  
+  ## Temp: confetti logic
+  observeEvent(session, { # on session start
+    sendConfetti();Sys.sleep(0.5)
+    sendConfetti();Sys.sleep(0.5)
+    sendConfetti();Sys.sleep(0.5)
+  })
+  
+  observeEvent(input$confetti_start, { # on actionbutton
+    sendConfetti()
+    message("You have sent ", input$sentConfetti, " confetti")
+  })
 
 
   ## Download handlers----
@@ -273,5 +286,11 @@ output$flow <- renderUI({
     src_flow <- "http://ykkunkels.com/wp-content/uploads/2023/11/Contributors-Workflow-Phase-1_v2_small.jpg"
     div(id = "flow", tags$img(src = src_flow, width = "85%", height = "auto"))
   })
+
+## Temp: celebrate_image
+output$celebrate_1000 <- renderUI({
+  src_celeb <- "http://ykkunkels.com/wp-content/uploads/2024/02/celebrate_1000_v3.jpg"
+  div(id = "celebrate_1000", tags$img(src = src_celeb, width = "1025px", height = "250px"))
+})
   
 } # closing server
