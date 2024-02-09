@@ -1,18 +1,22 @@
 
-############################
-### ESIR Portal in Shiny ###
-### UI version 1.1.9     ###
-### MP, YKK - 06/12/2023 ###
-### Changelog:           ###
-###  > Welcome tab       ###
-###  > Disclaimer text   ###
-###~*~*~*~*~*~*~*~*~*~*~*###
+######################################
+### ESIR Portal in Shiny           ###
+### UI version 1.1.11              ###
+### MP, YKK - 07/12/2023           ###
+### Changelog:                     ###
+###  > Added confetti              ###
+###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
 if(!require('shiny')){install.packages('shiny', dep = TRUE)};library('shiny')
 if(!require('shinydashboard')){install.packages('shinydashboard', dep = TRUE)};library('shinydashboard')
 if(!require('shinyjs')){install.packages('shinyjs', dep = TRUE)};library('shinyjs')
 if(!require('xlsx')){install.packages('xlsx', dep = TRUE)};library('xlsx')
+
+# Temp libraries
+if(!require('devtools')){install.packages('devtools', dep = TRUE)};library('devtools')
+devtools::install_github("ArthurData/confetti")
+library(confetti)
 
 # UI ----
 ui <- dashboardPage(skin = "green",
@@ -27,10 +31,10 @@ ui <- dashboardPage(skin = "green",
                                   menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
                                   menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                   uiOutput("logo"),
-                                  h5("[version 1.1.9] We do not take responsibility for the", br(), 
+                                  h5("[version 1.1.10] We do not take responsibility for the", br(), 
                                      "quality of items within the repository. Inclusion of", br(), 
                                      "items within the repository does not indicate", br(), 
-                                     "our endorsement of the. All items within the", br(), 
+                                     "our endorsement of them. All items within the", br(), 
                                      "repository are subject to a Creative Commons", br(), 
                                      "Attribution Non-Commerical License (CC BY-NC).",
                                      style = "font-style: normal; font-size: 80%; color: #b5c8d4; letter-spacing: 0.2px; line-height: 10pt;
@@ -54,7 +58,8 @@ ui <- dashboardPage(skin = "green",
         
         ## Input: Search topic select
         selectInput("topic_select", "Select search topic:",
-                    c("Item ID" = "item_ID",
+                    c("All" = "all",
+                      "Item ID" = "item_ID",
                       "Original language" = "label",
                       "English" = "english",
                       "Description" = "description",
@@ -93,7 +98,18 @@ ui <- dashboardPage(skin = "green",
         
         ## Input: Download button for .XLSX
         h4("Download your selection as Excel file"),
-        downloadButton("downloadData_Excel", "Download Excel file")
+        downloadButton("downloadData_Excel", "Download Excel file"),
+        
+        br(), br(),
+        
+        ## Temp: confetti actionbuttons
+        h4("We now have more than 1000 items!"),
+        h5("Celebrate with us by throwing some confetti:"),
+        useConfetti(),
+        actionButton(
+          inputId = "confetti_start",
+          label =  "Throw confetti!"
+        )
         
       ), #closing left column  
 
@@ -122,7 +138,7 @@ ui <- dashboardPage(skin = "green",
             verbatimTextOutput(outputId = "item_contact", placeholder = FALSE),
 
             htmlOutput(outputId = "warningtext"),
-
+            
             ## Previous and next buttons
             fluidRow(
               column(width = 1, hidden(actionButton(inputId = "first", label = "<<<"))),
@@ -132,7 +148,10 @@ ui <- dashboardPage(skin = "green",
               column(width = 1, hidden(actionButton(inputId = "nextb", label = ">"))),
               column(width = 1, hidden(actionButton(inputId = "nextb_10", label = ">>"))),
               column(width = 1, hidden(actionButton(inputId = "last", label = ">>>")))
-            ) # closing fluidRow
+            ), # closing fluidRow
+            
+            ## Temp: celebrate_image
+            uiOutput("celebrate_1000")
       
       ), # closing right colum
     ), # closing tabItem()

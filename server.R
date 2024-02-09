@@ -1,9 +1,9 @@
 
-############################
-### ESIR Portal in Shiny ###
-### server version 1.1.9 ###
-### MP, YKK - 13/07/2023 ###
-###~*~*~*~*~*~*~*~*~*~*~*###
+#############################
+### ESIR Portal in Shiny  ###
+### server version 1.1.11 ###
+### MP, YKK - 07/02/2023  ###
+###~*~*~*~*~*~*~*~*~*~*~*~###
 
 
 ## SERVER ----
@@ -30,41 +30,69 @@ server <- function(input, output, session) {
   df[, "item_ID"] <- 1:nrow(df) #fill the item_ID column
 
   
-    ## Search, Show all, and Clear buttons----
-    ## Observe: go button click
+  ## Search, Show all, and Clear buttons----
+  ## Observe: go button click
     observeEvent(input$go, {
-      
-      search_input$match_no <- 1
-      search_input$search_text <- tolower(input$search_text)
-      
-      ## Add population columns
-      for(i in 1:nrow(df)){
-        df[i, "population"] <- paste(colnames(df[, c(15:19)])[which(df[i, c(15:19)] == "YES")], collapse = ", ")
-      }
-      
-      ## Search through item .csv to fetch items including user search input
-      if(any(grepl(search_input$search_text, as.character(df[, input$topic_select])) == TRUE)){
+        search_input$match_no <- 1
+        search_input$search_text <- tolower(input$search_text)
         
-        search_output$item_selection <- which(grepl(search_input$search_text, 
-                                                    as.character(df[, input$topic_select])) == TRUE)
+        ## Add population columns
+        for (i in 1:nrow(df)) {df[i, "population"] <- paste(colnames(df[, c(15:19)])[which(df[i, c(15:19)] == "YES")], collapse = ", ")}
         
+        ## Define columns to search when "All" is selected
+        all_columns <- c("item_ID", "label", "english", "description", "dataset", "beeps_per_day", "population", "citation", "existing_ref", "contact")
+        
+        ## Search through specified columns
+        if (input$topic_select == "all") {
+          # Search across specified columns
+          if (any(sapply(df[, all_columns], function(x)
+            any(
+              grepl(search_input$search_text, as.character(x))
+            )))) {
+            search_output$item_selection <-
+              which(apply(df[, all_columns], 1, function(x)
+                any(
+                  grepl(search_input$search_text, as.character(x))
+                )))
+            
             ## Multiple matches exception
-            if(length(search_output$item_selection) > 1){
-              
+            if (length(search_output$item_selection) > 1) {
               output$warningtext <- renderUI({
-                s1 <- paste("We found", length(search_output$item_selection),"matches")
-                s2 <- paste("Use the buttons below to navigate your matches")
-                HTML(paste(s1, s2, sep = '<br/>'))
+                  s1 <- paste("We found", length(search_output$item_selection), "matches")
+                  s2 <- paste("Use the buttons below to navigate your matches")
+                  HTML(paste(s1, s2, sep = '<br/>'))
               })
               
-            }else{
-              output$warningtext <- renderText({
-                paste("")
-              })
+            }else {
+              output$warningtext <- renderText({paste("")})
+             }
+            
+          }else {
+            search_output$item_selection <- NA
+            output$warningtext <- renderText({paste("")})
+           }
+        }else {
+          # Search in the selected column
+          if (any(grepl(search_input$search_text, as.character(df[, input$topic_select])) == TRUE)) {
+            search_output$item_selection <- which(grepl(search_input$search_text, as.character(df[, input$topic_select])) == TRUE)
+            
+            ## Multiple matches exception
+            if (length(search_output$item_selection) > 1) {
+                  output$warningtext <- renderUI({
+                    s1 <- paste("We found", length(search_output$item_selection), "matches")
+                    s2 <- paste("Use the buttons below to navigate your matches")
+                    HTML(paste(s1, s2, sep = '<br/>'))
+                  })
+              
+            } else {
+              output$warningtext <- renderText({paste("")})
             }
-        
-      }else{search_output$item_selection <- NA}
-    }) # closing observeEvent(input$go, ...)
+          } else {
+            search_output$item_selection <- NA
+            output$warningtext <- renderText({paste("")})
+          }
+        }
+  }) # closing observeEvent(input$go, ...)
   
   
   ## Observe: all button click
@@ -88,9 +116,7 @@ server <- function(input, output, session) {
       search_output$item_selection <- NA
       search_input$match_no <- 1
       
-      output$warningtext <- renderText({
-        paste("")
-      })
+      output$warningtext <- renderText({paste("")})
       
       shinyjs::disable("first")
       shinyjs::hide("first")
@@ -213,6 +239,19 @@ server <- function(input, output, session) {
   output$match_no <- renderText({
     search_input$match_no
   })
+  
+  
+  ## Temp: confetti logic
+  observeEvent(session, { # on session start
+    sendConfetti();Sys.sleep(0.5)
+    sendConfetti();Sys.sleep(0.5)
+    sendConfetti();Sys.sleep(0.5)
+  })
+  
+  observeEvent(input$confetti_start, { # on actionbutton
+    sendConfetti()
+    message("You have sent ", input$sentConfetti, " confetti")
+  })
 
 
   ## Download handlers----
@@ -247,5 +286,11 @@ output$flow <- renderUI({
     src_flow <- "http://ykkunkels.com/wp-content/uploads/2023/11/Contributors-Workflow-Phase-1_v2_small.jpg"
     div(id = "flow", tags$img(src = src_flow, width = "85%", height = "auto"))
   })
+
+## Temp: celebrate_image
+output$celebrate_1000 <- renderUI({
+  src_celeb <- "http://ykkunkels.com/wp-content/uploads/2024/02/celebrate_1000_v3.jpg"
+  div(id = "celebrate_1000", tags$img(src = src_celeb, width = "1025px", height = "250px"))
+})
   
 } # closing server

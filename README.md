@@ -1,6 +1,6 @@
 # Welcome to the ESM Item Repository Shiny app! 
 
-<sub><sup>1-12-2023 YKK + BK</sup></sub>
+<sub><sup>30-1-2024 YKK + BK</sup></sub>
 
 **What**
 
@@ -22,15 +22,21 @@ Key Objectives:
 
 *  Development Support: Support the conceptual development and rigorous evaluation of ESM items.  
 
+**Do you want to contribute to the item repository?**
 
-**How**
+If you want to contribute items to the ESM repository, all you have to do is to follow these steps:
+
+<img src="C:/Users/u0167110/Desktop/Shiny App/ESIR_portal/ESIR_portal/Contributors-Workflow-Phase-1_v2_small.jpg" alt="Repository Contributor's workflow">
+
+
+**How the app works**
 
 The data resides in a .csv file hosted on "osf.io" and is made accessible to users through this Shiny app, enabling the search functionality for ESM items.
 Developed in R, the app leverages packages such as shiny, shinydashboard, shinyjs, and xlsx. It is deployed via "shinyapps.io" for convenient accessibility.
 
 **Key Features**
 
-Current version: 1.1.8
+Current version: 1.1.9
 
 The items from the repository can be searched and selected by one the following attributes: 
 
