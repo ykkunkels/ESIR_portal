@@ -1,10 +1,10 @@
 
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.11              ###
-### MP, YKK - 07/12/2023           ###
+### UI version 1.1.12              ###
+### YKK - 01/03/2024               ###
 ### Changelog:                     ###
-###  > Added confetti              ###
+###  > Confetti simplification     ###
 ###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
@@ -15,8 +15,7 @@ if(!require('xlsx')){install.packages('xlsx', dep = TRUE)};library('xlsx')
 
 # Temp libraries
 if(!require('devtools')){install.packages('devtools', dep = TRUE)};library('devtools')
-devtools::install_github("ArthurData/confetti")
-library(confetti)
+devtools::install_github("ArthurData/confetti");library(confetti)
 
 # UI ----
 ui <- dashboardPage(skin = "green",

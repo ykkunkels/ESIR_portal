@@ -1,8 +1,8 @@
 
 #############################
 ### ESIR Portal in Shiny  ###
-### server version 1.1.11 ###
-### MP, YKK - 27/02/2024  ###
+### server version 1.1.12 ###
+### YKK - 01/03/2024      ###
 ###~*~*~*~*~*~*~*~*~*~*~*~###
 
 ## SERVER ----
@@ -241,15 +241,15 @@ server <- function(input, output, session) {
   
   
   ## Temp: confetti logic
-  observeEvent(session, { # on session start
-    sendConfetti();Sys.sleep(0.5)
-    sendConfetti();Sys.sleep(0.5)
-    sendConfetti();Sys.sleep(0.5)
-  })
+  # observeEvent(session, { # on session start
+  #   sendConfetti();Sys.sleep(0.5)
+  #   sendConfetti();Sys.sleep(0.5)
+  #   sendConfetti();Sys.sleep(0.5)
+  # })
   
   observeEvent(input$confetti_start, { # on actionbutton
     sendConfetti()
-    message("You have sent ", input$sentConfetti, " confetti")
+    # message("You have sent ", input$sentConfetti, " confetti")
   })
 
 
