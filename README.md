@@ -1,6 +1,6 @@
 # Welcome to the ESM Item Repository Shiny app! 
 
-<sub><sup>30-1-2024 YKK + BK</sup></sub>
+<sub><sup>02-07-2024 YKK + BK</sup></sub>
 
 **What**
 
@@ -36,9 +36,9 @@ Developed in R, the app leverages packages such as shiny, shinydashboard, shinyj
 
 **Key Features**
 
-Current version: 1.1.9
+Current version: 1.1.11
 
-The items from the repository can be searched and selected by one the following attributes: 
+Repository items can be searched and selected by any or all of the following attributes:
 
 *  Item ID  
 *  Wording in original language  

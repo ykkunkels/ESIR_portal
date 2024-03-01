@@ -1,8 +1,8 @@
 
 #############################
 ### ESIR Portal in Shiny  ###
-### server version 1.1.11 ###
-### MP, YKK - 07/02/2023  ###
+### server version 1.1.12 ###
+### YKK - 01/03/2024      ###
 ###~*~*~*~*~*~*~*~*~*~*~*~###
 
 
@@ -242,15 +242,15 @@ server <- function(input, output, session) {
   
   
   ## Temp: confetti logic
-  observeEvent(session, { # on session start
-    sendConfetti();Sys.sleep(0.5)
-    sendConfetti();Sys.sleep(0.5)
-    sendConfetti();Sys.sleep(0.5)
-  })
+  # observeEvent(session, { # on session start
+  #   sendConfetti();Sys.sleep(0.5)
+  #   sendConfetti();Sys.sleep(0.5)
+  #   sendConfetti();Sys.sleep(0.5)
+  # })
   
   observeEvent(input$confetti_start, { # on actionbutton
     sendConfetti()
-    message("You have sent ", input$sentConfetti, " confetti")
+    # message("You have sent ", input$sentConfetti, " confetti")
   })
 
 
@@ -279,7 +279,7 @@ server <- function(input, output, session) {
   ## Output: Images----
   output$logo <- renderUI({
     src_logo <- "http://ykkunkels.com/wp-content/uploads/2019/05/Repository_logo.png"
-    div(id = "logo", tags$img(src = src_logo, width = "100%", height = "auto"))
+    div(id = "logo", tags$img(src = src_logo, width = "auto", height = "auto"))
   })
   
 output$flow <- renderUI({
@@ -290,7 +290,7 @@ output$flow <- renderUI({
 ## Temp: celebrate_image
 output$celebrate_1000 <- renderUI({
   src_celeb <- "http://ykkunkels.com/wp-content/uploads/2024/02/celebrate_1000_v3.jpg"
-  div(id = "celebrate_1000", tags$img(src = src_celeb, width = "1025px", height = "250px"))
+  div(id = "celebrate_1000", tags$img(src = src_celeb, width = "auto", height = "auto"))
 })
   
 } # closing server
