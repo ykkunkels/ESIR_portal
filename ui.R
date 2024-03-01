@@ -1,10 +1,11 @@
 
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.13              ###
-### MP - 01/03/2024                ###
+### UI version 1.1.13a             ###
+### MP, YKK - 01/03/2024           ###
 ### Changelog:                     ###
 ###  > Fixed issue #16             ###
+###  > Removed button coloring     ###
 ###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
@@ -46,7 +47,7 @@ ui <- dashboardPage(skin = "green",
                    dashboardBody(
       
   tabItems(
-    # Home tab
+    ## Home tab
     tabItem(tabName = "home_tab",
          
     ## Left column - main panel----
@@ -80,31 +81,16 @@ ui <- dashboardPage(skin = "green",
         tags$script(
           HTML(
             "
-$(document).keypress(function(event) {
-  if (event.keyCode == 13) {
-    event.preventDefault(); // Prevent default behavior of Enter key
-    Shiny.setInputValue('go', 1, {priority: 'event'});
-  }
-});
-"
+            $(document).keypress(function(event) {
+              if (event.keyCode == 13) {
+                event.preventDefault(); // Prevent default behavior of Enter key
+                Shiny.setInputValue('go', 1, {priority: 'event'});
+              }
+            });
+            "
           )
         ),
 
-tags$style(
-  HTML(
-    "
-  #go {
-    background-color: #e0e0e0; /* Slightly darker shade of grey */
-    color: #444; /* Text color */
-    border-color: #c0c0c0; /* Border color */
-  }
-  #go:hover {
-    background-color: #c0c0c0; /* Darker shade of grey on hover */
-    border-color: #a0a0a0; /* Darker border color on hover */
-  }
-"
-  )
-), 
 
         ## Input: Action button
         actionButton(inputId= "go", label = "Search items"),
