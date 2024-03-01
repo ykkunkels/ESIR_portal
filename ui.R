@@ -1,10 +1,10 @@
 
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.11              ###
-### MP, YKK - 07/12/2023           ###
+### UI version 1.1.13              ###
+### MP - 01/03/2024                ###
 ### Changelog:                     ###
-###  > Added confetti              ###
+###  > Fixed issue #16             ###
 ###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
@@ -71,9 +71,42 @@ ui <- dashboardPage(skin = "green",
                       "Contact" = "contact")),
   
         ## Input: Search query
-        textAreaInput(inputId = "search_text",height = '40px', label = "Enter search term",  
-                      placeholder = "Enter search term here"),
+        textAreaInput(
+          inputId = "search_text",
+          height = '40px',
+          label = "Enter search term",
+          placeholder = "Enter search term here"
+        ),
         
+        tags$script(
+          HTML(
+            "
+$(document).keypress(function(event) {
+  if (event.keyCode == 13) {
+    event.preventDefault(); // Prevent default behavior of Enter key
+    Shiny.setInputValue('go', 1, {priority: 'event'});
+  }
+});
+"
+          )
+        ),
+
+tags$style(
+  HTML(
+    "
+  #go {
+    background-color: #e0e0e0; /* Slightly darker shade of grey */
+    color: #444; /* Text color */
+    border-color: #c0c0c0; /* Border color */
+  }
+  #go:hover {
+    background-color: #c0c0c0; /* Darker shade of grey on hover */
+    border-color: #a0a0a0; /* Darker border color on hover */
+  }
+"
+  )
+), 
+
         ## Input: Action button
         actionButton(inputId= "go", label = "Search items"),
         

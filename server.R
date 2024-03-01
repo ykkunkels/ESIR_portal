@@ -1,10 +1,11 @@
 
-#############################
-### ESIR Portal in Shiny  ###
-### server version 1.1.11 ###
-### MP, YKK - 07/02/2023  ###
-###~*~*~*~*~*~*~*~*~*~*~*~###
-
+######################################
+### ESIR Portal in Shiny           ###
+### UI version 1.1.13              ###
+### MP - 01/03/2024                ###
+### Changelog:                     ###
+###  > Fixed issue #16             ###
+###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
 
 ## SERVER ----
 server <- function(input, output, session) {
