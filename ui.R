@@ -15,8 +15,7 @@ if(!require('xlsx')){install.packages('xlsx', dep = TRUE)};library('xlsx')
 
 # Temp libraries
 if(!require('devtools')){install.packages('devtools', dep = TRUE)};library('devtools')
-devtools::install_github("ArthurData/confetti")
-library(confetti)
+devtools::install_github("ArthurData/confetti");library(confetti)
 
 # UI ----
 ui <- dashboardPage(skin = "green",
