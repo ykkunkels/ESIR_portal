@@ -36,9 +36,9 @@ Developed in R, the app leverages packages such as shiny, shinydashboard, shinyj
 
 **Key Features**
 
-Current version: 1.1.9
+Current version: 1.1.10
 
-The items from the repository can be searched and selected by one the following attributes: 
+The items from the repository can be searched and selected by one or all of the following attributes: 
 
 *  Item ID  
 *  Wording in original language  
