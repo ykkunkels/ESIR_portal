@@ -1,10 +1,11 @@
 
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.11              ###
-### MP, YKK - 07/12/2023           ###
+### UI version 1.1.13a             ###
+### MP, YKK - 01/03/2024           ###
 ### Changelog:                     ###
-###  > Added confetti              ###
+###  > Fixed issue #16             ###
+###  > Removed button coloring     ###
 ###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
@@ -15,8 +16,7 @@ if(!require('xlsx')){install.packages('xlsx', dep = TRUE)};library('xlsx')
 
 # Temp libraries
 if(!require('devtools')){install.packages('devtools', dep = TRUE)};library('devtools')
-devtools::install_github("ArthurData/confetti")
-library(confetti)
+devtools::install_github("ArthurData/confetti");library(confetti)
 
 # UI ----
 ui <- dashboardPage(skin = "green",
@@ -47,7 +47,7 @@ ui <- dashboardPage(skin = "green",
                    dashboardBody(
       
   tabItems(
-    # Home tab
+    ## Home tab
     tabItem(tabName = "home_tab",
          
     ## Left column - main panel----
@@ -71,9 +71,27 @@ ui <- dashboardPage(skin = "green",
                       "Contact" = "contact")),
   
         ## Input: Search query
-        textAreaInput(inputId = "search_text",height = '40px', label = "Enter search term",  
-                      placeholder = "Enter search term here"),
+        textAreaInput(
+          inputId = "search_text",
+          height = '40px',
+          label = "Enter search term",
+          placeholder = "Enter search term here"
+        ),
         
+        tags$script(
+          HTML(
+            "
+            $(document).keypress(function(event) {
+              if (event.keyCode == 13) {
+                event.preventDefault(); // Prevent default behavior of Enter key
+                Shiny.setInputValue('go', 1, {priority: 'event'});
+              }
+            });
+            "
+          )
+        ),
+
+
         ## Input: Action button
         actionButton(inputId= "go", label = "Search items"),
         
