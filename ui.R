@@ -2,9 +2,13 @@
 ######################################
 ### ESIR Portal in Shiny           ###
 ### UI version 1.1.12              ###
-### YKK - 01/03/2024               ###
+### BK - 12/03/2024                ###
 ### Changelog:                     ###
-###  > Confetti simplification     ###
+###  > Installing confetti         ###
+###  package only if required      ###
+###  > Setting dynamic size of     ###
+###  textboxes                     ###
+###  > Adding Flexbox containers   ###
 ###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
@@ -15,7 +19,7 @@ if(!require('xlsx')){install.packages('xlsx', dep = TRUE)};library('xlsx')
 
 # Temp libraries
 if(!require('devtools')){install.packages('devtools', dep = TRUE)};library('devtools')
-devtools::install_github("ArthurData/confetti");library(confetti)
+if(!require('confetti')){devtools::install_github("ArthurData/confetti")};library(confetti)
 
 # UI ----
 ui <- dashboardPage(skin = "green",
@@ -44,6 +48,25 @@ ui <- dashboardPage(skin = "green",
   
                    ## Body ----
                    dashboardBody(
+                     
+                     tags$style(HTML("
+                       .panel-container {
+                           display: grid;
+                           grid-template-rows: auto;
+                           height: 100%; /* Ensure the container takes up full height */
+                       }
+                     
+                       .panel {
+                           /* No specific styling needed for panels */
+                       }
+                       .column-class4, .column-class8 {
+                   background-color: #ecf0f5; /* Set your desired color for columns*/
+                       }
+                       
+                      #home_tab_content {
+                   background-color: #ecf0f5; /* Set your desired color for home_tab*/
+               }
+           ")),
       
   tabItems(
     # Home tab
@@ -55,7 +78,12 @@ ui <- dashboardPage(skin = "green",
         ## Use: shinyjs
         useShinyjs(),
         
+        ## Flexbox container for dynamic position of objects
+        div(
+          style = "display: flex; flex-direction: column;",
+        
         ## Input: Search topic select
+        tags$div(style = "width: 100%;", 
         selectInput("topic_select", "Select search topic:",
                     c("All" = "all",
                       "Item ID" = "item_ID",
@@ -68,10 +96,12 @@ ui <- dashboardPage(skin = "green",
                       "Citation" = "citation",
                       "Existing reference" = "existing_ref",
                       "Contact" = "contact")),
+        ),
   
         ## Input: Search query
-        textAreaInput(inputId = "search_text",height = '40px', label = "Enter search term",  
-                      placeholder = "Enter search term here"),
+        tags$div(style = "width: 100%;", 
+        textAreaInput(inputId = "search_text",height = 'auto', label = "Enter search term",  
+                      placeholder = "Enter search term here")),
         
         ## Input: Action button
         actionButton(inputId= "go", label = "Search items"),
@@ -82,18 +112,17 @@ ui <- dashboardPage(skin = "green",
         ## Input: Reset button
         actionButton(inputId= "reset", label = "Clear"),
         
-        br(),
         h5("To download the complete dataset from the portal,", 
            style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"),
         h5("press the 'Show all items' button and then press 'Download'.", 
            style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"),
-        br(), br(),
+        
+        br(),br(),
         
         ## Input: Download button for .CSV
         h4("Download your selection as .csv file"),
         downloadButton("downloadData", "Download .CSV file"),
         
-        br(), br(),
         
         ## Input: Download button for .XLSX
         h4("Download your selection as Excel file"),
@@ -110,19 +139,25 @@ ui <- dashboardPage(skin = "green",
           label =  "Throw confetti!"
         )
         
+        ) #closing Flexbox container for left column
+        
       ), #closing left column  
 
       
       ## Right column - Main panel----
-      column(8, 
+      column(8,
+             
+            ## Flexbox container for dynamic position of objects
+             div(
+               style = "display: flex; flex-direction: column;",
              
             ## Add Style tags
-            tags$head(tags$style("#item_show{min-height: 40px; max-height: 40px; overflow-y:scroll; white-space: pre-wrap;}")), 
-            tags$head(tags$style("#item_english{min-height: 40px; max-height: 40px; overflow-y:scroll; white-space: pre-wrap;}")), 
-            tags$head(tags$style("#item_description{min-height: 40px; max-height: 40px; overflow-y:scroll; white-space: pre-wrap;}")), 
-            tags$head(tags$style("#item_citation{min-height: 60px; max-height: 60px; overflow-y:scroll; white-space: pre-wrap;}")), 
-            tags$head(tags$style("#existing_ref{min-height: 60px; max-height: 60px; overflow-y:scroll; white-space: pre-wrap;}")), 
-            tags$head(tags$style("#item_contact{min-height: 40px; max-height: 40px; overflow-y:scroll; white-space: pre-wrap;}")), 
+            tags$head(tags$style("#item_show{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")), 
+            tags$head(tags$style("#item_english{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")), 
+            tags$head(tags$style("#item_description{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")), 
+            tags$head(tags$style("#item_citation{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")), 
+            tags$head(tags$style("#existing_ref{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")), 
+            tags$head(tags$style("#item_contact{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")), 
         
             ## Output: Text----
             verbatimTextOutput(outputId = "item_selection", placeholder = FALSE),
@@ -152,6 +187,7 @@ ui <- dashboardPage(skin = "green",
             ## Temp: celebrate_image
             uiOutput("celebrate_1000")
       
+             ) #closing Flexbox container
       ), # closing right colum
     ), # closing tabItem()
     
