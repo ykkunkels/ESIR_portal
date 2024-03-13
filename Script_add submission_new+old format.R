@@ -1,0 +1,140 @@
+#######################################################
+## ADD NEW SUBMISSIONS - CHECKS AND REVERTING FORMAT ##
+#######################################################
+
+rm(list=ls()) #remove all past objects
+
+#### READ IN THE SUBMISSION ####
+library(xlsx)
+library(naniar)
+
+filename = "submission_example_old_2024-03-12" #overwrite the filename of the submission
+# should be of the format submission__(name dataset or other identifier)_(YYYY-MM-DD: date it is saved here)
+# example: submission_example_2023-05-09
+df = read.xlsx(file = paste0("./Submission templates/", filename, ".xlsx"), header = F, 1)
+
+#### SOME CHECKS AND FIXES ####
+
+# Missing values (has to be done first to make sure that problems with this do not influence the rest of the checks)
+na_strings <- c("NA", "N A", "N / A", "N/A", "N/ A","", "n.a.", "N.A", "n/a", "n.a.", "n. a.", "n. a. " , " ")
+df = df %>% replace_with_na_all(condition = ~.x %in% na_strings)
+df = as.data.frame(df) #otherwise it becomes a tibble, gives problems with matching the header later
+df = df[rowSums(is.na(df)) != ncol(df), ] #removes all lines which are completely empty
+
+df[is.na(df)] = "" #change NA to empty cells => if opened in excel, missing values are empty instead of "NA" character value
+sum(is.na(df)) #check, should be zero
+
+# Does the file have the correct dimensions?
+dim(df)[1]-6 #number of new items to be added
+if(dim(df)[2] == 40){
+  new = F
+  print("This submission file is according to the old template (without the extra columns and extra line).")
+}else if(dim(df)[2] == 43){
+  new = T
+  print("This submission file is according to the new template (with the extra columns and extra line).")
+}else{
+  new = NA
+  print("This submission file does not have the right number of columns according the old nor new template.")
+}
+
+# Does the file have the correct columns in the correct order?
+if(new == F){
+  header = read.xlsx("header_old.xlsx", header = F, 1)
+  header[is.na(header)] = ""
+  if(identical(header[1:3,],df[1:3,])){
+    print("Header and example lines removed, colnames assigned.")
+    df = df[-c(1:(max(which(grepl("Example", df[,1])))-2)),]
+    colnames = read.xlsx("header_old.xlsx", header = F, 2) 
+    colnames(df) = colnames
+  }else{
+    print("Header of submission does not match!")
+  }
+}else if(new == T){
+  header = read.xlsx("header_new.xlsx", header = F, 1)
+  header[is.na(header)] = ""
+  if(isTRUE(all.equal(header[1:3,],df[1:3,], tolerance = 1.0))){
+    print("Header and example lines removed, colnames assigned.")
+    df = df[-c(1:(max(which(grepl("Example", df[,1])))-2)),] # the -2 is to check with the example rows, these should be deleted
+    colnames = read.xlsx("header_new.xlsx", header = F, 2) 
+    colnames(df) = colnames
+  }else{
+    print("Header of submission does not match!")
+  }
+}
+
+# Are there line breaks present?
+linebreaks = grepl("\n", df) 
+(linebreaks = df[grepl("\n", df[,2]),]) #should be an empty object
+
+# Standardise the values for the populations
+pop_cols = which(colnames(df) %in% c("children", "adolescents", "adults", "elderly", "gen_pop", "outpatient", "inpatient"))
+df[,pop_cols] = lapply(df[,pop_cols], tolower) #all values to lowercase
+lapply(df[,pop_cols], table) #to make sure that the values contain "yes" and "no", otherwise additional changes necessary
+
+for(i in pop_cols){ #to standardize in case the values contain spaces etc 
+  df[,i] = ifelse(grepl("yes" ,df[,i],), "yes",
+                  ifelse(grepl("no" ,df[,i],), "no", ""))
+}
+lapply(df[,pop_cols], table)
+
+# Lowercase the dataset names so they are retrievable through the search portal
+df$dataset = tolower(df$dataset)
+table(df$dataset)
+
+# Non-Latin characters (if present)
+# non_latin = c(2:5,7) #write down the row numbers of the lines with non-Latin characters
+# non_latin_lines = df[non_latin,] #optional: select the columns where the non-Latin characters are
+# 
+# View(non_latin_lines) #check what the characters look like
+# non_latin_lines #check what the characters look like
+
+#### REVERT NEW FORMAT TO OLD FORMAT ####
+if(new == T){
+  df[df == ""] = NA
+  #### CONVERT RESPONSE SCALE VARIABLES: FROM 4 TO 2 COLUMNS ####
+  
+  #check that information is given in only one column, as there should only be one response scale
+  response_check = as.data.frame(matrix(c(1:nrow(df),rep(NA,nrow(df))), nrow = nrow(df), ncol = 2))
+  resp_cols = which(grepl("response_scale", colnames(df)))
+  for(i in 1:nrow(df)){
+    response_check$V2[i] = sum(is.na(df[i, resp_cols])) #there should be 3 missings (only 1 column should contain a value)
+  }
+  problem = df[response_check$V1[response_check$V2 != 3], resp_cols] #dataset with cases that do not contain 3 missings!
+  #possible problems: value not coded as missing but means missing => add in line 19
+  #                   information in different cells => change in original excel and then repeat from start
+  
+  ### IMPORTANT
+  nrow(problem) == 0 #must be TRUE before continuing
+  
+  #add name of the column to the value (as string) for all except VAS
+  disc_col = which(grepl("_discrete" ,colnames(df)))
+  df[,disc_col] = ifelse(is.na(df[,disc_col]),NA, paste0(df[,disc_col], " (discrete)"))
+  cont_col = which(grepl("_cont" ,colnames(df)))
+  df[,cont_col] = ifelse(is.na(df[,cont_col]),NA, paste0(df[,cont_col], " (continuous)"))
+  cont_cat = which(grepl("_cat" ,colnames(df)))
+  df[,cont_cat] = ifelse(is.na(df[,cont_cat]),NA, paste0(df[,cont_cat], " (categorical)"))
+  
+  #merge these into the first column
+  df[,disc_col] = ifelse(!is.na(df[,disc_col]), df[,disc_col],
+                         ifelse(!is.na(df[,cont_col]), df[,cont_col],
+                                ifelse(!is.na(df[,cont_cat]), df[,cont_cat], NA)))
+  #delete the extra 2 columns
+  df = df[,-c(cont_col,cont_cat)]
+  
+  
+  #### ADD INFORMATION FROM "REMARKS ABOUT POPULATION" TO "OTHER REMARKS" AND REMOVE
+  pop_remarks_col = which(grepl("pop_remarks" ,colnames(df))) 
+  df[,pop_remarks_col] = ifelse(is.na(df[,pop_remarks_col]),NA, paste0("Remarks about the population: " ,df[,pop_remarks_col]))
+  
+  all_remarks_col = which(grepl("item_other" ,colnames(df))) 
+  df[,all_remarks_col] = ifelse(is.na(df[,all_remarks_col]) & is.na(df[,pop_remarks_col]), NA, #if no remarks about population & no other remarks => NA
+                   ifelse(is.na(df[,all_remarks_col]), df[,pop_remarks_col], #if remarks about pop & no other remarks => remarks about pop
+                          ifelse(is.na(df[,pop_remarks_col]), df[,all_remarks_col], #if no remarks about pop & other remarks => other remarks
+                                 paste0(df[,all_remarks_col], ". ", df[,pop_remarks_col])))) #if remarks about pop & other => concatenate strings
+  df = df[,-pop_remarks_col]
+  
+}
+
+#### SAVE FILE AS CSV ####
+write.csv(df, paste0("./Submission templates/", filename, "_processed.csv"), row.names = F, na = "")
+#missings are saved as empty cells, in case the csv is opened in excel it is not crowded by NA-values
