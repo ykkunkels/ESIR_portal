@@ -69,7 +69,7 @@ ui <- dashboardPage(skin = "green",
            ")),
       
   tabItems(
-    # Home tab
+    ## Home tab
     tabItem(tabName = "home_tab",
          
     ## Left column - main panel----
@@ -102,7 +102,22 @@ ui <- dashboardPage(skin = "green",
         tags$div(style = "width: 100%;", 
         textAreaInput(inputId = "search_text",height = 'auto', label = "Enter search term",  
                       placeholder = "Enter search term here")),
+
         
+        tags$script(
+          HTML(
+            "
+            $(document).keypress(function(event) {
+              if (event.keyCode == 13) {
+                event.preventDefault(); // Prevent default behavior of Enter key
+                Shiny.setInputValue('go', 1, {priority: 'event'});
+              }
+            });
+            "
+          )
+        ),
+
+
         ## Input: Action button
         actionButton(inputId= "go", label = "Search items"),
         
