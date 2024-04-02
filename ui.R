@@ -1,112 +1,146 @@
-
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.12              ###
-### BK - 12/03/2024                ###
+### UI version 1.1.14              ###
+### BK + MP - 02/04/2024           ###
 ### Changelog:                     ###
 ###  > Installing confetti         ###
 ###  package only if required      ###
 ###  > Setting dynamic size of     ###
 ###  textboxes                     ###
 ###  > Adding Flexbox containers   ###
-###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
+###  > Code styled with styler     ###
+### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 ## Load and / or Install required packages----
-if(!require('shiny')){install.packages('shiny', dep = TRUE)};library('shiny')
-if(!require('shinydashboard')){install.packages('shinydashboard', dep = TRUE)};library('shinydashboard')
-if(!require('shinyjs')){install.packages('shinyjs', dep = TRUE)};library('shinyjs')
-if(!require('xlsx')){install.packages('xlsx', dep = TRUE)};library('xlsx')
+if (!require("shiny")) {
+  install.packages("shiny", dep = TRUE)
+}
+library("shiny")
+if (!require("shinydashboard")) {
+  install.packages("shinydashboard", dep = TRUE)
+}
+library("shinydashboard")
+if (!require("shinyjs")) {
+  install.packages("shinyjs", dep = TRUE)
+}
+library("shinyjs")
+if (!require("xlsx")) {
+  install.packages("xlsx", dep = TRUE)
+}
+library("xlsx")
+if (!require("styler")) {
+  install.packages("styler", dep = TRUE)
+}
+library("styler")
 
 # Temp libraries
-if(!require('devtools')){install.packages('devtools', dep = TRUE)};library('devtools')
-if(!require('confetti')){devtools::install_github("ArthurData/confetti")};library(confetti)
+if (!require("devtools")) {
+  install.packages("devtools", dep = TRUE)
+}
+library("devtools")
+if (!require("confetti")) {
+  devtools::install_github("ArthurData/confetti")
+}
+library(confetti)
+
+## Check code style ----
+styler::style_dir()
 
 # UI ----
-ui <- dashboardPage(skin = "green",
-                    
-                    ## Header ----
-                    dashboardHeader(title = "ESM Item Repository", titleWidth = 300),
-                    
-                    dashboardSidebar(width = 300,
-                      sidebarMenu(menuItem("Menu"),
-                                  menuItem("Home", tabName = "home_tab", icon = icon("file-text")),
-                                  menuItem("Welcome", tabName = "welcome_tab", icon = icon("door-open")),
-                                  menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
-                                  menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
-                                  uiOutput("logo"),
-                                  h5("[version 1.1.10] We do not take responsibility for the", br(), 
-                                     "quality of items within the repository. Inclusion of", br(), 
-                                     "items within the repository does not indicate", br(), 
-                                     "our endorsement of them. All items within the", br(), 
-                                     "repository are subject to a Creative Commons", br(), 
-                                     "Attribution Non-Commerical License (CC BY-NC).",
-                                     style = "font-style: normal; font-size: 80%; color: #b5c8d4; letter-spacing: 0.2px; line-height: 10pt;
-                                    position: relative; left: 18px;")
-                                  
-                      ) # closing sidebarMenu
-                    ), # closing dashboardSidebar
-  
-                   ## Body ----
-                   dashboardBody(
-                     
-                     tags$style(HTML("
+ui <- dashboardPage(
+  skin = "green",
+
+  ## Header ----
+  dashboardHeader(title = "ESM Item Repository", titleWidth = 300),
+  dashboardSidebar(
+    width = 300,
+    sidebarMenu(
+      menuItem("Menu"),
+      menuItem("Home", tabName = "home_tab", icon = icon("file-text")),
+      menuItem("Welcome", tabName = "welcome_tab", icon = icon("door-open")),
+      menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
+      menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
+      uiOutput("logo"),
+      h5("[version 1.1.10] We do not take responsibility for the", br(),
+        "quality of items within the repository. Inclusion of", br(),
+        "items within the repository does not indicate", br(),
+        "our endorsement of them. All items within the", br(),
+        "repository are subject to a Creative Commons", br(),
+        "Attribution Non-Commerical License (CC BY-NC).",
+        style = "font-style: normal; font-size: 80%; color: #b5c8d4; letter-spacing: 0.2px; line-height: 10pt;
+                                    position: relative; left: 18px;"
+      )
+    ) # closing sidebarMenu
+  ), # closing dashboardSidebar
+
+  ## Body ----
+  dashboardBody(
+    tags$style(HTML("
                        .panel-container {
                            display: grid;
                            grid-template-rows: auto;
                            height: 100%; /* Ensure the container takes up full height */
                        }
-                     
+
                        .panel {
                            /* No specific styling needed for panels */
                        }
                        .column-class4, .column-class8 {
                    background-color: #ecf0f5; /* Set your desired color for columns*/
                        }
-                       
+
                       #home_tab_content {
                    background-color: #ecf0f5; /* Set your desired color for home_tab*/
                }
            ")),
-      
-  tabItems(
-    ## Home tab
-    tabItem(tabName = "home_tab",
-         
-    ## Left column - main panel----
-    column(4,   
-           
-        ## Use: shinyjs
-        useShinyjs(),
-        
-        ## Flexbox container for dynamic position of objects
-        div(
-          style = "display: flex; flex-direction: column;",
-        
-        ## Input: Search topic select
-        tags$div(style = "width: 100%;", 
-        selectInput("topic_select", "Select search topic:",
-                    c("All" = "all",
-                      "Item ID" = "item_ID",
-                      "Original language" = "label",
-                      "English" = "english",
-                      "Description" = "description",
-                      "Dataset" = "dataset",
-                      "Beeps per day" = "beeps_per_day",
-                      "Population" = "population",
-                      "Citation" = "citation",
-                      "Existing reference" = "existing_ref",
-                      "Contact" = "contact")),
-        ),
-  
-        ## Input: Search query
-        tags$div(style = "width: 100%;", 
-        textAreaInput(inputId = "search_text",height = 'auto', label = "Enter search term",  
-                      placeholder = "Enter search term here")),
+    tabItems(
+      ## Home tab
+      tabItem(
+        tabName = "home_tab",
 
-        
-        tags$script(
-          HTML(
-            "
+        ## Left column - main panel----
+        column(
+          4,
+
+          ## Use: shinyjs
+          useShinyjs(),
+
+          ## Flexbox container for dynamic position of objects
+          div(
+            style = "display: flex; flex-direction: column;",
+
+            ## Input: Search topic select
+            tags$div(
+              style = "width: 100%;",
+              selectInput(
+                "topic_select", "Select search topic:",
+                c(
+                  "All" = "all",
+                  "Item ID" = "item_ID",
+                  "Original language" = "label",
+                  "English" = "english",
+                  "Description" = "description",
+                  "Dataset" = "dataset",
+                  "Beeps per day" = "beeps_per_day",
+                  "Population" = "population",
+                  "Citation" = "citation",
+                  "Existing reference" = "existing_ref",
+                  "Contact" = "contact"
+                )
+              ),
+            ),
+
+            ## Input: Search query
+            tags$div(
+              style = "width: 100%;",
+              textAreaInput(
+                inputId = "search_text", height = "auto", label = "Enter search term",
+                placeholder = "Enter search term here"
+              )
+            ),
+            tags$script(
+              HTML(
+                "
             $(document).keypress(function(event) {
               if (event.keyCode == 13) {
                 event.preventDefault(); // Prevent default behavior of Enter key
@@ -114,66 +148,64 @@ ui <- dashboardPage(skin = "green",
               }
             });
             "
-          )
-        ),
+              )
+            ),
 
 
-        ## Input: Action button
-        actionButton(inputId= "go", label = "Search items"),
-        
-        ## Input: All button
-        actionButton(inputId= "all", label = "Show all items"),
-        
-        ## Input: Reset button
-        actionButton(inputId= "reset", label = "Clear"),
-        
-        h5("To download the complete dataset from the portal,", 
-           style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"),
-        h5("press the 'Show all items' button and then press 'Download'.", 
-           style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"),
-        
-        br(),br(),
-        
-        ## Input: Download button for .CSV
-        h4("Download your selection as .csv file"),
-        downloadButton("downloadData", "Download .CSV file"),
-        
-        
-        ## Input: Download button for .XLSX
-        h4("Download your selection as Excel file"),
-        downloadButton("downloadData_Excel", "Download Excel file"),
-        
-        br(), br(),
-        
-        ## Temp: confetti actionbuttons
-        h4("We now have more than 1000 items!"),
-        h5("Celebrate with us by throwing some confetti:"),
-        useConfetti(),
-        actionButton(
-          inputId = "confetti_start",
-          label =  "Throw confetti!"
-        )
-        
-        ) #closing Flexbox container for left column
-        
-      ), #closing left column  
+            ## Input: Action button
+            actionButton(inputId = "go", label = "Search items"),
 
-      
-      ## Right column - Main panel----
-      column(8,
-             
-            ## Flexbox container for dynamic position of objects
-             div(
-               style = "display: flex; flex-direction: column;",
-             
+            ## Input: All button
+            actionButton(inputId = "all", label = "Show all items"),
+
+            ## Input: Reset button
+            actionButton(inputId = "reset", label = "Clear"),
+            h5("To download the complete dataset from the portal,",
+              style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"
+            ),
+            h5("press the 'Show all items' button and then press 'Download'.",
+              style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"
+            ),
+            br(), br(),
+
+            ## Input: Download button for .CSV
+            h4("Download your selection as .csv file"),
+            downloadButton("downloadData", "Download .CSV file"),
+
+
+            ## Input: Download button for .XLSX
+            h4("Download your selection as Excel file"),
+            downloadButton("downloadData_Excel", "Download Excel file"),
+            br(), br(),
+
+            ## Temp: confetti actionbuttons
+            h4("We now have more than 1000 items!"),
+            h5("Celebrate with us by throwing some confetti:"),
+            useConfetti(),
+            actionButton(
+              inputId = "confetti_start",
+              label =  "Throw confetti!"
+            )
+          ) # closing Flexbox container for left column
+        ), # closing left column
+
+
+        ## Right column - Main panel----
+        column(
+          8,
+
+          ## Flexbox container for dynamic position of objects
+          div(
+            style = "display: flex; flex-direction: column;",
+
             ## Add Style tags
-            tags$head(tags$style("#item_show{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")), 
-            tags$head(tags$style("#item_english{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")), 
-            tags$head(tags$style("#item_description{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")), 
-            tags$head(tags$style("#item_citation{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")), 
-            tags$head(tags$style("#existing_ref{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")), 
-            tags$head(tags$style("#item_contact{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")), 
-        
+            tags$head(tags$style("#item_show{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
+            tags$head(tags$style("#item_english{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
+            tags$head(tags$style("#item_description{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
+            tags$head(tags$style("#item_citation{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
+            tags$head(tags$style("#existing_ref{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
+            tags$head(tags$style("#item_contact{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
+
             ## Output: Text----
             verbatimTextOutput(outputId = "item_selection", placeholder = FALSE),
             verbatimTextOutput(outputId = "item_show", placeholder = FALSE),
@@ -185,9 +217,8 @@ ui <- dashboardPage(skin = "green",
             verbatimTextOutput(outputId = "item_citation", placeholder = FALSE),
             verbatimTextOutput(outputId = "existing_ref", placeholder = FALSE),
             verbatimTextOutput(outputId = "item_contact", placeholder = FALSE),
-
             htmlOutput(outputId = "warningtext"),
-            
+
             ## Previous and next buttons
             fluidRow(
               column(width = 1, hidden(actionButton(inputId = "first", label = "<<<"))),
@@ -198,42 +229,40 @@ ui <- dashboardPage(skin = "green",
               column(width = 1, hidden(actionButton(inputId = "nextb_10", label = ">>"))),
               column(width = 1, hidden(actionButton(inputId = "last", label = ">>>")))
             ), # closing fluidRow
-            
+
             ## Temp: celebrate_image
             uiOutput("celebrate_1000")
-      
-             ) #closing Flexbox container
-      ), # closing right colum
-    ), # closing tabItem()
-    
-    # Welcome tab content----
-    tabItem(tabName = "welcome_tab",
-            
-            h2("Welcome to the ESM Item Repository!"),
-            h4("We are Olivia Kirtley (KU Leuven),", a("Yoram K. Kunkels", href = "http://www.ykkunkels.com/", target = "_blank"), "(Centraal Bureau voor de Statistiek), Gudrun Eisele (KU Leuven), Steffie Schoefs (KU Leuven), Nian Kemme (KU Leuven), Tessa Biesemans (KU Leuven), Laura Van Heck (KU Leuven), Milla Pihlajamäki (KU Leuven), Benjamin Kunc (KU Leuven), and Inez Myin-Germeys (KU Leuven). We aim to support the further development of Experience Sampling Methodology (ESM) research with an open repository of existing ESM items", a("(https://osf.io/kg376/)", href = "https://osf.io/kg376/", target = "_blank"), ".", 
-                style = "font-style: normal; letter-spacing: 1px; line-height: 125%;"),
-            h4("To achieve this, we need your help in collecting as many items as possible! Please submit completed documents to: tessa.biesemans@kuleuven.be", 
-               style = "font-style: normal; letter-spacing: 1px; line-height: 125%;"),
-            
-            uiOutput("flow"),
-            
-            ), # closing tabItem()
-    
+          ) # closing Flexbox container
+        ), # closing right colum
+      ), # closing tabItem()
 
-    # Acknowledgements tab content----
-    tabItem(tabName = "acknowledgements_tab",
-            
-            h2("Acknowledgements and citation help"),
-            br(),
-            h4("When insights and content from the repository are used, the repository should be cited as: Kirtley, O. J., Hiekkaranta, A. P., Kunkels, Y. K., Verhoeven, D., Van Nierop, M., & Myin-Germeys, I. (2019, April 2). The Experience Sampling Method (ESM) Item Repository. Retrieved from osf.io/kg376, DOI 10.17605/OSF.IO/KG376.", 
-               style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"),
-            br(), br(),
-            h4("Funding acknowledgements: Olivia Kirtley and Anu Hiekkaranta’s work on the project is supported by postdoctoral and PhD fellowships, respectively, from an FWO Odysseus grant to Inez Myin-Germeys (FWO GOF8416N). Yoram Kunkels’ work on this project is supported by the European Research Council (ERC-CoG-2015; TRANS-ID; No 681466 to Marieke Wichers).", 
-               style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"),
-            
-    ) # closing tabItem()
-  ), # closing tabItems()
-     
-    ) # closing dashboardBody
-  ) # closing dashboardPage
+      # Welcome tab content----
+      tabItem(
+        tabName = "welcome_tab",
+        h2("Welcome to the ESM Item Repository!"),
+        h4("We are Olivia Kirtley (KU Leuven),", a("Yoram K. Kunkels", href = "http://www.ykkunkels.com/", target = "_blank"), "(Centraal Bureau voor de Statistiek), Gudrun Eisele (KU Leuven), Steffie Schoefs (KU Leuven), Nian Kemme (KU Leuven), Tessa Biesemans (KU Leuven), Laura Van Heck (KU Leuven), Milla Pihlajamäki (KU Leuven), Benjamin Kunc (KU Leuven), and Inez Myin-Germeys (KU Leuven). We aim to support the further development of Experience Sampling Methodology (ESM) research with an open repository of existing ESM items", a("(https://osf.io/kg376/)", href = "https://osf.io/kg376/", target = "_blank"), ".",
+          style = "font-style: normal; letter-spacing: 1px; line-height: 125%;"
+        ),
+        h4("To achieve this, we need your help in collecting as many items as possible! Please submit completed documents to: tessa.biesemans@kuleuven.be",
+          style = "font-style: normal; letter-spacing: 1px; line-height: 125%;"
+        ),
+        uiOutput("flow"),
+      ), # closing tabItem()
 
+
+      # Acknowledgements tab content----
+      tabItem(
+        tabName = "acknowledgements_tab",
+        h2("Acknowledgements and citation help"),
+        br(),
+        h4("When insights and content from the repository are used, the repository should be cited as: Kirtley, O. J., Hiekkaranta, A. P., Kunkels, Y. K., Verhoeven, D., Van Nierop, M., & Myin-Germeys, I. (2019, April 2). The Experience Sampling Method (ESM) Item Repository. Retrieved from osf.io/kg376, DOI 10.17605/OSF.IO/KG376.",
+          style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"
+        ),
+        br(), br(),
+        h4("Funding acknowledgements: Olivia Kirtley and Anu Hiekkaranta’s work on the project is supported by postdoctoral and PhD fellowships, respectively, from an FWO Odysseus grant to Inez Myin-Germeys (FWO GOF8416N). Yoram Kunkels’ work on this project is supported by the European Research Council (ERC-CoG-2015; TRANS-ID; No 681466 to Marieke Wichers).",
+          style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"
+        ),
+      ) # closing tabItem()
+    ), # closing tabItems()
+  ) # closing dashboardBody
+) # closing dashboardPage
