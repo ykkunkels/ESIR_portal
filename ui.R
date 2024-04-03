@@ -2,13 +2,10 @@
 ######################################
 ### ESIR Portal in Shiny           ###
 ### UI version 1.1.12              ###
-### BK - 12/03/2024                ###
+### BK - 03/04/2024                ###
 ### Changelog:                     ###
-###  > Installing confetti         ###
-###  package only if required      ###
-###  > Setting dynamic size of     ###
-###  textboxes                     ###
-###  > Adding Flexbox containers   ###
+###  > Removing fixed spaces (br)  ###
+### from the main panel of home tab###
 ###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
@@ -34,7 +31,7 @@ ui <- dashboardPage(skin = "green",
                                   menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
                                   menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                   uiOutput("logo"),
-                                  h5("[version 1.1.10] We do not take responsibility for the", br(), 
+                                  h5("[version 1.1.12] We do not take responsibility for the", br(), 
                                      "quality of items within the repository. Inclusion of", br(), 
                                      "items within the repository does not indicate", br(), 
                                      "our endorsement of them. All items within the", br(), 
@@ -132,7 +129,7 @@ ui <- dashboardPage(skin = "green",
         h5("press the 'Show all items' button and then press 'Download'.", 
            style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"),
         
-        br(),br(),
+
         
         ## Input: Download button for .CSV
         h4("Download your selection as .csv file"),
@@ -143,7 +140,7 @@ ui <- dashboardPage(skin = "green",
         h4("Download your selection as Excel file"),
         downloadButton("downloadData_Excel", "Download Excel file"),
         
-        br(), br(),
+
         
         ## Temp: confetti actionbuttons
         h4("We now have more than 1000 items!"),
