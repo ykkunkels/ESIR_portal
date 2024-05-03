@@ -1,6 +1,6 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### Server version 1.1.14          ###
+### Server version 1.1.15          ###
 ### MP - 02/04/2024                ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
@@ -37,8 +37,9 @@ server <- function(input, output, session) {
     search_input$search_text <- tolower(input$search_text)
 
     ## Add population columns
+    pop_col <- c("other", "children", "adolescents", "adults", "elderly")
     for (i in 1:nrow(df)) {
-      df[i, "population"] <- paste(colnames(df[, c(15:19)])[which(df[i, c(15:19)] == "YES")], collapse = ", ")
+      df[i, "population"] <- paste(colnames(df[, pop_col])[which(df[i, pop_col] == "YES")], collapse = ", ")
     }
 
     ## Define columns to search when "All" is selected
