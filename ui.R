@@ -1,11 +1,10 @@
 
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.13a             ###
-### MP, YKK - 01/03/2024           ###
+### UI version 1.1.14              ###
+### YKK - 01/03/2024               ###
 ### Changelog:                     ###
-###  > Fixed issue #16             ###
-###  > Removed button coloring     ###
+###  > Removed confetti            ###
 ###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
@@ -119,16 +118,7 @@ ui <- dashboardPage(skin = "green",
         downloadButton("downloadData_Excel", "Download Excel file"),
         
         br(), br(),
-        
-        ## Temp: confetti actionbuttons
-        h4("We now have more than 1000 items!"),
-        h5("Celebrate with us by throwing some confetti:"),
-        useConfetti(),
-        actionButton(
-          inputId = "confetti_start",
-          label =  "Throw confetti!"
-        )
-        
+
       ), #closing left column  
 
       
@@ -167,12 +157,9 @@ ui <- dashboardPage(skin = "green",
               column(width = 1, hidden(actionButton(inputId = "nextb_10", label = ">>"))),
               column(width = 1, hidden(actionButton(inputId = "last", label = ">>>")))
             ), # closing fluidRow
-            
-            ## Temp: celebrate_image
-            uiOutput("celebrate_1000")
-      
       ), # closing right colum
     ), # closing tabItem()
+    
     
     # Welcome tab content----
     tabItem(tabName = "welcome_tab",
