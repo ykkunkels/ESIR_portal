@@ -1,8 +1,12 @@
 
 #############################
 ### ESIR Portal in Shiny  ###
-### server version 1.1.12 ###
-### YKK - 01/03/2024      ###
+### server version 1.1.13 ###
+### BK - 11/06/2024       ###
+### Changelog:            ###
+###  > Confetti removal   ###
+###  > Setting coding     ###
+###     of csv to UTF-8   ###
 ###~*~*~*~*~*~*~*~*~*~*~*~###
 
 ## SERVER ----
@@ -14,7 +18,7 @@ server <- function(input, output, session) {
   search_output <- reactiveValues(search_results = NA, found_something = FALSE, item_selection = "", citation = NA)
   
   ## Read ESIR item data from URL
-  df <- read.csv(url("https://osf.io/5ba2c/download"), sep = ",", stringsAsFactors = FALSE) # Fetches the "ESIR.csv" file from OSF
+  df <- read.csv(url("https://osf.io/5ba2c/download", ), sep = ",", stringsAsFactors = FALSE, encoding="UTF-8") # Fetches the "ESIR.csv" file from OSF
   
   ## Format .csv and add proper column names
   df <- df[(-(1:3)), ]
@@ -240,17 +244,6 @@ server <- function(input, output, session) {
   })
   
   
-  ## Temp: confetti logic
-  # observeEvent(session, { # on session start
-  #   sendConfetti();Sys.sleep(0.5)
-  #   sendConfetti();Sys.sleep(0.5)
-  #   sendConfetti();Sys.sleep(0.5)
-  # })
-  
-  observeEvent(input$confetti_start, { # on actionbutton
-    sendConfetti()
-    # message("You have sent ", input$sentConfetti, " confetti")
-  })
 
 
   ## Download handlers----
@@ -286,10 +279,5 @@ output$flow <- renderUI({
     div(id = "flow", tags$img(src = src_flow, width = "85%", height = "auto"))
   })
 
-## Temp: celebrate_image
-output$celebrate_1000 <- renderUI({
-  src_celeb <- "http://ykkunkels.com/wp-content/uploads/2024/02/celebrate_1000_v3.jpg"
-  div(id = "celebrate_1000", tags$img(src = src_celeb, width = "auto", height = "auto"))
-})
   
 } # closing server

@@ -1,10 +1,10 @@
 
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.12              ###
-### YKK - 01/03/2024               ###
+### UI version 1.1.13              ###
+### BK - 11/06/2024                ###
 ### Changelog:                     ###
-###  > Confetti simplification     ###
+###  > Confetti removal            ###
 ###~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*###
 
 ## Load and / or Install required packages----
@@ -15,7 +15,6 @@ if(!require('xlsx')){install.packages('xlsx', dep = TRUE)};library('xlsx')
 
 # Temp libraries
 if(!require('devtools')){install.packages('devtools', dep = TRUE)};library('devtools')
-devtools::install_github("ArthurData/confetti");library(confetti)
 
 # UI ----
 ui <- dashboardPage(skin = "green",
@@ -101,14 +100,6 @@ ui <- dashboardPage(skin = "green",
         
         br(), br(),
         
-        ## Temp: confetti actionbuttons
-        h4("We now have more than 1000 items!"),
-        h5("Celebrate with us by throwing some confetti:"),
-        useConfetti(),
-        actionButton(
-          inputId = "confetti_start",
-          label =  "Throw confetti!"
-        )
         
       ), #closing left column  
 
@@ -149,8 +140,6 @@ ui <- dashboardPage(skin = "green",
               column(width = 1, hidden(actionButton(inputId = "last", label = ">>>")))
             ), # closing fluidRow
             
-            ## Temp: celebrate_image
-            uiOutput("celebrate_1000")
       
       ), # closing right colum
     ), # closing tabItem()
