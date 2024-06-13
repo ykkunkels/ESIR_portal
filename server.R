@@ -260,7 +260,7 @@ server <- function(input, output, session) {
   output$match_no <- renderText({
     search_input$match_no
   })
-  
+
 
 
   ## Download handlers----
@@ -295,6 +295,4 @@ server <- function(input, output, session) {
     src_flow <- "http://ykkunkels.com/wp-content/uploads/2023/11/Contributors-Workflow-Phase-1_v2_small.jpg"
     div(id = "flow", tags$img(src = src_flow, width = "85%", height = "auto"))
   })
-
-
 } # closing server

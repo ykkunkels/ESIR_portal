@@ -35,13 +35,9 @@ if (!require("devtools")) {
   install.packages("devtools", dep = TRUE)
 }
 library("devtools")
-if (!require("confetti")) {
-  devtools::install_github("ArthurData/confetti")
-}
-library(confetti)
 
-## Check code style ----
-styler::style_dir()
+# ## Check code style ----
+# styler::style_dir()
 
 # UI ----
 ui <- dashboardPage(
@@ -126,18 +122,19 @@ ui <- dashboardPage(
                 )
               ),
             ),
+          ),
 
-            ## Input: Search query
-            tags$div(
-              style = "width: 100%;",
-              textAreaInput(
-                inputId = "search_text", height = "auto", label = "Enter search term",
-                placeholder = "Enter search term here"
-              )
-            ),
-            tags$script(
-              HTML(
-                "
+          ## Input: Search query
+          tags$div(
+            style = "width: 100%;",
+            textAreaInput(
+              inputId = "search_text", height = "auto", label = "Enter search term",
+              placeholder = "Enter search term here"
+            )
+          ),
+          tags$script(
+            HTML(
+              "
             $(document).keypress(function(event) {
               if (event.keyCode == 13) {
                 event.preventDefault(); // Prevent default behavior of Enter key
@@ -145,111 +142,90 @@ ui <- dashboardPage(
               }
             });
             "
-              )
-            ),
+            )
+          ),
 
 
-        ## Input: Action button
-        actionButton(inputId= "go", label = "Search items"),
-        
-        ## Input: All button
-        actionButton(inputId= "all", label = "Show all items"),
-        
-        ## Input: Reset button
-        actionButton(inputId= "reset", label = "Clear"),
-        
-        br(),
-        h5("To download the complete dataset from the portal,", 
-           style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"),
-        h5("press the 'Show all items' button and then press 'Download'.", 
-           style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"),
-        br(), br(),
-        
-        ## Input: Download button for .CSV
-        h4("Download your selection as .csv file"),
-        downloadButton("downloadData", "Download .CSV file"),
-        
-        br(), br(),
-        
-        ## Input: Download button for .XLSX
-        h4("Download your selection as Excel file"),
-        downloadButton("downloadData_Excel", "Download Excel file"),
-        
-        br(), br(),
+          ## Input: Action button
+          actionButton(inputId = "go", label = "Search items"),
 
-      ), #closing left column  
+          ## Input: All button
+          actionButton(inputId = "all", label = "Show all items"),
 
-      
-      ## Right column - Main panel----
-      column(8, 
-             
-            ## Add Style tags
-            tags$head(tags$style("#item_show{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
-            tags$head(tags$style("#item_english{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
-            tags$head(tags$style("#item_description{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
-            tags$head(tags$style("#item_citation{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
-            tags$head(tags$style("#existing_ref{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
-            tags$head(tags$style("#item_contact{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
+          ## Input: Reset button
+          actionButton(inputId = "reset", label = "Clear"),
+          br(),
+          h5("To download the complete dataset from the portal,",
+            style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"
+          ),
+          h5("press the 'Show all items' button and then press 'Download'.",
+            style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"
+          ),
+          br(), br(),
 
-            ## Output: Text----
-            verbatimTextOutput(outputId = "item_selection", placeholder = FALSE),
-            verbatimTextOutput(outputId = "item_show", placeholder = FALSE),
-            verbatimTextOutput(outputId = "item_english", placeholder = FALSE),
-            verbatimTextOutput(outputId = "item_description", placeholder = FALSE),
-            verbatimTextOutput(outputId = "item_dataset", placeholder = FALSE),
-            verbatimTextOutput(outputId = "item_beeps_per_day", placeholder = FALSE),
-            verbatimTextOutput(outputId = "item_population", placeholder = FALSE),
-            verbatimTextOutput(outputId = "item_citation", placeholder = FALSE),
-            verbatimTextOutput(outputId = "existing_ref", placeholder = FALSE),
-            verbatimTextOutput(outputId = "item_contact", placeholder = FALSE),
-            htmlOutput(outputId = "warningtext"),
+          ## Input: Download button for .CSV
+          h4("Download your selection as .csv file"),
+          downloadButton("downloadData", "Download .CSV file"),
+          br(), br(),
 
-            ## Previous and next buttons
-            fluidRow(
-              column(width = 1, hidden(actionButton(inputId = "first", label = "<<<"))),
-              column(width = 1, hidden(actionButton(inputId = "previous_10", label = "<<"))),
-              column(width = 1, hidden(actionButton(inputId = "previous", label = "<"))),
-              column(width = 1, hidden(verbatimTextOutput(outputId = "match_no"))),
-              column(width = 1, hidden(actionButton(inputId = "nextb", label = ">"))),
-              column(width = 1, hidden(actionButton(inputId = "nextb_10", label = ">>"))),
-              column(width = 1, hidden(actionButton(inputId = "last", label = ">>>")))
-            ), # closing fluidRow
+          ## Input: Download button for .XLSX
+          h4("Download your selection as Excel file"),
+          downloadButton("downloadData_Excel", "Download Excel file"),
+          br(), br(),
+        ), # closing left column
 
-      ), # closing right colum
-    ), # closing tabItem()
-    
-    
-    # Welcome tab content----
-    tabItem(tabName = "welcome_tab",
-            
-            h2("Welcome to the ESM Item Repository!"),
-            h4("We are Olivia Kirtley (KU Leuven),", a("Yoram K. Kunkels", href = "http://www.ykkunkels.com/", target = "_blank"), "(Centraal Bureau voor de Statistiek), Gudrun Eisele (KU Leuven), Steffie Schoefs (KU Leuven), Nian Kemme (KU Leuven), Tessa Biesemans (KU Leuven), Laura Van Heck (KU Leuven), Milla Pihlajamäki (KU Leuven), Benjamin Kunc (KU Leuven), and Inez Myin-Germeys (KU Leuven). We aim to support the further development of Experience Sampling Methodology (ESM) research with an open repository of existing ESM items", a("(https://osf.io/kg376/)", href = "https://osf.io/kg376/", target = "_blank"), ".", 
-                style = "font-style: normal; letter-spacing: 1px; line-height: 125%;"),
-            h4("To achieve this, we need your help in collecting as many items as possible! Please submit completed documents to: tessa.biesemans@kuleuven.be", 
-               style = "font-style: normal; letter-spacing: 1px; line-height: 125%;"),
-            
-            uiOutput("flow"),
-            
-            ), # closing tabItem()
-    
 
-    # Acknowledgements tab content----
-    tabItem(tabName = "acknowledgements_tab",
-            
-            h2("Acknowledgements and citation help"),
-            br(),
-            h4("When insights and content from the repository are used, the repository should be cited as: Kirtley, O. J., Hiekkaranta, A. P., Kunkels, Y. K., Verhoeven, D., Van Nierop, M., & Myin-Germeys, I. (2019, April 2). The Experience Sampling Method (ESM) Item Repository. Retrieved from osf.io/kg376, DOI 10.17605/OSF.IO/KG376.", 
-               style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"),
-            br(), br(),
-            h4("Funding acknowledgements: Olivia Kirtley and Anu Hiekkaranta’s work on the project is supported by postdoctoral and PhD fellowships, respectively, from an FWO Odysseus grant to Inez Myin-Germeys (FWO GOF8416N). Yoram Kunkels’ work on this project is supported by the European Research Council (ERC-CoG-2015; TRANS-ID; No 681466 to Marieke Wichers).", 
-               style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"),
-            
-    ) # closing tabItem()
-  ), # closing tabItems()
-     
-    ) # closing dashboardBody
-  ) # closing dashboardPage
+        ## Right column - Main panel----
+        column(
+          8,
 
+          ## Add Style tags
+          tags$head(tags$style("#item_show{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
+          tags$head(tags$style("#item_english{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
+          tags$head(tags$style("#item_description{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
+          tags$head(tags$style("#item_citation{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
+          tags$head(tags$style("#existing_ref{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
+          tags$head(tags$style("#item_contact{min-height: auto; max-height: auto; overflow-y:scroll; white-space: pre-wrap;}")),
+
+          ## Output: Text----
+          verbatimTextOutput(outputId = "item_selection", placeholder = FALSE),
+          verbatimTextOutput(outputId = "item_show", placeholder = FALSE),
+          verbatimTextOutput(outputId = "item_english", placeholder = FALSE),
+          verbatimTextOutput(outputId = "item_description", placeholder = FALSE),
+          verbatimTextOutput(outputId = "item_dataset", placeholder = FALSE),
+          verbatimTextOutput(outputId = "item_beeps_per_day", placeholder = FALSE),
+          verbatimTextOutput(outputId = "item_population", placeholder = FALSE),
+          verbatimTextOutput(outputId = "item_citation", placeholder = FALSE),
+          verbatimTextOutput(outputId = "existing_ref", placeholder = FALSE),
+          verbatimTextOutput(outputId = "item_contact", placeholder = FALSE),
+          htmlOutput(outputId = "warningtext"),
+
+          ## Previous and next buttons
+          fluidRow(
+            column(width = 1, hidden(actionButton(inputId = "first", label = "<<<"))),
+            column(width = 1, hidden(actionButton(inputId = "previous_10", label = "<<"))),
+            column(width = 1, hidden(actionButton(inputId = "previous", label = "<"))),
+            column(width = 1, hidden(verbatimTextOutput(outputId = "match_no"))),
+            column(width = 1, hidden(actionButton(inputId = "nextb", label = ">"))),
+            column(width = 1, hidden(actionButton(inputId = "nextb_10", label = ">>"))),
+            column(width = 1, hidden(actionButton(inputId = "last", label = ">>>")))
+          ), # closing fluidRow
+        ), # closing right colum
+      ), # closing tabItem()
+
+
+      # Welcome tab content----
+      tabItem(
+        tabName = "welcome_tab",
+        h2("Welcome to the ESM Item Repository!"),
+        h4("We are Olivia Kirtley (KU Leuven),", a("Yoram K. Kunkels", href = "http://www.ykkunkels.com/", target = "_blank"), "(Centraal Bureau voor de Statistiek), Gudrun Eisele (KU Leuven), Steffie Schoefs (KU Leuven), Nian Kemme (KU Leuven), Tessa Biesemans (KU Leuven), Laura Van Heck (KU Leuven), Milla Pihlajamäki (KU Leuven), Benjamin Kunc (KU Leuven), and Inez Myin-Germeys (KU Leuven). We aim to support the further development of Experience Sampling Methodology (ESM) research with an open repository of existing ESM items", a("(https://osf.io/kg376/)", href = "https://osf.io/kg376/", target = "_blank"), ".",
+          style = "font-style: normal; letter-spacing: 1px; line-height: 125%;"
+        ),
+        h4("To achieve this, we need your help in collecting as many items as possible! Please submit completed documents to: tessa.biesemans@kuleuven.be",
+          style = "font-style: normal; letter-spacing: 1px; line-height: 125%;"
+        ),
+        uiOutput("flow"),
+      ), # closing tabItem()
 
 
       # Acknowledgements tab content----
@@ -265,6 +241,6 @@ ui <- dashboardPage(
           style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"
         ),
       ) # closing tabItem()
-    ), # closing tabItems()
+    ) # closing tabItems()
   ) # closing dashboardBody
 ) # closing dashboardPage
