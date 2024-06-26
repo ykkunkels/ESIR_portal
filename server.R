@@ -1,13 +1,15 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### Server version 1.1.16          ###
-### YKK - 13/06/2024               ###
+### Server version 1.1.17          ###
+### YKK - 26/06/2024               ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 
 ## SERVER ----
 server <- function(input, output, session) {
+  
   ## Initialise values, read and format data----
+  
   ## Define & initialise reactiveValues objects
   search_input <- reactiveValues(search_text = NA, match_no = 1)
   search_output <- reactiveValues(search_results = NA, found_something = FALSE, item_selection = "", citation = NA)
@@ -28,6 +30,16 @@ server <- function(input, output, session) {
   )
 
   df[, "item_ID"] <- 1:nrow(df) # fill the item_ID column
+  
+  
+  ## Read citations data from URL
+  df_citations <- read.csv(url("https://osf.io/nj92h/download"), sep = ",", stringsAsFactors = FALSE) # Fetches the "citations.csv" file from OSF
+  
+  ## Render citations data
+  output$df_citations <- renderDataTable(df_citations,
+                                         options = list(
+                                           pageLength = 10
+                                         ))
 
 
   ## Search, Show all, and Clear buttons----
