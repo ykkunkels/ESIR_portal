@@ -6,6 +6,7 @@
 ###  > Cleaned & integration merge ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
+
 ## Load and / or Install required packages----
 if (!require("shiny")) {
   install.packages("shiny", dep = TRUE)
@@ -38,35 +39,38 @@ library("devtools")
 # styler::style_dir()
 
 # UI ----
-ui <- dashboardPage(
-  skin = "green",
 
-  ## Header ----
-  dashboardHeader(title = "ESM Item Repository", titleWidth = 300),
-  dashboardSidebar(
-    width = 300,
-    sidebarMenu(
-      menuItem("Menu"),
-      menuItem("Home", tabName = "home_tab", icon = icon("file-text")),
-      menuItem("Welcome", tabName = "welcome_tab", icon = icon("door-open")),
-      menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
-      menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
-      uiOutput("logo"),
-      h5("[version 1.1.16] We do not take responsibility for the", br(),
-        "quality of items within the repository. Inclusion of", br(),
-        "items within the repository does not indicate", br(),
-        "our endorsement of them. All items within the", br(),
-        "repository are subject to a Creative Commons", br(),
-        "Attribution Non-Commerical License (CC BY-NC).",
-        style = "font-style: normal; font-size: 80%; color: #b5c8d4; letter-spacing: 0.2px; line-height: 10pt;
-                                    position: relative; left: 18px;"
-      )
-    ) # closing sidebarMenu
-  ), # closing dashboardSidebar
 
-  ## Body ----
-  dashboardBody(
-    tags$style(HTML("
+ui <- dashboardPage(skin = "green",
+                    
+                    ## Header ----
+                    dashboardHeader(title = "ESM Item Repository", titleWidth = 300),
+                    
+                    dashboardSidebar(width = 300,
+                      sidebarMenu(menuItem("Menu"),
+                                  menuItem("Home", tabName = "home_tab", icon = icon("file-text")),
+                                  menuItem("Welcome", tabName = "welcome_tab", icon = icon("door-open")),
+                                  menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
+                                  menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
+                                  uiOutput("logo"),
+                                  h5("[version 1.1.16] We do not take responsibility for the", br(), 
+                                     "quality of items within the repository. Inclusion of", br(), 
+                                     "items within the repository does not indicate", br(), 
+                                     "our endorsement of them. All items within the", br(), 
+                                     "repository are subject to a Creative Commons", br(), 
+                                     "Attribution Non-Commerical License (CC BY-NC).",
+                                     style = "font-style: normal; font-size: 80%; color: #b5c8d4; letter-spacing: 0.2px; line-height: 10pt;
+                                    position: relative; left: 18px;")
+                                  
+                      ) # closing sidebarMenu
+                    ), # closing dashboardSidebar
+  
+                   ## Body ----
+                   dashboardBody(
+                     
+                     tags$style(HTML("
+
+
                        .panel-container {
                            display: grid;
                            grid-template-rows: auto;
@@ -142,6 +146,7 @@ ui <- dashboardPage(
             "
             )
           ),
+
 
 
           ## Input: Action button
