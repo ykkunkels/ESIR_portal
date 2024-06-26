@@ -1,7 +1,7 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### Server version 1.1.15          ###
-### MP - 02/04/2024                ###
+### Server version 1.1.16          ###
+### YKK - 13/06/2024               ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 
@@ -260,7 +260,7 @@ server <- function(input, output, session) {
   output$match_no <- renderText({
     search_input$match_no
   })
-  
+
 
 
   ## Download handlers----
@@ -295,6 +295,4 @@ server <- function(input, output, session) {
     src_flow <- "http://ykkunkels.com/wp-content/uploads/2023/11/Contributors-Workflow-Phase-1_v2_small.jpg"
     div(id = "flow", tags$img(src = src_flow, width = "85%", height = "auto"))
   })
-
-
 } # closing server
