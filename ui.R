@@ -1,11 +1,9 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.15              ###
-### MP - 03/05/2024                ###
+### UI version 1.1.16              ###
+### YKK - 13/06/2024               ###
 ### Changelog:                     ###
-###  > Issue #15: changed harcoded ###
-###    object assignments to       ###
-###    dynamic                     ###
+###  > Cleaned & integration merge ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 ## Load and / or Install required packages----
@@ -54,7 +52,7 @@ ui <- dashboardPage(
       menuItem("Blog", icon = icon("atlas"), href = "http://www.esmitemrepositoryinfo.com/"),
       menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
       uiOutput("logo"),
-      h5("[version 1.1.15] We do not take responsibility for the", br(),
+      h5("[version 1.1.16] We do not take responsibility for the", br(),
         "quality of items within the repository. Inclusion of", br(),
         "items within the repository does not indicate", br(),
         "our endorsement of them. All items within the", br(),
