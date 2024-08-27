@@ -1,11 +1,10 @@
 ######################################
 ### ESIR Portal in Shiny           ###
 ### UI version 1.1.17              ###
-### BK - 06/08/2024                ###
+### BK - 27/08/2024                ###
 ### Changelog:                     ###
-###  > Added citations page        ###
-###  > Was only on master and      ###
-###  > not development             ###
+###  > Solved the 'displaying      ###
+###  > of the citations' issue     ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 
@@ -251,9 +250,7 @@ ui <- dashboardPage(skin = "green",
                         # Citations tab content----
                         tabItem(
                           tabName = "citations_tab",
-                          h2("Articles citing the ESM Item Repository"),
-                          
-                          mainPanel(dataTableOutput("df_citations"))
+                          dataTableOutput("df_citations")      # Display the DataTable
                           
                         ) # closing tabItem()
                         

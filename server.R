@@ -1,8 +1,9 @@
 ######################################
 ### ESIR Portal in Shiny           ###
 ### Server version 1.1.17          ###
-### BK 06/08/2024                  ###
-###   > Added "encoding = UTF-8"   ###
+### BK 27/08/2024                  ###
+###   > Solving the issue with     ###
+###   > displaying the citations   ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 
