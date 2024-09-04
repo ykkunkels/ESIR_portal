@@ -1,7 +1,7 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.18              ###
-### BK - 27/08/2024                ###
+### UI version 1.1.19              ###
+### YKK - 04/09/2024               ###
 ### Changelog:                     ###
 ###  > Solved the 'displaying      ###
 ###  > of the citations' issue     ###
@@ -9,26 +9,36 @@
 
 
 ## Load and / or Install required packages----
-if (!require("shiny")) {
-  install.packages("shiny", dep = TRUE)
-}
-library("shiny")
-if (!require("shinydashboard")) {
-  install.packages("shinydashboard", dep = TRUE)
-}
-library("shinydashboard")
 if (!require("htmltools")) {
   install.packages("htmltools", dep = TRUE)
 }
 library("htmltools")
+
+if (!require("sass")) {
+  install.packages("sass", dep = TRUE)
+}
+library("sass")
+
+if (!require("shiny")) {
+  install.packages("shiny", dep = TRUE)
+}
+library("shiny")
+
+if (!require("shinydashboard")) {
+  install.packages("shinydashboard", dep = TRUE)
+}
+library("shinydashboard")
+
 if (!require("shinyjs")) {
   install.packages("shinyjs", dep = TRUE)
 }
 library("shinyjs")
+
 if (!require("xlsx")) {
   install.packages("xlsx", dep = TRUE)
 }
-library("htmltools")
+library("xlsx")
+
 
 # Temp libraries
 # if (!require("styler")) {
@@ -60,7 +70,7 @@ ui <- dashboardPage(skin = "green",
                                   menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                   menuItem("Citations", tabName = "citations_tab", icon = icon("quote-left")),
                                   uiOutput("logo"),
-                                  h5("[version 1.1.18] We do not take responsibility for the", br(), 
+                                  h5("[version 1.1.19] We do not take responsibility for the", br(), 
                                      "quality of items within the repository. Inclusion of", br(), 
                                      "items within the repository does not indicate", br(), 
                                      "our endorsement of them. All items within the", br(), 
@@ -165,10 +175,13 @@ ui <- dashboardPage(skin = "green",
           ## Input: Reset button
           actionButton(inputId = "reset", label = "Clear"),
           br(),
-          h5("To download the complete dataset from the portal,",
+          h5("This portal shows only a selection of the available item information. 
+             Download the data via the download-buttons to get the full dataset.",
             style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"
           ),
-          h5("press the 'Show all items' button and then press 'Download'.",
+          h5("To download the complete dataset from the portal, 
+             press the 'Show all items' button hereabove and then press 'Download .CSV' 
+             or 'Download Excel' herebelow.",
             style = "font-style: normal; letter-spacing: 0.5px; line-height: 15pt;"
           ),
           br(), br(),
