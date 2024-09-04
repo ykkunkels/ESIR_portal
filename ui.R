@@ -1,9 +1,10 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.17              ###
-### YKK - 26/06/2024               ###
+### UI version 1.1.18              ###
+### BK - 27/08/2024                ###
 ### Changelog:                     ###
-###  > Added citations page        ###
+###  > Solved the 'displaying      ###
+###  > of the citations' issue     ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 
@@ -54,7 +55,7 @@ ui <- dashboardPage(skin = "green",
                                   menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                   menuItem("Citations", tabName = "citations_tab", icon = icon("quote-left")),
                                   uiOutput("logo"),
-                                  h5("[version 1.1.17] We do not take responsibility for the", br(), 
+                                  h5("[version 1.1.18] We do not take responsibility for the", br(), 
                                      "quality of items within the repository. Inclusion of", br(), 
                                      "items within the repository does not indicate", br(), 
                                      "our endorsement of them. All items within the", br(), 
@@ -251,7 +252,7 @@ ui <- dashboardPage(skin = "green",
         tabName = "citations_tab",
         h2("Articles citing the ESM Item Repository"),
         
-        mainPanel(dataTableOutput("df_citations"))
+        dataTableOutput("df_citations")      # Display the DataTable
 
       ) # closing tabItem()
       
