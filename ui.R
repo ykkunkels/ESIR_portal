@@ -17,6 +17,10 @@ if (!require("shinydashboard")) {
   install.packages("shinydashboard", dep = TRUE)
 }
 library("shinydashboard")
+if (!require("htmltools")) {
+  install.packages("htmltools", dep = TRUE)
+}
+library("htmltools")
 if (!require("shinyjs")) {
   install.packages("shinyjs", dep = TRUE)
 }
@@ -24,7 +28,7 @@ library("shinyjs")
 if (!require("xlsx")) {
   install.packages("xlsx", dep = TRUE)
 }
-library("xlsx")
+library("htmltools")
 
 # Temp libraries
 # if (!require("styler")) {
