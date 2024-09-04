@@ -25,16 +25,17 @@ if (!require("xlsx")) {
   install.packages("xlsx", dep = TRUE)
 }
 library("xlsx")
-if (!require("styler")) {
-  install.packages("styler", dep = TRUE)
-}
-library("styler")
 
 # Temp libraries
-if (!require("devtools")) {
-  install.packages("devtools", dep = TRUE)
-}
-library("devtools")
+# if (!require("styler")) {
+#   install.packages("styler", dep = TRUE)
+# }
+# library("styler")
+# 
+# if (!require("devtools")) {
+#   install.packages("devtools", dep = TRUE)
+# }
+# library("devtools")
 
 # ## Check code style ----
 # styler::style_dir()
