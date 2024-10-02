@@ -1,10 +1,9 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.19              ###
+### UI version 1.1.20              ###
 ### YKK - 04/09/2024               ###
 ### Changelog:                     ###
-###  > Solved the 'displaying      ###
-###  > of the citations' issue     ###
+###  > Added SAA banner            ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 
@@ -70,7 +69,7 @@ ui <- dashboardPage(skin = "green",
                                   menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                   menuItem("Citations", tabName = "citations_tab", icon = icon("quote-left")),
                                   uiOutput("logo"),
-                                  h5("[version 1.1.19] We do not take responsibility for the", br(), 
+                                  h5("[version 1.1.20] We do not take responsibility for the", br(), 
                                      "quality of items within the repository. Inclusion of", br(), 
                                      "items within the repository does not indicate", br(), 
                                      "our endorsement of them. All items within the", br(), 
@@ -232,8 +231,13 @@ ui <- dashboardPage(skin = "green",
             column(width = 1, hidden(actionButton(inputId = "nextb", label = ">"))),
             column(width = 1, hidden(actionButton(inputId = "nextb_10", label = ">>"))),
             column(width = 1, hidden(actionButton(inputId = "last", label = ">>>")))
-          ), # closing fluidRow
+          ) # closing fluidRow
         ), # closing right colum
+        
+        fluidRow(
+          uiOutput("saa")
+        )
+        
       ), # closing tabItem()
 
 

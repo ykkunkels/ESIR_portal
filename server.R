@@ -307,4 +307,11 @@ server <- function(input, output, session) {
     src_flow <- "http://ykkunkels.com/wp-content/uploads/2023/11/Contributors-Workflow-Phase-1_v2_small.jpg"
     div(id = "flow", tags$img(src = src_flow, width = "85%", height = "auto"))
   })
+  
+  # Temp SAA Banner
+  output$saa <- renderUI({
+    src_saa <- "http://ykkunkels.com/wp-content/uploads/2024/10/SAA25-Banner.png"
+    div(id = "saa", tags$img(src = src_saa, width = "1090px", height = "233px"))
+  })
+  
 } # closing server
