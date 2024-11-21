@@ -1,9 +1,9 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.20              ###
-### YKK - 04/09/2024               ###
+### UI version 1.1.21              ###
+### YKK - 21/11/2024               ###
 ### Changelog:                     ###
-###  > Added SAA banner            ###
+###  > Fixed OSF data call         ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 

@@ -33,7 +33,7 @@ server <- function(input, output, session) {
   
   
   ## Read citations data from URL
-  df_citations <- read.csv(url("https://osf.io/nj92h/download"), sep = ",", stringsAsFactors = FALSE) # Fetches the "citations.csv" file from OSF
+  df_citations <- read.csv(url("https://osf.io/5ba2c/download"), sep = ",", stringsAsFactors = FALSE) # Fetches the "citations.csv" file from OSF
   
   ## Render citations data
   output$df_citations <- renderDataTable(df_citations,
