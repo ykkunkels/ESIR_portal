@@ -1,9 +1,9 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.21              ###
-### YKK - 21/11/2024               ###
+### UI version 1.1.22              ###
+### YKK - 09/12/2024               ###
 ### Changelog:                     ###
-###  > Fixed OSF data call         ###
+###  > Updated text                ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 
@@ -69,7 +69,7 @@ ui <- dashboardPage(skin = "green",
                                   menuItem("Acknowledgements", tabName = "acknowledgements_tab", icon = icon("book-reader")),
                                   menuItem("Citations", tabName = "citations_tab", icon = icon("quote-left")),
                                   uiOutput("logo"),
-                                  h5("[version 1.1.20] We do not take responsibility for the", br(), 
+                                  h5("[version 1.1.22] We do not take responsibility for the", br(), 
                                      "quality of items within the repository. Inclusion of", br(), 
                                      "items within the repository does not indicate", br(), 
                                      "our endorsement of them. All items within the", br(), 
@@ -245,10 +245,10 @@ ui <- dashboardPage(skin = "green",
       tabItem(
         tabName = "welcome_tab",
         h2("Welcome to the ESM Item Repository!"),
-        h4("We are Olivia Kirtley (KU Leuven),", a("Yoram K. Kunkels", href = "http://www.ykkunkels.com/", target = "_blank"), "(Centraal Bureau voor de Statistiek), Gudrun Eisele (KU Leuven), Steffie Schoefs (KU Leuven), Nian Kemme (KU Leuven), Tessa Biesemans (KU Leuven), Laura Van Heck (KU Leuven), Milla Pihlajamäki (KU Leuven), Benjamin Kunc (KU Leuven), and Inez Myin-Germeys (KU Leuven). We aim to support the further development of Experience Sampling Methodology (ESM) research with an open repository of existing ESM items", a("(https://osf.io/kg376/)", href = "https://osf.io/kg376/", target = "_blank"), ".",
+        h4("We are Olivia Kirtley (KU Leuven),", a("Yoram K. Kunkels", href = "http://www.ykkunkels.com/", target = "_blank"), "(Centraal Bureau voor de Statistiek), Gudrun Eisele (KU Leuven), Steffie Schoefs (KU Leuven), Nieke Vermaelen (KU Leuven), Laura Van Heck (KU Leuven), Milla Pihlajamäki (KU Leuven), Benjamin Kunc (KU Leuven), and Inez Myin-Germeys (KU Leuven). We aim to support the further development of Experience Sampling Methodology (ESM) research with an open repository of existing ESM items", a("(https://osf.io/kg376/)", href = "https://osf.io/kg376/", target = "_blank"), ".",
           style = "font-style: normal; letter-spacing: 1px; line-height: 125%;"
         ),
-        h4("To achieve this, we need your help in collecting as many items as possible! Please submit completed documents to: tessa.biesemans@kuleuven.be",
+        h4("To achieve this, we need your help in collecting as many items as possible! Please submit completed documents to: submissions@esmitemrepository.com",
           style = "font-style: normal; letter-spacing: 1px; line-height: 125%;"
         ),
         uiOutput("flow"),
@@ -260,11 +260,11 @@ ui <- dashboardPage(skin = "green",
         tabName = "acknowledgements_tab",
         h2("Acknowledgements and citation help"),
         br(),
-        h4("When insights and content from the repository are used, the repository should be cited as: Kirtley, O. J., Hiekkaranta, A. P., Kunkels, Y. K., Verhoeven, D., Van Nierop, M., & Myin-Germeys, I. (2019, April 2). The Experience Sampling Method (ESM) Item Repository. Retrieved from osf.io/kg376, DOI 10.17605/OSF.IO/KG376.",
+        h4("When insights and content from the repository are used, the repository should be cited as: Kirtley, O. J., Eisele, G., Kunkels, Y. K., Hiekkaranta, A., Van Heck, L., Pihlajamäki, M. R., Kunc, B., Schoefs, S., Kemme, N., Biesemans, T., & Myin-Germeys, I. (2024). The Experience Sampling Method Item Repository", a("https://doi.org/10.17605/OSF.IO/KG376", href = "https://doi.org/10.17605/OSF.IO/KG376", target = "_blank"),
           style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"
         ),
         br(), br(),
-        h4("Funding acknowledgements: Olivia Kirtley and Anu Hiekkaranta’s work on the project is supported by postdoctoral and PhD fellowships, respectively, from an FWO Odysseus grant to Inez Myin-Germeys (FWO GOF8416N). Yoram Kunkels’ work on this project is supported by the European Research Council (ERC-CoG-2015; TRANS-ID; No 681466 to Marieke Wichers).",
+        h4("Funding acknowledgements: The ESM Item Repository and those who are part of the ESM Item Repository team receive funding from the following sources: A KU Leuven C1 grant (C16/23/011) to Inez Myin-Germeys and Olivia Kirtley, a KU Leuven C+ grant (CPLUS/24/009) to Olivia Kirtley, an Research Foundation Flanders (FWO; G049023N) grant to Inez Myin-Germeys and Olivia Kirtley, and a Junior Postdoctoral Fellowship from Research Foundation Flanders (FWO; 1223725N) to Gudrun Eisele.",
           style = "font-style: normal; letter-spacing: 1px; line-height: 26pt;"
         ),
       ), # closing tabItem()
