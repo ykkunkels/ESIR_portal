@@ -1,7 +1,7 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### Server version 1.1.21          ###
-### YKK - 21/11/2024               ###
+### Server version 1.1.22          ###
+### YKK - 09/12/2024               ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 
@@ -33,7 +33,7 @@ server <- function(input, output, session) {
   
   
   ## Read citations data from URL
-  df_citations <- read.csv(url("https://osf.io/5ba2c/download"), sep = ",", stringsAsFactors = FALSE) # Fetches the "citations.csv" file from OSF
+  df_citations <- read.csv(url("https://osf.io/z92pd/download"), sep = ",", stringsAsFactors = FALSE) # Fetches the "citations.csv" file from OSF
   
   ## Render citations data
   output$df_citations <- renderDataTable(df_citations,
