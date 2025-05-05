@@ -1,7 +1,7 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### Server version 1.1.22          ###
-### YKK - 09/12/2024               ###
+### Server version 1.1.23          ###
+### YKK - 05/05/2025               ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 
@@ -15,7 +15,7 @@ server <- function(input, output, session) {
   search_output <- reactiveValues(search_results = NA, found_something = FALSE, item_selection = "", citation = NA)
 
   ## Read ESIR item data from URL
-  df <- read.csv(url("https://osf.io/5ba2c/download"), sep = ",", stringsAsFactors = FALSE) # Fetches the "ESIR.csv" file from OSF
+  df <- read.csv(url("https://osf.io/5ba2c/download", ), sep = ",", stringsAsFactors = FALSE, encoding="UTF-8") # Fetches the "ESIR.csv" file from OSF 
 
   ## Format .csv and add proper column names
   df <- df[(-(1:3)), ]

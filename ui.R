@@ -1,9 +1,9 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.22              ###
+### UI version 1.1.23              ###
 ### YKK - 09/12/2024               ###
 ### Changelog:                     ###
-###  > Updated text                ###
+### > Added UTF-8 for csv download ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 
