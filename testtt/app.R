@@ -1,15 +1,8 @@
 library(shiny)
 library(DT)
 library(stringr)
+library(openxlsx)
 
-
-# things to edit/add
-# - filter by tags under the tag column
-# - possibility to choose between different columns (these can be the default), but then you can also add: samples (similar to tags), dataset, contact, existing reference, reliability, validity 
-# - add citation page
-
-
-# All tags
 all_tags <- c(
   "activity",
   "anxiety",
@@ -47,7 +40,6 @@ all_tags <- c(
   "worry"
 )
 
-# Fixed tag color palette
 tag_colors <- setNames(
   c(
     "#1abc9c",
@@ -88,49 +80,33 @@ tag_colors <- setNames(
   all_tags
 )
 
-library(shiny)
-library(DT)
-library(openxlsx)
-
 ui <- fluidPage(
   tags$head(
     tags$link(href = "https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap", rel = "stylesheet"),
-    tags$style(HTML("
+    tags$style(HTML(
+      paste0(
+        "
       body {
         font-family: 'Arial', sans-serif;
         background-color: #f4f6f7;
-        margin: 0;
-        padding: 0;
+        margin: 0; padding: 0;
       }
       .title-panel {
-        background-color: #54a36e;
-        padding: 30px 40px;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100vw;
-        margin-left: calc(-50vw + 50%);
-        box-sizing: border-box;
-        margin-bottom: 10px;
+        background-color: #54a36e; padding: 30px 40px; color: white;
+        display: flex; align-items: center; justify-content: center;
+        width: 100vw; margin-left: calc(-50vw + 50%);
+        box-sizing: border-box; margin-bottom: 10px;
       }
       .title-panel strong {
         font-family: 'Oswald', sans-serif;
-        font-size: 44px;
-        font-weight: 500;
-        text-transform: uppercase;
+        font-size: 44px; font-weight: 500; text-transform: uppercase;
         letter-spacing: 1.5px;
       }
       .info-text {
-        background-color: #ffffff;
-        border-left: 6px solid #54a36e;
-        padding: 20px;
-        margin: 20px 0;
-        font-size: 16px;
-        color: #333333;
-        line-height: 1.6;
-        border-radius: 6px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        background-color: #ffffff; border-left: 6px solid #54a36e;
+        padding: 20px; margin: 20px 0; font-size: 12px;
+        color: #333333; line-height: 1.6;
+        border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
       }
       .badge-tag {
         display: inline-block;
@@ -139,155 +115,168 @@ ui <- fluidPage(
         background-color: #2ecc71;
         color: white;
         border-radius: 20px;
-        font-size: 12px;
+        font-size: 10px;
+        cursor: pointer;
+        border: 2px solid transparent;
+      }
+      .badge-tag.selected {
+        border: 2px solid black !important;
       }
       .table-container {
         background-color: white;
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        padding: 20px;
-        margin-top: 20px;
+        padding: 20px; margin-top: 20px;
       }
       table.dataTable {
-        border-radius: 10px;
-        border-collapse: separate;
-        width: 100%;
-        margin-top: 20px;
-        font-size: 13px;
+        border-radius: 10px; border-collapse: separate;
+        width: 100%; margin-top: 20px; font-size: 11px;
       }
       table.dataTable th, table.dataTable td {
-        padding: 12px;
-        text-align: left;
+        padding: 12px; text-align: left;
       }
       table.dataTable th {
-        background-color: #2c3e50;
-        color: white;
-        font-size: 14px;
+        background-color: #2c3e50; color: white; font-size: 12px;
       }
       table.dataTable tbody tr:hover {
         background-color: #f1f1f1;
       }
       .dataTables_length select, .dataTables_filter input {
-        font-size: 14px;
+        font-size: 12px;
       }
       .dataTables_wrapper .dataTables_length,
       .dataTables_wrapper .dataTables_filter {
         margin-bottom: 10px;
       }
       .dataTables_paginate {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 20px !important;
-        gap: 5px;
+        display: flex; justify-content: flex-end;
+        margin-top: 20px !important; gap: 5px;
       }
       .dataTables_info {
-        font-size: 14px;
-        margin-top: 20px !important;
+        font-size: 12px; margin-top: 20px !important;
       }
       .dataTables_paginate .paginate_button {
         background-color: #a2b9c1 !important;
-        border-radius: 5px;
-        color: white !important;
-        padding: 8px 12px;
-        font-size: 14px;
+        border-radius: 5px; color: white !important;
+        padding: 8px 12px; font-size: 12px;
       }
       .dataTables_paginate .paginate_button.current {
         background-color: #7f8c8d !important;
       }
       .footer-text {
-        font-size: 12px;
-        color: #777;
+        font-size: 10px; color: #777;
         text-align: center;
-        margin-top: 15px;
-        margin-bottom: 20px;
+        margin-top: 15px; margin-bottom: 20px;
         line-height: 1.4;
       }
-      
-      /* Tooltip Styling */
-      .dt-tooltip {
-        background-color: #333333;
-        color: white;
-        border-radius: 5px;
-        padding: 5px 10px;
-        font-size: 12px;
-        display: none;
-        position: absolute;
-        z-index: 9999;
-      }
-    "))
+    "
+      )
+    ))
   ),
   
-  # Title Panel
   div(class = "title-panel", tags$strong("Welcome to the ESM Item Repository!")),
   
-  # Info Text
-  div(class = "info-text",
-      tags$b("How do I use the ESM Item Repository?"),
-      tags$br(), #tags$br(),
-      "This portal presents a selection of item information available for review. ",
-      "It is designed to allow you to easily search 🔍, filter 🧹, and explore 🧭 these items based on various columns provided below. ",
-      "You can use the available search and filter features to refine your results and quickly find the items most relevant to your needs 🎯", 
-      tags$br(), #tags$br(),
-      "💡 Tip: You can now hover over any of the column titles in the table to see more information about what each column means️.",
-      tags$br(), #tags$br(),
-      "⬇️ To download the complete dataset from the portal, press the 'Show all items (Clear search)' button below and then press 'Download .csv' or 'Download Excel (.xlsx)' below.",
-      tags$br(),
-      tags$span(HTML("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To download a subset of the dataset, complete your search and press 'Download .csv' or 'Download Excel (.xlsx)' below.")),
-      tags$br(), tags$br(),
-      tags$b("How do I refer to the ESM Item Repository in publications and other documents?"),
-      tags$br(),
-      "If you use insights from the ESM Item Repository, please cite as: ",
-      "Kirtley, O. J., Eisele, G., Kunkels, Y. K., Hiekkaranta, A., Van Heck, L., Pihlajamäki, M. R., Kunc, B., Schoefs, S., Kemme, N., Biesemans, T., & Myin-Germeys, I. (2024). The Experience Sampling Method Item Repository ",
-      tags$a(href = "https://doi.org/10.17605/OSF.IO/KG376", target = "_blank", "https://doi.org/10.17605/OSF.IO/KG376"),
-      tags$div(style = "margin-top: 20px;",
-               actionButton("reset_btn", "🔄 Show all items (Clear search)", 
-                            style = "background-color: #3498db; color: white; border: none; margin-right: 10px;"),
-               downloadButton("download_csv", "Download .csv", 
-                              style = "background-color: #2ecc71; color: white; border: none; margin-right: 10px;"),
-               downloadButton("download_excel", "Download Excel (.xlsx)", 
-                              style = "background-color: #1abc9c; color: white; border: none;")
+  div(
+    class = "info-text",
+    tags$b("How do I use the ESM Item Repository?"),
+    tags$br(),
+    #tags$br(),
+    "This portal presents a selection of item information available for review. ",
+    "It is designed to allow you to easily search 🔍, filter 🧹, and explore 🧭 these items based on various columns provided below. ",
+    "You can use the available search and filter features to refine your results and quickly find the items most relevant to your needs 🎯",
+    tags$br(),
+    #tags$br(),
+    "💡 Tip: You can now hover over any of the column titles in the table to see more information about what each column means️.",
+    tags$br(),
+    #tags$br(),
+    "⬇️ To download the complete dataset from the portal, press the 'Show all items (Clear search)' button below and then press 'Download .csv' or 'Download Excel (.xlsx)' below.",
+    tags$br(),
+    tags$span(
+      HTML(
+        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To download a subset of the dataset, complete your search and press 'Download .csv' or 'Download Excel (.xlsx)' below."
       )
-  ),
-  
- 
-  # Table Section
-  fluidRow(
-    column(
-      width = 12,
-      div(class = "table-container", DTOutput("filtered_table")),
-      div(style = "height: 20px;")
+    ),
+    tags$br(),
+    tags$br(),
+    tags$b(
+      "How do I refer to the ESM Item Repository in publications and other documents?"
+    ),
+    tags$br(),
+    "If you use insights from the ESM Item Repository, please cite as: ",
+    "Kirtley, O. J., Eisele, G., Kunkels, Y. K., Hiekkaranta, A., Van Heck, L., Pihlajamäki, M. R., Kunc, B., Schoefs, S., Kemme, N., Biesemans, T., & Myin-Germeys, I. (2024). The Experience Sampling Method Item Repository ",
+    tags$a(
+      href = "https://doi.org/10.17605/OSF.IO/KG376",
+      target = "_blank",
+      "https://doi.org/10.17605/OSF.IO/KG376"
+    ),
+    tags$div(
+      style = "margin-top: 20px;",
+      actionButton("reset_btn", "🔄 Show all items (Clear search)", style = "background-color: #3498db; color: white; border: none; margin-right: 10px;"),
+      downloadButton("download_csv", "Download .csv", style = "background-color: #2ecc71; color: white; border: none; margin-right: 10px;"),
+      downloadButton("download_excel", "Download Excel (.xlsx)", style = "background-color: #1abc9c; color: white; border: none;")
     )
   ),
   
-  # Footer Text
-  div(class = "footer-text",
-      "[version 1.1.22] We do not take responsibility for the quality of items within the repository. Inclusion of items within the repository does not indicate our endorsement of them. All items within the repository are subject to a Creative Commons Attribution Non-Commercial License (CC BY-NC)."
+  div(style = "margin-top: 20px;", tags$h4("Filter by tags"), uiOutput("tag_selector")),
+  
+  fluidRow(column(
+    12,
+    div(class = "table-container", DTOutput("filtered_table")),
+    div(style = "height: 20px;")
+  )),
+  
+  div(
+    class = "footer-text",
+    "[version 1.1.22] We do not take responsibility for the quality of items within the repository. Inclusion of items within the repository does not indicate our endorsement of them. All items within the repository are subject to a Creative Commons Attribution Non-Commercial License (CC BY-NC)."
   )
 )
 
 server <- function(input, output, session) {
-  # Load and clean data
-  df <- read.csv(
-    url("https://osf.io/5ba2c/download"),
-    sep = ",",
-    stringsAsFactors = FALSE
-  )
-  df <- df[(-(1:3)), ]
-  
+  df <- read.csv(url("https://osf.io/5ba2c/download"), stringsAsFactors = FALSE)[-(1:3), ]
   colnames(df) <- c(
-    "item_ID", "label", "english", "description", "comment", "response_scale_discrete",
-    "response_scale_vas", "branched_from", "branched_response", "beep_level", "beeps_per_day",
-    "morning", "evening", "event", "other", "children", "adolescents", "adults", "elderly",
-    "gen_pop", "outpatient", "inpatient", "which", "dataset", "contact", "open", "open_link",
-    "request", "closed", "citation", "existing_adapt", "existing_ref", "how_admin",
-    "how_long_beep", "reliability", "validity", "development", "item_use", "item_instructions",
+    "item_ID",
+    "label",
+    "english",
+    "description",
+    "comment",
+    "response_scale_discrete",
+    "response_scale_vas",
+    "branched_from",
+    "branched_response",
+    "beep_level",
+    "beeps_per_day",
+    "morning",
+    "evening",
+    "event",
+    "other",
+    "children",
+    "adolescents",
+    "adults",
+    "elderly",
+    "gen_pop",
+    "outpatient",
+    "inpatient",
+    "which",
+    "dataset",
+    "contact",
+    "open",
+    "open_link",
+    "request",
+    "closed",
+    "citation",
+    "existing_adapt",
+    "existing_ref",
+    "how_admin",
+    "how_long_beep",
+    "reliability",
+    "validity",
+    "development",
+    "item_use",
+    "item_instructions",
     "item_other"
   )
-  
   df$item_ID <- 1:nrow(df)
-  
-  tags_plain <- read.csv("tags_plain.csv")
-  tags_plain <- tags_plain[, 2:3]
+  tags_plain <- read.csv("tags_plain.csv")[, 2:3]
   df <- merge(df, tags_plain, by = "item_ID", all.x = TRUE)
   colnames(df)[colnames(df) == "tag_final"] <- "tag"
   df$tag[df$tag == ""] <- NA
@@ -299,34 +288,86 @@ server <- function(input, output, session) {
     tags <- strsplit(tag_string, ";\\s*")[[1]]
     html <- paste0(sapply(tags, function(tg) {
       col <- tag_colors[[tg]]
-      paste0('<span class="badge-tag" style="background-color:', col, ';">', tg, '</span>')
+      paste0('<span class="badge-tag" style="background-color:',
+             col,
+             ';">',
+             tg,
+             '</span>')
     }), collapse = " ")
     return(html)
   }
   
-  # Reactive filtered view for display
-  filtered_data <- reactive({
-    data <- df[, c("label", "english", "description", "citation", "contact", "beeps_per_day", "tag")]
-    colnames(data) <- c(
-      "Item in original language", "Item in English", "Description", "Citation", "Contact", "Beeps per day", "Tags"
-    )
-    data$`Beeps per day` <- as.numeric(data$`Beeps per day`)
-    data$Tags <- sapply(data$Tags, format_tags)
-    data
+  selected_tags <- reactiveVal(character(0))
+  
+  output$tag_selector <- renderUI({
+    tagList(lapply(all_tags, function(tag) {
+      style <- paste0("background-color:", tag_colors[[tag]], ";")
+      classes <- "badge-tag"
+      if (tag %in% selected_tags()) {
+        classes <- paste(classes, "selected")
+      }
+      span(
+        tag,
+        class = classes,
+        style = style,
+        onclick = sprintf(
+          "Shiny.setInputValue('tag_click', '%s', {priority: 'event'});",
+          tag
+        )
+      )
+    }))
   })
   
-  # DataTable proxy
+  observeEvent(input$tag_click, {
+    current <- selected_tags()
+    if (input$tag_click %in% current) {
+      selected_tags(setdiff(current, input$tag_click))
+    } else {
+      selected_tags(c(current, input$tag_click))
+    }
+  })
+  
+  filtered_data <- reactive({
+    data <- df
+    if (length(selected_tags()) > 0) {
+      data <- data[sapply(data$tag_list, function(tags) {
+        if (is.null(tags))
+          return(FALSE)
+        any(tags %in% selected_tags())
+      }), ]
+    }
+    output_df <- data[, c("label",
+                          "english",
+                          "description",
+                          "citation",
+                          "contact",
+                          "beeps_per_day",
+                          "tag")]
+    colnames(output_df) <- c(
+      "Item in original language",
+      "Item in English",
+      "Description",
+      "Citation",
+      "Contact",
+      "Beeps per day",
+      "Tags"
+    )
+    output_df$`Beeps per day` <- as.numeric(output_df$`Beeps per day`)
+    output_df$Tags <- sapply(output_df$Tags, format_tags)
+    output_df
+  })
+  
   proxy <- dataTableProxy("filtered_table")
   
-  # Render table
   output$filtered_table <- renderDT({
     datatable(
       filtered_data(),
       filter = "top",
       escape = FALSE,
+      rownames = FALSE,
       options = list(
         pageLength = 10,
-        lengthMenu = list(c(10, 25, 50, -1), c("10", "25", "50", "All")),
+        lengthMenu = list(c(10, 50, 100, -1), c('10', '50', '100', 'All')),
         autoWidth = TRUE,
         dom = 'lfrtip',
         language = list(search = "Search all columns:"),
@@ -334,26 +375,14 @@ server <- function(input, output, session) {
           list(targets = 0, width = "14.3%"),
           list(targets = 1, width = "14.3%"),
           list(targets = 2, width = "14.3%"),
-          list(targets = 3, width = "28.6%"),
+          list(targets = 3, width = "25.6%"),
           list(targets = 4, width = "7.1%"),
-          list(targets = 5, width = "7.7%"),
-          list(targets = 6, width = "13.7%", searchable = FALSE)
-        ),
-        initComplete = JS(
-          "function(settings) {",
-          "  var tooltips = [",
-          "    '🗣️The item in its original language',",
-          "    'The item translated to English. This may be blank if English is the original language of the item.',",
-          "    '📝A description of the item as specified by the contributor(s), e.g., what the item measures',",
-          "    '📚References to publications using the item.',",
-          "    '📧Contact information for the item contributor(s)',",
-          "    '⏰The number of beep prompts per day associated with the item.',",
-          "    '🏷️Item tags expressing, for example, the measured construct of the item'",
-          "  ];",
-          "  this.api().columns().every(function(i) {",
-          "    this.header().title = tooltips[i];",
-          "  });",
-          "}"
+          list(targets = 5, width = "10.7%"),
+          list(
+            targets = 6,
+            width = "13.7%",
+            searchable = FALSE
+          )
         ),
         drawCallback = JS(
           "function(settings) {",
@@ -367,55 +396,42 @@ server <- function(input, output, session) {
           "    '🏷️Item tags expressing, for example, the measured construct of the item'",
           "  ];",
           "  this.api().columns().every(function(i) {",
-          "    this.header().title = tooltips[i];",
+          "    $(this.header()).attr('title', tooltips[i]);",
           "  });",
           "}"
         )
-      ),
-      rownames = FALSE
-    ) %>% formatRound(columns = "Beeps per day", digits = 0)
+      )
+    ) %>% formatRound("Beeps per day", 0)
   }, server = FALSE)
   
   
   
-  # Reset table
   observeEvent(input$reset_btn, {
-    proxy %>%
-      selectRows(NULL) %>%
-      selectPage(1) %>%
-      clearSearch()
+    proxy %>% selectRows(NULL) %>% selectPage(1) %>% clearSearch()
+    selected_tags(character(0))
   })
   
-  
-  # Download .csv
   output$download_csv <- downloadHandler(
-    filename = function() {
-      paste0("filtered_data_", Sys.Date(), ".csv")
-    },
+    filename = function()
+      paste0("filtered_data_", Sys.Date(), ".csv"),
     content = function(file) {
-      rows <- input$filtered_table_rows_all
-      if (is.null(rows)) {
-        data_to_save <- df
-      } else {
-        data_to_save <- df[rows, ]
-      }
+      data_to_save <- if (is.null(input$filtered_table_rows_all))
+        df
+      else
+        df[input$filtered_table_rows_all, ]
       data_to_save$tag_list <- NULL
       write.csv(data_to_save, file, row.names = FALSE)
     }
   )
   
-  # Download .xlsx
   output$download_excel <- downloadHandler(
-    filename = function() {
-      paste0("filtered_data_", Sys.Date(), ".xlsx")
-    },
+    filename = function()
+      paste0("filtered_data_", Sys.Date(), ".xlsx"),
     content = function(file) {
-      rows <- input$filtered_table_rows_all
-      if (is.null(rows)) {
-        data_to_save <- df
-      } else {
-        data_to_save <- df[rows, ]
-      }
+      data_to_save <- if (is.null(input$filtered_table_rows_all))
+        df
+      else
+        df[input$filtered_table_rows_all, ]
       data_to_save$tag_list <- NULL
       write.xlsx(data_to_save, file)
     }
