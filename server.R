@@ -35,7 +35,7 @@ server <- function(input, output, session) {
   
   
   ## Read citations data from URL
-  df_citations <- read.csv(url("https://osf.io/nj92h/download"), sep = ",", stringsAsFactors = FALSE) # Fetches the "citations.csv" file from OSF
+  df_citations <- read.csv(url("https://osf.io/z92pd/download"), sep = ",", stringsAsFactors = FALSE) # Fetches the "citations.csv" file from OSF
   
   ## Render citations data
   output$df_citations <- renderDataTable(df_citations,
@@ -48,7 +48,7 @@ server <- function(input, output, session) {
   ## Observe: go button click
   observeEvent(input$go, {
     search_input$match_no <- 1
-    search_input$search_text <- tolower(input$search_text)
+    search_input$search_text <- input$search_text
     
     ## Add population columns
     pop_col <- c("other", "children", "adolescents", "adults", "elderly")
@@ -64,13 +64,13 @@ server <- function(input, output, session) {
       # Search across specified columns
       if (any(sapply(df[, all_columns], function(x) {
         any(
-          grepl(search_input$search_text, as.character(x))
+          grepl(search_input$search_text, as.character(x), ignore.case = TRUE)
         )
       }))) {
         search_output$item_selection <-
           which(apply(df[, all_columns], 1, function(x) {
             any(
-              grepl(search_input$search_text, as.character(x))
+              grepl(search_input$search_text, as.character(x), ignore.case = TRUE)
             )
           }))
         
@@ -94,8 +94,9 @@ server <- function(input, output, session) {
       }
     } else {
       # Search in the selected column
-      if (any(grepl(search_input$search_text, as.character(df[, input$topic_select])) == TRUE)) {
-        search_output$item_selection <- which(grepl(search_input$search_text, as.character(df[, input$topic_select])) == TRUE)
+      if (any(grepl(search_input$search_text, as.character(df[, input$topic_select])) == TRUE, ignore.case = TRUE)) {
+        search_output$item_selection <- which(grepl(search_input$search_text, as.character(df[, input$topic_select])) == TRUE,
+                                              ignore.case = TRUE)
         
         ## Multiple matches exception
         if (length(search_output$item_selection) > 1) {
