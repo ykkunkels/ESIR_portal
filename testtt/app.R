@@ -2,6 +2,7 @@ library(shiny)
 library(DT)
 library(stringr)
 library(openxlsx)
+library(dplyr)
 
 all_tags <- c(
   "activity",
@@ -42,71 +43,103 @@ all_tags <- c(
 
 tag_colors <- setNames(
   c(
-    "#1abc9c",
-    "#3498db",
-    "#9b59b6",
-    "#e67e22",
-    "#34495e",
-    "#16a085",
-    "#f39c12",
-    "#7f8c8d",
-    "#27ae60",
-    "#e74c3c",
-    "#8e44ad",
-    "#2ecc71",
-    "#95a5a6",
-    "#d35400",
-    "#c0392b",
-    "#2980b9",
-    "#f1c40f",
-    "#bdc3c7",
-    "#2c3e50",
-    "#ff6f69",
-    "#6c5ce7",
-    "#00cec9",
-    "#a29bfe",
-    "#fd79a8",
-    "#fab1a0",
-    "#ffeaa7",
-    "#636e72",
-    "#b2bec3",
-    "#dfe6e9",
-    "#fdcb6e",
-    "#e17055",
-    "#ff7675",
-    "#74b9ff",
-    "#55efc4"
+    "#8F7EE5",
+    "#CC8E51",
+    "#0F6B99",
+    "#99540F",
+    "#C3E57E",
+    "#E57E7E",
+    "#B22C2C",
+    "#B26F2C",
+    "#E5B17E",
+    "#E5B17E",
+    "#6B990F",
+    "#C3E57E",
+    "#B26F2C",
+    "#CC8E51",
+    "#6551CC",
+    "#85B22C",
+    "#990F0F",
+    "#2C85B2",
+    "#B22C2C",
+    "#0F6B99",
+    "#7EC3E5",
+    "#422CB2",
+    "#51A3CC",
+    "#990F0F",
+    "#CC5151",
+    "#A3CC51",
+    "#85B22C",
+    "#CC5151",
+    "#E57E7E",
+    "#6B990F",
+    "#A3CC51",
+    "#BFB2FF",
+    "#260F99",
+    "#99540F"
   ),
   all_tags
 )
 
-ui <- fluidPage(
-  tags$head(
-    tags$link(href = "https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap", rel = "stylesheet"),
-    tags$style(HTML(
-      paste0(
-        "
+ui <- navbarPage(
+  title = NULL,
+  # Removes navbar title
+  id = "main_tabs",
+  collapsible = TRUE,
+  fluid = TRUE,
+  
+  tabPanel(
+    "Search the Repository",
+    fluidPage(
+      tags$head(
+        tags$link(href = "https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap", rel = "stylesheet"),
+        tags$style(HTML(
+          paste0(
+            "
       body {
         font-family: 'Arial', sans-serif;
         background-color: #f4f6f7;
         margin: 0; padding: 0;
       }
       .title-panel {
-        background-color: #54a36e; padding: 30px 40px; color: white;
-        display: flex; align-items: center; justify-content: center;
-        width: 100vw; margin-left: calc(-50vw + 50%);
-        box-sizing: border-box; margin-bottom: 10px;
+        background-color: rgba(84, 163, 110, 0.70);
+        padding: 10px 10px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+        box-sizing: border-box;
+        margin-bottom: 10px;
+      }
+      .title-content {
+        display: flex;
+        align-items: center;
+        gap: 20px;
       }
       .title-panel strong {
         font-family: 'Oswald', sans-serif;
-        font-size: 44px; font-weight: 500; text-transform: uppercase;
+        font-size: 55px;
+        font-weight: 500;
+        text-transform: uppercase;
         letter-spacing: 1.5px;
+        white-space: nowrap;
+      }
+      .title-logo {
+        height: 200px;
+        object-fit: contain;
       }
       .info-text {
-        background-color: #ffffff; border-left: 6px solid #54a36e;
-        padding: 20px; margin: 20px 0; font-size: 12px;
-        color: #333333; line-height: 1.6;
-        border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        background-color: #ffffff;
+        border-left: 6px solid #54a36e;
+        padding: 20px;
+        margin: 20px 0;
+        font-size: 18px;
+        color: #333333;
+        line-height: 1.6;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
       }
       .badge-tag {
         display: inline-block;
@@ -115,9 +148,22 @@ ui <- fluidPage(
         background-color: #2ecc71;
         color: white;
         border-radius: 20px;
-        font-size: 10px;
+        font-size: 16px;
         cursor: pointer;
         border: 2px solid transparent;
+      }
+      #reset_btn,
+      #download_csv,
+      #download_excel {
+        font-size: 18px !important;
+      }
+
+      #reset_btn .btn,
+      #download_csv .btn,
+      #download_excel .btn {
+        font-size: 18px !important;
+        padding: 10px 20px !important;
+        border-radius: 20px !important;
       }
       .badge-tag.selected {
         border: 2px solid black !important;
@@ -126,109 +172,226 @@ ui <- fluidPage(
         background-color: white;
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        padding: 20px; margin-top: 20px;
+        padding: 20px;
+        margin-top: 20px;
       }
       table.dataTable {
-        border-radius: 10px; border-collapse: separate;
-        width: 100%; margin-top: 20px; font-size: 11px;
+        border-radius: 10px;
+        border-collapse: separate;
+        width: 100%;
+        margin-top: 20px;
+        font-size: 13px;
       }
       table.dataTable th, table.dataTable td {
-        padding: 12px; text-align: left;
+        padding: 12px;
+        text-align: left;
       }
       table.dataTable th {
-        background-color: #2c3e50; color: white; font-size: 12px;
+        background-color: #2c3e50;
+        color: white;
+        font-size: 14px;
       }
       table.dataTable tbody tr:hover {
         background-color: #f1f1f1;
       }
       .dataTables_length select, .dataTables_filter input {
-        font-size: 12px;
+        font-size: 14px;
       }
       .dataTables_wrapper .dataTables_length,
       .dataTables_wrapper .dataTables_filter {
         margin-bottom: 10px;
       }
       .dataTables_paginate {
-        display: flex; justify-content: flex-end;
-        margin-top: 20px !important; gap: 5px;
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px !important;
+        gap: 5px;
       }
       .dataTables_info {
-        font-size: 12px; margin-top: 20px !important;
+        font-size: 14px;
+        margin-top: 20px !important;
       }
       .dataTables_paginate .paginate_button {
         background-color: #a2b9c1 !important;
-        border-radius: 5px; color: white !important;
-        padding: 8px 12px; font-size: 12px;
+        border-radius: 5px;
+        color: white !important;
+        padding: 8px 12px;
+        font-size: 14px;
       }
       .dataTables_paginate .paginate_button.current {
         background-color: #7f8c8d !important;
       }
       .footer-text {
-        font-size: 10px; color: #777;
+        font-size: 12px;
+        color: #777;
         text-align: center;
-        margin-top: 15px; margin-bottom: 20px;
+        margin-top: 15px;
+        margin-bottom: 20px;
         line-height: 1.4;
       }
-    "
+      #download_citation.light-download-btn {
+       background-color: #f4f6f7 !important;
+       color: #333 !important;
+       font-size: 18px !important;
+       padding: 10px 20px !important;
+       border-radius: 20px !important;
+       margin-top: 0px !important;
+       margin-left: 0px !important;
+       vertical-align: top;
+      }
+      "
+          )
+        ))
+      ),
+      
+      div(class = "title-panel", div(
+        class = "title-content",
+        tags$strong("Welcome to the ESM Item Repository!"),
+        tags$img(src = "logo.png", class = "title-logo")
+      )),
+      
+      div(
+        class = "info-text",
+        tags$b("How do I use the ESM Item Repository?"),
+        tags$br(),
+        "This portal presents a selection of item information available for review. ",
+        "It is designed to allow you to easily search 🔍, filter 🧹, and explore 🧭 these items based on various columns provided below. ",
+        "You can use the available search and filter features to refine your results and quickly find the items most relevant to your needs 🎯",
+        "Note that this portal only shows a selection of the available item information. You can download the data via the buttons below for more information about the items.",
+        tags$br(),
+        "💡 Tip: You can now hover over any of the column titles in the table to see more information about what each column means️.",
+        tags$br(),
+        "⬇️ To download the complete dataset from the portal, press the 'Show all items (Clear search)' button below and then press 'Download .csv' or 'Download Excel (.xlsx)' below.",
+        tags$br(),
+        tags$span(
+          HTML(
+            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To download a subset of the dataset, complete your search and press 'Download .csv' or 'Download Excel (.xlsx)' below."
+          )
+        ),
+        tags$br(),
+        div(
+          style = "background-color: #e0e0e0; padding: 20px; border-radius: 10px; margin-top: 20px;",
+          tags$b(
+            "How do I refer to the ESM Item Repository in publications and other documents?"
+          ),
+          tags$br(),
+          
+          div(
+            style = "display: flex; align-items: flex-start; gap: 20px;",
+            
+            # Left: Citation text
+            div(
+              style = "flex: 0 0 85%; max-width: 85%; font-size: 18px; line-height: 1.5;",
+              "If you use insights from the ESM Item Repository, please cite as: ",
+              tags$br(),
+              "Kirtley, O. J., Eisele, G., Kunkels, Y. K., Hiekkaranta, A., Van Heck, L., Pihlajamäki, M. R., Kunc, B., Schoefs, S., Kemme, N., Biesemans, T., & Myin-Germeys, I. (2024). The Experience Sampling Method Item Repository ",
+              tags$a(
+                href = "https://doi.org/10.17605/OSF.IO/KG376",
+                target = "_blank",
+                "https://doi.org/10.17605/OSF.IO/KG376"
+              ),
+              ". Alternatively, you can download the citation in your preferred format using the button on the right."
+            ),
+            
+            # Right: Citation controls (dropdown and button)
+            div(
+              style = "flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;",
+              selectInput(
+                inputId = "citation_format",
+                label = NULL,
+                choices = list(
+                  "BibTeX (.bib)" = "citation_bibtex.bib",
+                  "RIS (.ris)" = "citation_ris.ris",
+                  "EndNote (.xml)" = "citation_endnote_xlm.xml",
+                  "RefWorks (.txt)" = "citation_refworks.txt",
+                  "CSV (.csv)" = "citation_csv.csv",
+                  "Zotero RDF (.rdf)" = "citation_zotero_rdf.rdf"
+                ),
+                selected = "citation_bibtex.bib",
+                width = "220px"
+              ),
+              downloadButton(
+                outputId = "download_citation",
+                label = "Download citation",
+                class = "light-download-btn"
+              )
+            )
+          )
+        )
+        ,
+        div(
+          style = "display: flex; justify-content: space-between; align-items: flex-end; margin-top: 20px;",
+          
+          # Left: Reset and download buttons
+          div(
+            style = "display: flex; gap: 16px;",
+            actionButton("reset_btn", "🔄 Show all items (Clear search)", style = "background-color: #3498db; color: white; border: none;"),
+            downloadButton("download_csv", "Download .csv", style = "background-color: #2ecc71; color: white; border: none;"),
+            downloadButton("download_excel", "Download Excel (.xlsx)", style = "background-color: #1abc9c; color: white; border: none;")
+          ),
+        )
+        
+        
+      ),
+      
+      div(style = "margin-top: 20px;", tags$h4("Filter by tags"), uiOutput("tag_selector")),
+      
+      fluidRow(column(
+        12,
+        div(class = "table-container", DTOutput("filtered_table")),
+        div(style = "height: 20px;")
+      )),
+      
+      div(
+        class = "footer-text",
+        "[version 1.1.22] We do not take responsibility for the quality of items within the repository. Inclusion of items within the repository does not indicate our endorsement of them. All items within the repository are subject to a Creative Commons Attribution Non-Commercial License (CC BY-NC)."
       )
-    ))
-  ),
-  
-  div(class = "title-panel", tags$strong("Welcome to the ESM Item Repository!")),
-  
-  div(
-    class = "info-text",
-    tags$b("How do I use the ESM Item Repository?"),
-    tags$br(),
-    #tags$br(),
-    "This portal presents a selection of item information available for review. ",
-    "It is designed to allow you to easily search 🔍, filter 🧹, and explore 🧭 these items based on various columns provided below. ",
-    "You can use the available search and filter features to refine your results and quickly find the items most relevant to your needs 🎯",
-    tags$br(),
-    #tags$br(),
-    "💡 Tip: You can now hover over any of the column titles in the table to see more information about what each column means️.",
-    tags$br(),
-    #tags$br(),
-    "⬇️ To download the complete dataset from the portal, press the 'Show all items (Clear search)' button below and then press 'Download .csv' or 'Download Excel (.xlsx)' below.",
-    tags$br(),
-    tags$span(
-      HTML(
-        "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To download a subset of the dataset, complete your search and press 'Download .csv' or 'Download Excel (.xlsx)' below."
-      )
-    ),
-    tags$br(),
-    tags$br(),
-    tags$b(
-      "How do I refer to the ESM Item Repository in publications and other documents?"
-    ),
-    tags$br(),
-    "If you use insights from the ESM Item Repository, please cite as: ",
-    "Kirtley, O. J., Eisele, G., Kunkels, Y. K., Hiekkaranta, A., Van Heck, L., Pihlajamäki, M. R., Kunc, B., Schoefs, S., Kemme, N., Biesemans, T., & Myin-Germeys, I. (2024). The Experience Sampling Method Item Repository ",
-    tags$a(
-      href = "https://doi.org/10.17605/OSF.IO/KG376",
-      target = "_blank",
-      "https://doi.org/10.17605/OSF.IO/KG376"
-    ),
-    tags$div(
-      style = "margin-top: 20px;",
-      actionButton("reset_btn", "🔄 Show all items (Clear search)", style = "background-color: #3498db; color: white; border: none; margin-right: 10px;"),
-      downloadButton("download_csv", "Download .csv", style = "background-color: #2ecc71; color: white; border: none; margin-right: 10px;"),
-      downloadButton("download_excel", "Download Excel (.xlsx)", style = "background-color: #1abc9c; color: white; border: none;")
     )
   ),
   
-  div(style = "margin-top: 20px;", tags$h4("Filter by tags"), uiOutput("tag_selector")),
+  tabPanel("About the Repository", fluidPage(
+    div(class = "title-panel", div(
+      class = "title-content",
+      tags$strong("Welcome to the ESM Item Repository!"),
+      tags$img(src = "logo.png", class = "title-logo")
+    )),
+    div(
+      class = "info-text",
+      tags$b(style = "font-size: 18px; display: block; margin-top: 6px; margin-bottom: 10px;", "Who are we? 👋"),
+      tags$p(
+        "We are Olivia Kirtley (KU Leuven), Yoram K. Kunkels (Centraal Bureau voor de Statistiek), Gudrun Eisele (KU Leuven), Steffie Schoefs (KU Leuven), Nieke Vermaelen (KU Leuven), Laura Van Heck (KU Leuven), Milla Pihlajamäki (KU Leuven), Benjamin Kunc (KU Leuven), and Inez Myin-Germeys (KU Leuven)."
+      ),
+      tags$p(
+        "We are an open science initiative supporting the development of Experience Sampling Methodology (ESM) research through an open repository of ESM items. To make this possible, we launched the ESM Item Repository in 2018 and opened our portal in October 2019. Since then, researchers from 11 countries have contributed over 3,300 items—and more are coming! 🚀"
+      ),
+      tags$p(
+        "We aim to support the further development of ESM research with an open repository of existing ESM items:",
+        tags$a(href = "https://osf.io/kg376/", target = "_blank", "https://osf.io/kg376/")
+      ),
+      tags$p(
+        "💌 Want to contribute? Find more information about submission on our OSF page (",
+        tags$a(href = "https://osf.io/kg376/", target = "_blank", "https://osf.io/kg376/"),
+        ") and send your completed items to: ",
+        tags$b("submissions@esmitemrepository.com")
+      ),
+      
+      tags$hr(),
+      tags$b(style = "font-size: 18px; display: block; margin-top: 20px; margin-bottom: 10px;", "Funding acknowledgements 💰"),
+      tags$p("The ESM Item Repository and its team are funded by:"),
+      tags$ul(
+        tags$li(
+          "A KU Leuven C1 grant (C16/23/011) to Inez Myin-Germeys and Olivia Kirtley"
+        ),
+        tags$li("A KU Leuven C+ grant (CPLUS/24/009) to Olivia Kirtley"),
+        tags$li("A Research Foundation Flanders (FWO; G049023N) grant")
+      )
+    ),
+    div(
+      class = "footer-text",
+      "[version 1.1.22] We do not take responsibility for the quality of items within the repository. Inclusion of items within the repository does not indicate our endorsement of them. All items within the repository are subject to a Creative Commons Attribution Non-Commercial License (CC BY-NC)."
+    )
+  ))
   
-  fluidRow(column(
-    12,
-    div(class = "table-container", DTOutput("filtered_table")),
-    div(style = "height: 20px;")
-  )),
-  
-  div(
-    class = "footer-text",
-    "[version 1.1.22] We do not take responsibility for the quality of items within the repository. Inclusion of items within the repository does not indicate our endorsement of them. All items within the repository are subject to a Creative Commons Attribution Non-Commercial License (CC BY-NC)."
-  )
 )
 
 server <- function(input, output, session) {
@@ -276,7 +439,47 @@ server <- function(input, output, session) {
     "item_other"
   )
   df$item_ID <- 1:nrow(df)
-  tags_plain <- read.csv("tags_plain.csv")[, 2:3]
+  
+  df <- df %>%
+    mutate(
+      q_type = paste(
+        ifelse(str_to_lower(beep_level) %in% c("yes", "x"), "regular", NA),
+        ifelse(str_to_lower(morning) %in% c("yes", "x"), "morning", NA),
+        ifelse(str_to_lower(evening) %in% c("yes", "x"), "evening", NA),
+        ifelse(str_to_lower(event) %in% c("yes", "x"), "event", NA),
+        sep = "; "
+      ),
+      q_type = str_replace_all(q_type, "(NA; )+|; NA", ""),
+      # remove extra NAs and semicolons
+      q_type = str_replace(q_type, "^NA$", "")                # make sure "NA" alone becomes blank
+    )
+  
+  df <- df %>%
+    mutate(
+      population = paste(
+        ifelse(str_to_lower(children) %in% c("yes", "x"), "children", NA),
+        ifelse(
+          str_to_lower(adolescents) %in% c("yes", "x"),
+          "adolescents",
+          NA
+        ),
+        ifelse(str_to_lower(adults) %in% c("yes", "x"), "adults", NA),
+        ifelse(str_to_lower(elderly) %in% c("yes", "x"), "elderly", NA),
+        ifelse(
+          str_to_lower(gen_pop) %in% c("yes", "x"),
+          "general population",
+          NA
+        ),
+        ifelse(str_to_lower(outpatient) %in% c("yes", "x"), "outpatient", NA),
+        ifelse(str_to_lower(inpatient) %in% c("yes", "x"), "inpatient", NA),
+        sep = "; "
+      ),
+      population = str_replace_all(population, "(NA; )+|; NA", ""),
+      # remove extra NAs and semicolons
+      population = str_replace(population, "^NA$", "")                # make sure "NA" alone becomes blank
+    )
+  
+  tags_plain <- read.csv("tags_plain.csv")[, 2:3] # TO DO: crosscheck tags
   df <- merge(df, tags_plain, by = "item_ID", all.x = TRUE)
   colnames(df)[colnames(df) == "tag_final"] <- "tag"
   df$tag[df$tag == ""] <- NA
@@ -336,23 +539,30 @@ server <- function(input, output, session) {
         any(tags %in% selected_tags())
       }), ]
     }
-    output_df <- data[, c("label",
-                          "english",
-                          "description",
-                          "citation",
-                          "contact",
-                          "beeps_per_day",
-                          "tag")]
+    output_df <- data[, c(
+      "item_ID",
+      "label",
+      "english",
+      "description",
+      "dataset",
+      "q_type",
+      "population",
+      "citation",
+      "contact",
+      "tag"
+    )]
     colnames(output_df) <- c(
+      "Item ID",
       "Item in original language",
       "Item in English",
       "Description",
+      "Dataset",
+      "Questionnaire type",
+      "Population",
       "Citation",
       "Contact",
-      "Beeps per day",
       "Tags"
     )
-    output_df$`Beeps per day` <- as.numeric(output_df$`Beeps per day`)
     output_df$Tags <- sapply(output_df$Tags, format_tags)
     output_df
   })
@@ -372,27 +582,33 @@ server <- function(input, output, session) {
         dom = 'lfrtip',
         language = list(search = "Search all columns:"),
         columnDefs = list(
-          list(targets = 0, width = "14.3%"),
-          list(targets = 1, width = "14.3%"),
-          list(targets = 2, width = "14.3%"),
-          list(targets = 3, width = "25.6%"),
-          list(targets = 4, width = "7.1%"),
-          list(targets = 5, width = "10.7%"),
+          list(targets = 0, width = "4.545455%"),
+          list(targets = 1, width = "13.63636%"),
+          list(targets = 2, width = "13.63636%"),
+          list(targets = 3, width = "12.63636%"),
+          list(targets = 4, width = "6.818182%"),
+          list(targets = 5, width = "6.818182%"),
+          list(targets = 6, width = "6.818182%"),
+          list(targets = 7, width = "18.18182%"),
+          list(targets = 8, width = "5.818182%"),
           list(
-            targets = 6,
-            width = "13.7%",
+            targets = 9,
+            width = "11.09091%",
             searchable = FALSE
           )
         ),
         drawCallback = JS(
           "function(settings) {",
           "  var tooltips = [",
+          "    'A unique number to identify each item',",
           "    '🗣️The item in its original language',",
           "    'The item translated to English. This may be blank if English is the original language of the item.',",
           "    '📝A description of the item as specified by the contributor(s), e.g., what the item measures',",
+          "    'The possible name of the dataset that the item was used in',",
+          "    'What kind of questionnaire the item was part of (regular, morning, evening, and/or event)',",
+          "    'The population type the item was used for (children, adolescents, adults, elderly, general population, outpatient, and/or inpatient)',",
           "    '📚References to publications using the item.',",
           "    '📧Contact information for the item contributor(s)',",
-          "    '⏰The number of beep prompts per day associated with the item.',",
           "    '🏷️Item tags expressing, for example, the measured construct of the item'",
           "  ];",
           "  this.api().columns().every(function(i) {",
@@ -401,7 +617,7 @@ server <- function(input, output, session) {
           "}"
         )
       )
-    ) %>% formatRound("Beeps per day", 0)
+    )
   }, server = FALSE)
   
   
@@ -436,6 +652,17 @@ server <- function(input, output, session) {
       write.xlsx(data_to_save, file)
     }
   )
+  
+  output$download_citation <- downloadHandler(
+    filename = function() {
+      input$citation_format
+    },
+    content = function(file) {
+      file.copy(from = file.path("www", input$citation_format),
+                to = file)
+    }
+  )
+  
 }
 
 shinyApp(ui, server)

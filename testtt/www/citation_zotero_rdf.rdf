@@ -1,0 +1,107 @@
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:z="http://www.zotero.org/namespaces/export#"
+ xmlns:dcterms="http://purl.org/dc/terms/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:bib="http://purl.org/net/biblio#"
+ xmlns:foaf="http://xmlns.com/foaf/0.1/"
+ xmlns:link="http://purl.org/rss/1.0/modules/link/">
+    <bib:Article rdf:about="https://osf.io/kg376/">
+        <z:itemType>journalArticle</z:itemType>
+        <dcterms:isPartOf>
+            <bib:Journal>
+               <dc:identifier>DOI 10.17605/OSF.IO/KG376</dc:identifier>
+            </bib:Journal>
+        </dcterms:isPartOf>
+        <bib:authors>
+            <rdf:Seq>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kirtley</foaf:surname>
+                        <foaf:givenName>Olivia</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Eisele</foaf:surname>
+                        <foaf:givenName>Gudrun</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kunkels</foaf:surname>
+                        <foaf:givenName>Yoram</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Hiekkaranta</foaf:surname>
+                        <foaf:givenName>Anu</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Van Heck</foaf:surname>
+                        <foaf:givenName>Laura</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Pihlajamäki</foaf:surname>
+                        <foaf:givenName>Milla</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Kunc</foaf:surname>
+                        <foaf:givenName>Benjamin</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Schoefs</foaf:surname>
+                        <foaf:givenName>Steffie</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Vermaelen</foaf:surname>
+                        <foaf:givenName>Nieke</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+                <rdf:li>
+                    <foaf:Person>
+                        <foaf:surname>Myin-Germeys</foaf:surname>
+                        <foaf:givenName>Inez</foaf:givenName>
+                    </foaf:Person>
+                </rdf:li>
+            </rdf:Seq>
+        </bib:authors>
+        <link:link rdf:resource="#item_3913"/>
+        <dc:title>The Experience Sampling Method (ESM) Item Repository</dc:title>
+        <dcterms:abstract>This project has built a repository of items  (www.esmitemrepository.com) used in experience sampling method (ESM), ecological momentary assessment (EMA) and ambulatory assessment (AA) studies. The idea for this repository arose out of discussions during the Open Science hackathon at the 2018 Belgian-Dutch ESM Network Meeting. 
+
+In order to contribute items to the repository, you will need to download all five documents in the Contributors' Pack. When you have downloaded the ESM Item Repository submission template (spreadsheet) document, you can enter your items into it and then send it back to us via email (submissions [at] esmitemrepository.com). We will then collate all the submitted items into a repository and publish them here.
+
+If you would like to browse the full repository and download items and their information, visit www.esmitemrepository.com. 
+    Hosted on the Open Science Framework</dcterms:abstract>
+        <dc:date>2018-12-04</dc:date>
+        <z:language>en</z:language>
+        <z:libraryCatalog>osf.io</z:libraryCatalog>
+        <dc:identifier>
+           <dcterms:URI><rdf:value>https://osf.io/kg376/</rdf:value></dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2025-07-04 11:33:46</dcterms:dateSubmitted>
+        <dc:description>Publisher: OSF</dc:description>
+    </bib:Article>
+    <z:Attachment rdf:about="#item_3913">
+        <z:itemType>attachment</z:itemType>
+        <dc:title>Snapshot</dc:title>
+        <dc:identifier>
+           <dcterms:URI><rdf:value>https://osf.io/kg376/</rdf:value></dcterms:URI>
+        </dc:identifier>
+        <dcterms:dateSubmitted>2025-07-04 11:33:51</dcterms:dateSubmitted>
+        <z:linkMode>1</z:linkMode>
+        <link:type>text/html</link:type>
+    </z:Attachment>
+</rdf:RDF>
