@@ -234,10 +234,6 @@ ui <- dashboardPage(skin = "green",
           ) # closing fluidRow
         ), # closing right colum
         
-        fluidRow(
-          uiOutput("saa")
-        )
-        
       ), # closing tabItem()
 
 
