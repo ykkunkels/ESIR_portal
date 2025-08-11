@@ -1,6 +1,8 @@
 #######################################################
 ## ADD NEW SUBMISSIONS - CHECKS AND REVERTING FORMAT ##
 #######################################################
+## Original by Laura Van Heck
+## 13/03/2024
 
 rm(list=ls()) #remove all past objects
 
@@ -8,7 +10,7 @@ rm(list=ls()) #remove all past objects
 library(xlsx)
 library(naniar)
 
-filename = "submission_example_old_2024-03-12" #overwrite the filename of the submission
+filename = "submission_Bob Baxendell_2025-08-11" #overwrite the filename of the submission
 # should be of the format submission__(name dataset or other identifier)_(YYYY-MM-DD: date it is saved here)
 # example: submission_example_2023-05-09
 df = read.xlsx(file = paste0("./Submission templates/", filename, ".xlsx"), header = F, 1)
