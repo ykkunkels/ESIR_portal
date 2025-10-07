@@ -1,7 +1,7 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### Server version 1.1.23          ###
-### YKK - 05/05/2025               ###
+### Server version 1.1.24          ###
+### YKK - 07/10/2025               ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 
@@ -308,10 +308,10 @@ server <- function(input, output, session) {
     div(id = "flow", tags$img(src = src_flow, width = "85%", height = "auto"))
   })
   
-  # Temp SAA Banner
-  output$saa <- renderUI({
-    src_saa <- "http://ykkunkels.com/wp-content/uploads/2024/10/SAA25-Banner.png"
-    div(id = "saa", tags$img(src = src_saa, width = "1090px", height = "233px"))
-  })
+  # # Temp SAA Banner
+  # output$saa <- renderUI({
+  #   src_saa <- "http://ykkunkels.com/wp-content/uploads/2024/10/SAA25-Banner.png"
+  #   div(id = "saa", tags$img(src = src_saa, width = "1090px", height = "233px"))
+  # })
   
 } # closing server

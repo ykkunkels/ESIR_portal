@@ -1,9 +1,9 @@
 ######################################
 ### ESIR Portal in Shiny           ###
-### UI version 1.1.23              ###
-### YKK - 09/12/2024               ###
+### UI version 1.1.24              ###
+### YKK - 07/10/2025               ###
 ### Changelog:                     ###
-### > Added UTF-8 for csv download ###
+### > Removed banner               ###
 ### ~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~###
 
 
@@ -234,9 +234,9 @@ ui <- dashboardPage(skin = "green",
           ) # closing fluidRow
         ), # closing right colum
         
-        fluidRow(
-          uiOutput("saa")
-        )
+        # fluidRow(
+        #   uiOutput("saa")
+        # )
         
       ), # closing tabItem()
 
