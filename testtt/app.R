@@ -1,3 +1,8 @@
+# to do
+# make population + q type checkboxes
+# think about heading size (or tips etc; point is to think about guiding the user with text size)
+# make it adaptable to different screen
+
 library(shiny)
 library(DT)
 library(stringr)
@@ -41,45 +46,7 @@ all_tags <- c(
   "worry"
 )
 
-tag_colors <- setNames(
-  c(
-    "#8F7EE5",
-    "#CC8E51",
-    "#0F6B99",
-    "#99540F",
-    "#C3E57E",
-    "#E57E7E",
-    "#B22C2C",
-    "#B26F2C",
-    "#E5B17E",
-    "#E5B17E",
-    "#6B990F",
-    "#C3E57E",
-    "#B26F2C",
-    "#CC8E51",
-    "#6551CC",
-    "#85B22C",
-    "#990F0F",
-    "#2C85B2",
-    "#B22C2C",
-    "#0F6B99",
-    "#7EC3E5",
-    "#422CB2",
-    "#51A3CC",
-    "#990F0F",
-    "#CC5151",
-    "#A3CC51",
-    "#85B22C",
-    "#CC5151",
-    "#E57E7E",
-    "#6B990F",
-    "#A3CC51",
-    "#BFB2FF",
-    "#260F99",
-    "#99540F"
-  ),
-  all_tags
-)
+tag_colors <- setNames(rep("#5e7d6a", length(all_tags)), all_tags)
 
 ui <- navbarPage(
   title = NULL,
@@ -252,36 +219,38 @@ ui <- navbarPage(
       
       div(
         class = "info-text",
-        tags$b("How do I use the ESM Item Repository?"),
-        tags$br(),
-        "This portal presents a selection of item information available for review. ",
-        "It is designed to allow you to easily search 🔍, filter 🧹, and explore 🧭 these items based on various columns provided below. ",
-        "You can use the available search and filter features to refine your results and quickly find the items most relevant to your needs 🎯",
-        "Note that this portal only shows a selection of the available item information. You can download the data via the buttons below for more information about the items.",
-        tags$br(),
-        "💡 Tip: You can now hover over any of the column titles in the table to see more information about what each column means️.",
-        tags$br(),
-        "⬇️ To download the complete dataset from the portal, press the 'Show all items (Clear search)' button below and then press 'Download .csv' or 'Download Excel (.xlsx)' below.",
-        tags$br(),
-        tags$span(
-          HTML(
-            "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To download a subset of the dataset, complete your search and press 'Download .csv' or 'Download Excel (.xlsx)' below."
-          )
-        ),
-        tags$br(),
+        style = "display: flex; flex-direction: column; padding: 20px;",
+        
+        # Top row: explanatory text + grey citation box
         div(
-          style = "background-color: #e0e0e0; padding: 20px; border-radius: 10px; margin-top: 20px;",
-          tags$b(
-            "How do I refer to the ESM Item Repository in publications and other documents?"
-          ),
-          tags$br(),
+          style = "display: flex; gap: 20px; flex-wrap: wrap;",
           
+          # Left column: How to use text (2/3 width)
           div(
-            style = "display: flex; align-items: flex-start; gap: 20px;",
+            style = "flex: 3; min-width: 300px;",
+            tags$b("How do I use the ESM Item Repository?"),
+            tags$br(),
+            "This portal presents a selection of item information available for review. ",
+            "It is designed to allow you to easily search, filter, and explore these items based on various columns provided below. ",
+            "You can use the available search and filter features to refine your results and quickly find the items most relevant to your needs.",
+            tags$br(),
+            "Note that this portal only shows a selection of the available item information. You can download the data via the buttons below for more information about the items.",
+            tags$br(),
+            "💡 Tip: You can now hover over any of the column titles in the table to see more information about what each column means️.",
+            tags$br(),
+            "⬇️ To download the complete dataset from the portal, press the 'Show all items (Clear search)' button below and then press 'Download .csv' or 'Download Excel (.xlsx)' below.",
+            tags$br(),
+            "⬇️ To download a subset of the dataset (e.g., after filtering it based on your desired characteristics), complete your search and press 'Download .csv' or 'Download Excel (.xlsx)' below.",
+          ),
+          
+          # Right column: Citation grey box (1/3 width)
+          div(
+            style = "flex: 2.1; min-width: 250px; display: flex; flex-direction: column; justify-content: space-between; background-color: #f0f0f0; padding: 20px; border-radius: 10px; font-size: 18px; line-height: 1.5;",
             
-            # Left: Citation text
+            # Top: Citation text
             div(
-              style = "flex: 0 0 85%; max-width: 85%; font-size: 18px; line-height: 1.5;",
+              tags$b("How do I refer to the ESM Item Repository in publications and other documents?"),
+              tags$br(),
               "If you use insights from the ESM Item Repository, please cite as: ",
               tags$br(),
               "Kirtley, O. J., Eisele, G., Kunkels, Y. K., Hiekkaranta, A., Van Heck, L., Pihlajamäki, M. R., Kunc, B., Schoefs, S., Kemme, N., Biesemans, T., & Myin-Germeys, I. (2024). The Experience Sampling Method Item Repository ",
@@ -289,13 +258,14 @@ ui <- navbarPage(
                 href = "https://doi.org/10.17605/OSF.IO/KG376",
                 target = "_blank",
                 "https://doi.org/10.17605/OSF.IO/KG376"
-              ),
-              ". Alternatively, you can download the citation in your preferred format using the button on the right."
+              ), ".",
+              tags$br(),
+              "Alternatively, you can download the citation in your preferred format using the button below."
             ),
             
-            # Right: Citation controls (dropdown and button)
+            # Bottom: dropdown + download button side by side on the right
             div(
-              style = "flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;",
+              style = "display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;",
               selectInput(
                 inputId = "citation_format",
                 label = NULL,
@@ -308,7 +278,7 @@ ui <- navbarPage(
                   "Zotero RDF (.rdf)" = "citation_zotero_rdf.rdf"
                 ),
                 selected = "citation_bibtex.bib",
-                width = "220px"
+                width = "150px"
               ),
               downloadButton(
                 outputId = "download_citation",
@@ -317,30 +287,76 @@ ui <- navbarPage(
               )
             )
           )
-        )
-        ,
-        div(
-          style = "display: flex; justify-content: space-between; align-items: flex-end; margin-top: 20px;",
           
-          # Left: Reset and download buttons
-          div(
-            style = "display: flex; gap: 16px;",
-            actionButton("reset_btn", "🔄 Show all items (Clear search)", style = "background-color: #3498db; color: white; border: none;"),
-            downloadButton("download_csv", "Download .csv", style = "background-color: #2ecc71; color: white; border: none;"),
-            downloadButton("download_excel", "Download Excel (.xlsx)", style = "background-color: #1abc9c; color: white; border: none;")
-          ),
+        ),
+        
+        # Bottom row: main white box buttons (unchanged)
+        div(
+          style = "display: flex; justify-content: flex-start; gap: 16px; margin-top: 20px;",
+          actionButton("reset_btn", "🔄 Show all items (Clear search)", style = "background-color: #3498db; color: white; border: none;"),
+          downloadButton("download_csv", "Download .csv", style = "background-color: #2ecc71; color: white; border: none;"),
+          downloadButton("download_excel", "Download Excel (.xlsx)", style = "background-color: #1abc9c; color: white; border: none;")
         )
-        
-        
-      ),
+      )
+      ,
       
-      div(style = "margin-top: 20px;", tags$h4("Filter by tags"), uiOutput("tag_selector")),
+      fluidRow(
+        column(
+          12,
+          div(
+            class = "table-container",
+            
+            # Light grey box for tags and explanation (2-column layout)
+            div(
+              style = "background-color: #f0f0f0; padding: 20px; border-radius: 10px; margin-bottom: 20px; line-height: 1.6; font-size: 18px; color: #333;",
+              
+              # Make this a flexbox with two columns
+              div(
+                style = "display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 30px;",
+                
+                # Left column — header and explanation text
+                div(
+                  style = "flex: 1 1 45%; min-width: 300px;",
+                  tags$h4(strong("Filter by tags"), style = "margin-top: 0; margin-bottom: 10px;"),
+                  HTML(
+                    "Each item in the repository has one or more tags that describe what it measures—for example, mood, stress, sleep, or social interaction. 
+        These tags help you quickly find items of interest.<br>
+        <strong>Where the tags come from:</strong> Tags were created by analyzing item descriptions and then carefully reviewed by the ESM Item Repository team. 
+        Use the tags to explore items in the repository.<br>
+        <strong>How to use the tags:</strong> Click on a tag to filter the table and see only items with that tag. 
+        You can select multiple tags at the same time; the filter will show items that have <em>any</em> of the selected tags (OR logic).<br>"
+                  )
+                ),
+                
+                # Right column — tags cluster
+                div(
+                  style = "
+                  flex: 1 1 45%;
+                  min-width: 300px;
+                  display: flex;
+                  flex-wrap: wrap;
+                  justify-content: center;
+                  align-content: flex-start;
+                  gap: 10px;
+                  text-align: center;",
+                  uiOutput("tag_selector")
+                )
+              )
+            )
+            , 
+            
+            # Extra space between gray box and table
+            div(style = "height: 20px;"),
+            
+            # Table output
+            DTOutput("filtered_table")
+          )
+        )
+      )
       
-      fluidRow(column(
-        12,
-        div(class = "table-container", DTOutput("filtered_table")),
-        div(style = "height: 20px;")
-      )),
+      
+      
+      ,
       
       div(
         class = "footer-text",
@@ -357,35 +373,45 @@ ui <- navbarPage(
     )),
     div(
       class = "info-text",
-      tags$b(style = "font-size: 18px; display: block; margin-top: 6px; margin-bottom: 10px;", "Who are we? 👋"),
-      tags$p(
-        "We are Olivia Kirtley (KU Leuven), Yoram K. Kunkels (Centraal Bureau voor de Statistiek), Gudrun Eisele (KU Leuven), Steffie Schoefs (KU Leuven), Nieke Vermaelen (KU Leuven), Laura Van Heck (KU Leuven), Milla Pihlajamäki (KU Leuven), Benjamin Kunc (KU Leuven), and Inez Myin-Germeys (KU Leuven)."
-      ),
-      tags$p(
-        "We are an open science initiative supporting the development of Experience Sampling Methodology (ESM) research through an open repository of ESM items. To make this possible, we launched the ESM Item Repository in 2018 and opened our portal in October 2019. Since then, researchers from 11 countries have contributed over 3,300 items—and more are coming! 🚀"
-      ),
-      tags$p(
-        "We aim to support the further development of ESM research with an open repository of existing ESM items:",
-        tags$a(href = "https://osf.io/kg376/", target = "_blank", "https://osf.io/kg376/")
-      ),
-      tags$p(
-        "💌 Want to contribute? Find more information about submission on our OSF page (",
-        tags$a(href = "https://osf.io/kg376/", target = "_blank", "https://osf.io/kg376/"),
-        ") and send your completed items to: ",
-        tags$b("submissions@esmitemrepository.com")
+      style = "display: flex; gap: 20px; flex-wrap: wrap; padding: 20px;",  # overall box padding
+      
+      # Left column: Who are we (2/3 width)
+      div(
+        style = "flex: 2; min-width: 300px; padding: 0 10px; border-right: 1px solid #ccc; box-sizing: border-box;",
+        tags$b(style = "font-size: 18px; display: block; margin-bottom: 10px;", "Who are we? 👋"),
+        tags$p(
+          "We are Olivia Kirtley (KU Leuven), Yoram K. Kunkels (Centraal Bureau voor de Statistiek), Gudrun Eisele (KU Leuven), Steffie Schoefs (KU Leuven), Louise Bresseel (KU Leuven), Laura Van Heck (KU Leuven), Milla Pihlajamäki (KU Leuven), Lisa Peeters (KU Leuven), and Inez Myin-Germeys (KU Leuven)."
+        ),
+        tags$p(
+          "We are an open science initiative supporting the development of Experience Sampling Methodology (ESM) research through an open repository of ESM items. To make this possible, we launched the ESM Item Repository in 2018 and opened our portal in October 2019. Since then, researchers from 11 countries have contributed over 3,300 items—and more are coming! 🚀"
+        ),
+        tags$p(
+          "We aim to support the further development of ESM research with an open repository of existing ESM items:",
+          tags$a(href = "https://osf.io/kg376/", target = "_blank", "https://osf.io/kg376/")
+        ),
+        tags$p(
+          "💌 Want to contribute? Find more information about submission on our OSF page (",
+          tags$a(href = "https://osf.io/kg376/", target = "_blank", "https://osf.io/kg376/"),
+          ") and send your completed items to: ",
+          tags$b("submissions@esmitemrepository.com")
+        )
       ),
       
-      tags$hr(),
-      tags$b(style = "font-size: 18px; display: block; margin-top: 20px; margin-bottom: 10px;", "Funding acknowledgements 💰"),
-      tags$p("The ESM Item Repository and its team are funded by:"),
-      tags$ul(
-        tags$li(
-          "A KU Leuven C1 grant (C16/23/011) to Inez Myin-Germeys and Olivia Kirtley"
-        ),
-        tags$li("A KU Leuven C+ grant (CPLUS/24/009) to Olivia Kirtley"),
-        tags$li("A Research Foundation Flanders (FWO; G049023N) grant")
+      # Right column: Funding (1/3 width)
+      div(
+        style = "flex: 1; min-width: 250px; padding: 0 10px; box-sizing: border-box;",  # same horizontal padding
+        tags$b(style = "font-size: 18px; display: block; margin-bottom: 10px;", "Funding acknowledgements 💰"),
+        tags$p("The ESM Item Repository and its team are funded by:"),
+        tags$ul(
+          tags$li("A KU Leuven C1 grant (C16/23/011) to Inez Myin-Germeys and Olivia Kirtley"),
+          tags$li("A KU Leuven C+ grant (CPLUS/24/009) to Olivia Kirtley"),
+          tags$li("A Research Foundation Flanders (FWO; G049023N) grant")
+        )
       )
-    ),
+    )
+    
+    
+    ,
     div(
       class = "footer-text",
       "[version 1.1.22] We do not take responsibility for the quality of items within the repository. Inclusion of items within the repository does not indicate our endorsement of them. All items within the repository are subject to a Creative Commons Attribution Non-Commercial License (CC BY-NC)."
@@ -582,8 +608,8 @@ server <- function(input, output, session) {
         dom = 'lfrtip',
         language = list(search = "Search all columns:"),
         columnDefs = list(
-          list(targets = 0, width = "4.545455%"),
-          list(targets = 1, width = "13.63636%"),
+          list(targets = 0, width = "5.545455%"),
+          list(targets = 1, width = "12.63636%"),
           list(targets = 2, width = "13.63636%"),
           list(targets = 3, width = "12.63636%"),
           list(targets = 4, width = "6.818182%"),
@@ -601,14 +627,14 @@ server <- function(input, output, session) {
           "function(settings) {",
           "  var tooltips = [",
           "    'A unique number to identify each item',",
-          "    '🗣️The item in its original language',",
+          "    '️The item in its original language',",
           "    'The item translated to English. This may be blank if English is the original language of the item.',",
-          "    '📝A description of the item as specified by the contributor(s), e.g., what the item measures',",
+          "    'A description of the item as specified by the contributor(s), e.g., what the item measures',",
           "    'The possible name of the dataset that the item was used in',",
           "    'What kind of questionnaire the item was part of (regular, morning, evening, and/or event)',",
           "    'The population type the item was used for (children, adolescents, adults, elderly, general population, outpatient, and/or inpatient)',",
-          "    '📚References to publications using the item.',",
-          "    '📧Contact information for the item contributor(s)',",
+          "    'References to publications using the item.',",
+          "    'Contact information for the item contributor(s)',",
           "    '🏷️Item tags expressing, for example, the measured construct of the item'",
           "  ];",
           "  this.api().columns().every(function(i) {",
