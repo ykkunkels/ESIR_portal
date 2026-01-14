@@ -1,7 +1,15 @@
 # to do
 # make population + q type checkboxes
-# think about heading size (or tips etc; point is to think about guiding the user with text size)
-# make it adaptable to different screen
+# make sure tags do not undo dt table choices
+
+# Code
+# I see you combined ui.R and server.R into one script called app.R. while not
+# wrong, I do not think it benifits readability of the code, especially as we
+# are already almost running 700 lines of code. Perhaps we could split these
+# again? Or did you combine them with a specific reason?
+#
+#   The in-code documentation could be improved. It is not yet clear what
+# everything does.
 
 library(shiny)
 library(DT)
@@ -133,7 +141,8 @@ ui <- navbarPage(
         border-radius: 20px !important;
       }
       .badge-tag.selected {
-        border: 2px solid black !important;
+        border: 3px solid darkorange !important;
+        font-weight: 700;
       }
       .table-container {
         background-color: white;
@@ -206,6 +215,20 @@ ui <- navbarPage(
        margin-left: 0px !important;
        vertical-align: top;
       }
+      /* Make the navbar fixed at the top */
+      .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      font-size: 18px;
+      color: black;
+      }
+      /* Add spacing so content is not hidden behind navbar */
+      body {
+      padding-top: 70px; /* adjust if navbar height changes */
+      }
+
       "
           )
         ))
@@ -249,7 +272,9 @@ ui <- navbarPage(
             
             # Top: Citation text
             div(
-              tags$b("How do I refer to the ESM Item Repository in publications and other documents?"),
+              tags$b(
+                "How do I refer to the ESM Item Repository in publications and other documents?"
+              ),
               tags$br(),
               "If you use insights from the ESM Item Repository, please cite as: ",
               tags$br(),
@@ -258,7 +283,8 @@ ui <- navbarPage(
                 href = "https://doi.org/10.17605/OSF.IO/KG376",
                 target = "_blank",
                 "https://doi.org/10.17605/OSF.IO/KG376"
-              ), ".",
+              ),
+              ".",
               tags$br(),
               "Alternatively, you can download the citation in your preferred format using the button below."
             ),
@@ -300,37 +326,35 @@ ui <- navbarPage(
       )
       ,
       
-      fluidRow(
-        column(
-          12,
+      fluidRow(column(
+        12, div(
+          class = "table-container",
+          
+          # Light grey box for tags and explanation (2-column layout)
           div(
-            class = "table-container",
+            style = "background-color: #f0f0f0; padding: 20px; border-radius: 10px; margin-bottom: 20px; line-height: 1.6; font-size: 18px; color: #333;",
             
-            # Light grey box for tags and explanation (2-column layout)
+            # Make this a flexbox with two columns
             div(
-              style = "background-color: #f0f0f0; padding: 20px; border-radius: 10px; margin-bottom: 20px; line-height: 1.6; font-size: 18px; color: #333;",
+              style = "display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 30px;",
               
-              # Make this a flexbox with two columns
+              # Left column — header and explanation text
               div(
-                style = "display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 30px;",
-                
-                # Left column — header and explanation text
-                div(
-                  style = "flex: 1 1 45%; min-width: 300px;",
-                  tags$h4(strong("Filter by tags"), style = "margin-top: 0; margin-bottom: 10px;"),
-                  HTML(
-                    "Each item in the repository has one or more tags that describe what it measures—for example, mood, stress, sleep, or social interaction. 
+                style = "flex: 1 1 45%; min-width: 300px;",
+                tags$h4(strong("Filter by tags"), style = "margin-top: 0; margin-bottom: 10px;"),
+                HTML(
+                  "Each item in the repository has one or more tags that describe what it measures—for example, mood, stress, sleep, or social interaction.
         These tags help you quickly find items of interest.<br>
-        <strong>Where the tags come from:</strong> Tags were created by analyzing item descriptions and then carefully reviewed by the ESM Item Repository team. 
+        <strong>Where the tags come from:</strong> Tags were created by analyzing item descriptions and then carefully reviewed by the ESM Item Repository team.
         Use the tags to explore items in the repository.<br>
-        <strong>How to use the tags:</strong> Click on a tag to filter the table and see only items with that tag. 
+        <strong>How to use the tags:</strong> Click on a tag to filter the table and see only items with that tag.
         You can select multiple tags at the same time; the filter will show items that have <em>any</em> of the selected tags (OR logic).<br>"
-                  )
-                ),
-                
-                # Right column — tags cluster
-                div(
-                  style = "
+                )
+              ),
+              
+              # Right column — tags cluster
+              div(
+                style = "
                   flex: 1 1 45%;
                   min-width: 300px;
                   display: flex;
@@ -339,20 +363,19 @@ ui <- navbarPage(
                   align-content: flex-start;
                   gap: 10px;
                   text-align: center;",
-                  uiOutput("tag_selector")
-                )
+                uiOutput("tag_selector")
               )
             )
-            , 
-            
-            # Extra space between gray box and table
-            div(style = "height: 20px;"),
-            
-            # Table output
-            DTOutput("filtered_table")
           )
+          ,
+          
+          # Extra space between gray box and table
+          div(style = "height: 20px;"),
+          
+          # Table output
+          DTOutput("filtered_table")
         )
-      )
+      ))
       
       
       
@@ -373,7 +396,8 @@ ui <- navbarPage(
     )),
     div(
       class = "info-text",
-      style = "display: flex; gap: 20px; flex-wrap: wrap; padding: 20px;",  # overall box padding
+      style = "display: flex; gap: 20px; flex-wrap: wrap; padding: 20px;",
+      # overall box padding
       
       # Left column: Who are we (2/3 width)
       div(
@@ -399,11 +423,14 @@ ui <- navbarPage(
       
       # Right column: Funding (1/3 width)
       div(
-        style = "flex: 1; min-width: 250px; padding: 0 10px; box-sizing: border-box;",  # same horizontal padding
+        style = "flex: 1; min-width: 250px; padding: 0 10px; box-sizing: border-box;",
+        # same horizontal padding
         tags$b(style = "font-size: 18px; display: block; margin-bottom: 10px;", "Funding acknowledgements 💰"),
         tags$p("The ESM Item Repository and its team are funded by:"),
         tags$ul(
-          tags$li("A KU Leuven C1 grant (C16/23/011) to Inez Myin-Germeys and Olivia Kirtley"),
+          tags$li(
+            "A KU Leuven C1 grant (C16/23/011) to Inez Myin-Germeys and Olivia Kirtley"
+          ),
           tags$li("A KU Leuven C+ grant (CPLUS/24/009) to Olivia Kirtley"),
           tags$li("A Research Foundation Flanders (FWO; G049023N) grant")
         )
@@ -528,11 +555,35 @@ server <- function(input, output, session) {
   
   selected_tags <- reactiveVal(character(0))
   
+  # helper: darken a hex color (amount between 0 and 1; e.g. 0.15 = 15% darker)
+  darken_hex <- function(hex, amount = 0.15) {
+    hex <- gsub("#", "", hex)
+    if (nchar(hex) == 3) {
+      hex <- paste0(
+        substr(hex, 1, 1),
+        substr(hex, 1, 1),
+        substr(hex, 2, 2),
+        substr(hex, 2, 2),
+        substr(hex, 3, 3),
+        substr(hex, 3, 3)
+      )
+    }
+    vals <- sapply(c(1, 3, 5), function(i)
+      strtoi(substr(hex, i, i + 1), 16L))
+    dark <- pmax(0, round(vals * (1 - amount)))
+    sprintf("#%02x%02x%02x", dark[1], dark[2], dark[3])
+  }
+  
   output$tag_selector <- renderUI({
     tagList(lapply(all_tags, function(tag) {
-      style <- paste0("background-color:", tag_colors[[tag]], ";")
+      base_col <- tag_colors[[tag]]
+      # default style uses the base color
+      style <- paste0("background-color:", base_col, ";")
       classes <- "badge-tag"
+      # if selected: use a darkened background color but keep everything else the same
       if (tag %in% selected_tags()) {
+        darker <- darken_hex(base_col, amount = 0.35)  # tune amount to taste
+        style <- paste0("background-color:", darker, ";")
         classes <- paste(classes, "selected")
       }
       span(
@@ -546,6 +597,7 @@ server <- function(input, output, session) {
       )
     }))
   })
+  
   
   observeEvent(input$tag_click, {
     current <- selected_tags()
@@ -589,11 +641,26 @@ server <- function(input, output, session) {
       "Contact",
       "Tags"
     )
+    
+    # <-- MAKE Item ID a character so DT shows a text input (not a slider) -->
+    output_df$`Item ID` <- as.character(output_df$`Item ID`)
+    
     output_df$Tags <- sapply(output_df$Tags, format_tags)
     output_df
   })
   
-  proxy <- dataTableProxy("filtered_table")
+  column_tooltips <- c(
+    "A unique number to identify each item",
+    "The item in its original language",
+    "The item translated to English. This may be blank if English is the original language of the item",
+    "A description of the item as specified by the contributor(s), e.g., what the item measures",
+    "The possible name of the dataset that the item was used in",
+    "What kind of questionnaire the item was part of (regular, morning, evening, and/or event)",
+    "The population type the item was used for (children, adolescents, adults, elderly, general population, outpatient, and/or inpatient)",
+    "References to publications using the item",
+    "Contact information for the item contributor(s)",
+    "Item tags expressing, for example, the measured construct of the item"
+  )
   
   output$filtered_table <- renderDT({
     datatable(
@@ -608,7 +675,11 @@ server <- function(input, output, session) {
         dom = 'lfrtip',
         language = list(search = "Search all columns:"),
         columnDefs = list(
-          list(targets = 0, width = "5.545455%"),
+          list(
+            targets = 0,
+            width = "5.545455%",
+            type = 'num'
+          ),
           list(targets = 1, width = "12.63636%"),
           list(targets = 2, width = "13.63636%"),
           list(targets = 3, width = "12.63636%"),
@@ -623,61 +694,148 @@ server <- function(input, output, session) {
             searchable = FALSE
           )
         ),
-        drawCallback = JS(
-          "function(settings) {",
-          "  var tooltips = [",
-          "    'A unique number to identify each item',",
-          "    '️The item in its original language',",
-          "    'The item translated to English. This may be blank if English is the original language of the item.',",
-          "    'A description of the item as specified by the contributor(s), e.g., what the item measures',",
-          "    'The possible name of the dataset that the item was used in',",
-          "    'What kind of questionnaire the item was part of (regular, morning, evening, and/or event)',",
-          "    'The population type the item was used for (children, adolescents, adults, elderly, general population, outpatient, and/or inpatient)',",
-          "    'References to publications using the item.',",
-          "    'Contact information for the item contributor(s)',",
-          "    '🏷️Item tags expressing, for example, the measured construct of the item'",
-          "  ];",
-          "  this.api().columns().every(function(i) {",
-          "    $(this.header()).attr('title', tooltips[i]);",
+        # initComplete: attach custom handler for Item ID input and add a scoped range filter
+        initComplete = JS(
+          "function(settings, json) {",
+          "  var api = this.api();",
+          "  var tableNode = api.table().node();",
+          "  // find the first top-column input (Item ID) from the table container",
+          "  var $container = $(api.table().container());",
+          "  var $inputs = $container.find('thead input');",
+          "  var $idInput = $inputs.eq(0);",
+          "",
+          "  // avoid adding multiple global filters if table is redrawn/re-initialized",
+          "  if (!tableNode._rangeFilterAdded) {",
+          "    tableNode._rangeFilterAdded = true;",
+          "    $.fn.dataTable.ext.search.push(function(settingsParam, data, dataIndex) {",
+          "      if (settingsParam.nTable !== tableNode) return true; // only apply to this table",
+          "      var current = $idInput.val();",
+          "      if (!current || current.indexOf('-') === -1) return true; // not a range -> don't filter here",
+          "      var parts = current.split('-').map(function(s){ return s.trim(); });",
+          "      var min = parseInt(parts[0], 10);",
+          "      var max = parseInt(parts[1], 10);",
+          "      if (isNaN(min) || isNaN(max)) return true; // invalid range -> don't filter",
+          "      var idVal = parseInt(data[0], 10); // data[0] is Item ID column",
+          "      if (isNaN(idVal)) return false;",
+          "      return idVal >= min && idVal <= max;",
+          "    });",
+          "  }",
+          "",
+          "  // remove default column input event and replace with custom behavior for Item ID",
+          "  $idInput.off('keyup.DT input.DT change.DT');",
+          "  $idInput.on('keyup input change', function(e) {",
+          "    var val = $(this).val();",
+          "    if (val && val.indexOf('-') !== -1) {",
+          "      // range entered -> clear column search for Item ID and redraw (ext.search will handle range)",
+          "      api.column(0).search('').draw();",
+          "    } else {",
+          "      // normal text -> use standard column search (substring match)",
+          "      api.column(0).search(val).draw();",
+          "    }",
           "  });",
           "}"
+        ),
+        headerCallback = JS(
+          sprintf(
+            "function(thead, data, start, end, display) {
+       var tips = %s;
+       $('th', thead).each(function(i) {
+         $(this).attr('title', tips[i]);
+       });
+     }",
+            jsonlite::toJSON(column_tooltips)
+          )
         )
+        
       )
     )
   }, server = FALSE)
   
   
   
+  
+  ## ---- Reset button (no global proxy) ----
   observeEvent(input$reset_btn, {
-    proxy %>% selectRows(NULL) %>% selectPage(1) %>% clearSearch()
+    # inline proxy (no long-lived 'proxy' variable)
+    dataTableProxy("filtered_table") %>%
+      selectRows(NULL) %>%
+      selectPage(1) %>%
+      clearSearch()
+    
     selected_tags(character(0))
   })
   
+  ## ---- CSV download (robust fallback for client-side filtered rows) ----
   output$download_csv <- downloadHandler(
     filename = function()
       paste0("filtered_data_", Sys.Date(), ".csv"),
     content = function(file) {
-      data_to_save <- if (is.null(input$filtered_table_rows_all))
-        df
-      else
-        df[input$filtered_table_rows_all, ]
+      fd <- filtered_data()  # displayed table (Item ID is character)
+      # attempt several ways to get visible row indices from client
+      ids_char <- NULL
+      if (!is.null(input$filtered_table_rows_all) &&
+          length(input$filtered_table_rows_all) > 0) {
+        ids_char <- fd[input$filtered_table_rows_all, "Item ID"]
+      } else if (!is.null(input$filtered_table_rows_selected) &&
+                 length(input$filtered_table_rows_selected) > 0) {
+        ids_char <- fd[input$filtered_table_rows_selected, "Item ID"]
+      } else {
+        ids_char <- fd[["Item ID"]]
+      }
+      
+      # convert to numeric safely and drop NAs
+      ids_num <- suppressWarnings(as.numeric(ids_char))
+      ids_num <- ids_num[!is.na(ids_num)]
+      
+      if (length(ids_num) == 0) {
+        # nothing parsed -> fallback to saving the whole original df
+        showNotification("No filtered rows detected in the table — saving full dataset.",
+                         type = "warning")
+        data_to_save <- df
+      } else {
+        data_to_save <- df[match(ids_num, df$item_ID), ]
+      }
+      
       data_to_save$tag_list <- NULL
       write.csv(data_to_save, file, row.names = FALSE)
     }
   )
   
+  
+  ## ---- Excel download (same logic) ----
   output$download_excel <- downloadHandler(
     filename = function()
       paste0("filtered_data_", Sys.Date(), ".xlsx"),
     content = function(file) {
-      data_to_save <- if (is.null(input$filtered_table_rows_all))
-        df
-      else
-        df[input$filtered_table_rows_all, ]
+      fd <- filtered_data()
+      ids_char <- NULL
+      if (!is.null(input$filtered_table_rows_all) &&
+          length(input$filtered_table_rows_all) > 0) {
+        ids_char <- fd[input$filtered_table_rows_all, "Item ID"]
+      } else if (!is.null(input$filtered_table_rows_selected) &&
+                 length(input$filtered_table_rows_selected) > 0) {
+        ids_char <- fd[input$filtered_table_rows_selected, "Item ID"]
+      } else {
+        ids_char <- fd[["Item ID"]]
+      }
+      
+      ids_num <- suppressWarnings(as.numeric(ids_char))
+      ids_num <- ids_num[!is.na(ids_num)]
+      
+      if (length(ids_num) == 0) {
+        showNotification("No filtered rows detected in the table — saving full dataset.",
+                         type = "warning")
+        data_to_save <- df
+      } else {
+        data_to_save <- df[match(ids_num, df$item_ID), ]
+      }
+      
       data_to_save$tag_list <- NULL
       write.xlsx(data_to_save, file)
     }
   )
+  
+  
   
   output$download_citation <- downloadHandler(
     filename = function() {
