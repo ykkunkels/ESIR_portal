@@ -282,7 +282,7 @@ server <- function(input, output, session) {
     "The item translated to English. This may be blank if English is the original language of the item",
     "A description of the item as specified by the contributor(s), e.g., what the item measures",
     "The possible name of the dataset that the item was used in",
-    "What kind of questionnaire the item was part of (regular, morning, evening, and/or event)",
+    "What kind of questionnaire the item was part of (regular [i.e., the questionnaire shown at every signal-contingent beep], morning, evening, and/or event)",
     "The population type the item was used for (children, adolescents, adults, elderly, general population, outpatient, and/or inpatient)",
     "References to publications using the item",
     "Contact information for the item contributor(s)",
