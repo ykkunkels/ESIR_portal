@@ -376,6 +376,20 @@ server <- function(input, output, session) {
     selected_tags(character(0))
   })
   
+  observeEvent(input$toggle_info, {
+    shinyjs::toggle(id = "info_box")
+    
+    updateActionButton(
+      session,
+      "toggle_info",
+      label = ifelse(
+        grepl("Hide", input$toggle_info),
+        "ℹ️ Show instructions",
+        "ℹ️ Hide instructions"
+      )
+    )
+  })
+  
   # -------------------------
   # Download CSV of filtered or full data
   # -------------------------
