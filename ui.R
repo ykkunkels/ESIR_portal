@@ -1,8 +1,6 @@
 # to do
 # make population + q type checkboxes
 # make sure tags do not undo dt table choices
-# Potential changes before launch: allow tags to be selected based on an AND logic,
-# layout: make the “how to” box collapsable
 # make layout adapted to the screen size
 
 # Modified ESM Item Repository Shiny app
@@ -70,12 +68,50 @@ ui <- navbarPage(
     fluidPage(
       tags$head(
         tags$link(href = "https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap", rel = "stylesheet"),
-        tags$style(
-          HTML(
-            paste0(
-              "
+        tags$link(href = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap", rel = "stylesheet"),
+        tags$style(HTML(
+          paste0(
+            "
+              /* Collapsible info box styling — open by default */
+              details.collapsible-info-box {
+              margin: 20px 0;
+              background-color: #ffffff;
+              border-left: 6px solid rgba(46, 125, 78, 0.85);
+              padding: 0;
+              border-radius: 6px;
+              box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+              }
+
+              /* Summary header (clickable) */
+              details.collapsible-info-box > summary {
+              cursor: pointer;
+              padding: 12px 16px;
+              font-weight: 600;
+              font-size: 20px;
+              background-color: rgba(84, 163, 110, 0.40);
+              color: rgba(46, 125, 78, 0.85);
+              border-radius: 6px;
+              list-style: none;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              }
+
+              /* Remove default disclosure triangle */
+              details.collapsible-info-box summary::-webkit-details-marker { display: none; }
+
             /* Body and navbar styling */
-            body { font-family: 'Arial', sans-serif; background-color: #f4f6f7; margin: 0; padding: 0; padding-top: 70px; }
+            body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f4f6f7;
+            margin: 0;
+            padding: 0;
+            padding-top: 70px;
+            }
+            h1, h2, h3, h4, h5, summary {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            }
             .navbar { position: fixed; top: 0; width: 100%; z-index: 1000; font-size: 18px; color: black; }
 
             /* Title panel styling */
@@ -99,7 +135,7 @@ ui <- navbarPage(
             .table-container { background-color: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 12px; margin-top: 8px; }
 
             /* DataTable styling */
-            table.dataTable { border-radius: 10px; border-collapse: separate; width: 100%; margin-top: 8px; font-size: 13px; }
+            table.dataTable { border-radius: 10px; border-collapse: separate; width: 100%; margin-top: 8px; font-size: 13.5px; font-family: 'Inter', sans-serif; }
             table.dataTable th, table.dataTable td { padding: 8px; text-align: left; }
             table.dataTable th { background-color: #2c3e50; color: white; font-size: 12px; }
             table.dataTable tbody tr:hover { background-color: #f1f1f1; }
@@ -156,9 +192,8 @@ ui <- navbarPage(
 
 
             "
-            )
           )
-        )
+        ))
       ),
       
       div(class = "title-panel", div(
@@ -167,76 +202,83 @@ ui <- navbarPage(
         tags$img(src = "logo.png", class = "title-logo")
       )),
       
-      div(
-        class = "info-text",
-        style = "display: flex; flex-direction: column; padding: 12px;",
+      # Collapsible info box — default open
+      tags$details(
+        class = "collapsible-info-box info-text",
+        open = NA,
+        tags$summary(tags$h4(
+          strong("How do I use the ESM Item Repository?")
+        )),
+        # keep the original inner layout but wrapped inside the details
         div(
-          style = "display: flex; gap: 20px; flex-wrap: wrap;",
+          style = "display: flex; flex-direction: column; padding: 12px;",
           div(
-            style = "flex: 3; min-width: 300px;",
-            tags$b("How do I use the ESM Item Repository?"),
-            tags$br(),
-            "This portal presents a selection of item information available for review. ",
-            "It is designed to allow you to easily search, filter, and explore these items based on various columns provided below. ",
-            tags$br(),
-            "Note that this portal only shows a selection of the available item information. You can download the data via the buttons below for more information about the items.",
-            tags$br(),
-            "💡 Tip: You can now hover over any of the column titles in the table to see more information about what each column means️.",
-            tags$br(),
-            "⬇️ To download the complete dataset from the portal, press the 'Show all items (Clear search)' button below and then press 'Download .csv' or 'Download Excel (.xlsx)' below.",
-            tags$br(),
-            "⬇️ To download a subset of the dataset (e.g., after filtering it based on your desired characteristics), complete your search and press 'Download .csv' or 'Download Excel (.xlsx)' below."
-          ),
-          div(
-            style = "flex: 1.5; min-width: 200px; display: flex; flex-direction: column; justify-content: space-between; background-color: #f0f0f0; padding: 12px; border-radius: 6px; font-size: 18px; line-height: 1.5;",
+            style = "display: flex; gap: 20px; flex-wrap: wrap;",
             div(
-              tags$b(
-                "How do I refer to the ESM Item Repository in publications and other documents?"
-              ),
+              style = "flex: 3; min-width: 300px;",
+              "This portal presents a selection of item information available for review. ",
+              "It is designed to allow you to easily search, filter, and explore these items based on various columns provided below. ",
               tags$br(),
-              "If you use insights from the ESM Item Repository, please cite as: ",
+              "Note that this portal only shows a selection of the available item information. You can download the data via the buttons below for more information about the items.",
               tags$br(),
-              "Kirtley, O. J., Eisele, G., ... Myin-Germeys, I. (2024). The Experience Sampling Method Item Repository ",
-              tags$a(
-                href = "https://doi.org/10.17605/OSF.IO/KG376",
-                target = "_blank",
-                "https://doi.org/10.17605/OSF.IO/KG376"
-              ),
-              ".",
+              "💡 Tip: You can now hover over any of the column titles in the table to see more information about what each column means️.",
               tags$br(),
-              "Alternatively, you can download the citation in your preferred format using the button below."
+              "⬇️ To download the complete dataset from the portal, press the 'Show all items (Clear search)' button below and then press 'Download .csv' or 'Download Excel (.xlsx)' below.",
+              tags$br(),
+              "⬇️ To download a subset of the dataset (e.g., after filtering it based on your desired characteristics), complete your search and press 'Download .csv' or 'Download Excel (.xlsx)' below."
             ),
             div(
-              style = "display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px;",
-              selectInput(
-                inputId = "citation_format",
-                label = NULL,
-                choices = list(
-                  "BibTeX (.bib)" = "citation_bibtex.bib",
-                  "RIS (.ris)" = "citation_ris.ris",
-                  "EndNote (.xml)" = "citation_endnote_xlm.xml",
-                  "RefWorks (.txt)" = "citation_refworks.txt",
-                  "CSV (.csv)" = "citation_csv.csv",
-                  "Zotero RDF (.rdf)" = "citation_zotero_rdf.rdf"
+              style = "flex: 2; min-width: 200px; display: flex; flex-direction: column; justify-content: space-between; background-color: #f0f0f0; padding: 12px; border-radius: 6px; font-size: 18px; line-height: 1.5;",
+              div(
+                tags$b(
+                  "How do I refer to the ESM Item Repository in publications and other documents?"
                 ),
-                selected = "citation_bibtex.bib",
-                width = "150px"
+                tags$br(),
+                "If you use insights from the ESM Item Repository, please cite as: ",
+                tags$br(),
+                "Kirtley, O. J., Eisele, G., Kunkels, Y. K., Hiekkaranta, A., Van Heck, L., Pihlajamäki, M. R., Kunc, B., Schoefs, S., Kemme, N., Biesemans, T., & Myin-Germeys, I. (2024). The Experience Sampling Method Item Repository ",
+                tags$a(
+                  href = "https://doi.org/10.17605/OSF.IO/KG376",
+                  target = "_blank",
+                  "https://doi.org/10.17605/OSF.IO/KG376"
+                ),
+                ".",
+                tags$br(),
+                "Alternatively, you can download the citation in your preferred format using the button below."
               ),
-              downloadButton(
-                outputId = "download_citation",
-                label = "Download citation",
-                class = "light-download-btn"
+              div(
+                style = "display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px;",
+                selectInput(
+                  inputId = "citation_format",
+                  label = NULL,
+                  choices = list(
+                    "BibTeX (.bib)" = "citation_bibtex.bib",
+                    "RIS (.ris)" = "citation_ris.ris",
+                    "EndNote (.xml)" = "citation_endnote_xlm.xml",
+                    "RefWorks (.txt)" = "citation_refworks.txt",
+                    "CSV (.csv)" = "citation_csv.csv",
+                    "Zotero RDF (.rdf)" = "citation_zotero_rdf.rdf"
+                  ),
+                  selected = "citation_bibtex.bib",
+                  width = "150px"
+                ),
+                downloadButton(
+                  outputId = "download_citation",
+                  label = "Download citation",
+                  class = "light-download-btn"
+                )
               )
             )
+          ),
+          div(
+            style = "display: flex; justify-content: flex-start; gap: 12px; margin-top: 6px;",
+            actionButton("reset_btn", "🔄 Show all items (Clear search)", style = "background-color: #3498db; color: white; border: none;"),
+            downloadButton("download_csv", "Download .csv", style = "background-color: #2ecc71; color: white; border: none;"),
+            downloadButton("download_excel", "Download Excel (.xlsx)", style = "background-color: #1abc9c; color: white; border: none;")
           )
-        ),
-        div(
-          style = "display: flex; justify-content: flex-start; gap: 12px; margin-top: 6px;",
-          actionButton("reset_btn", "🔄 Show all items (Clear search)", style = "background-color: #3498db; color: white; border: none;"),
-          downloadButton("download_csv", "Download .csv", style = "background-color: #2ecc71; color: white; border: none;"),
-          downloadButton("download_excel", "Download Excel (.xlsx)", style = "background-color: #1abc9c; color: white; border: none;")
         )
-      ),
+      )
+      ,
       
       fluidRow(column(
         12,
@@ -246,7 +288,9 @@ ui <- navbarPage(
           # Collapsible Tags explanation box (default collapsed)
           tags$details(
             class = "collapsible-tag-box",
-            tags$summary(tags$h4(strong("Click to filter by tags"))),
+            tags$summary(tags$h4(strong(
+              "Click to filter by tags"
+            ))),
             div(
               style = "display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 18px;",
               
@@ -263,15 +307,33 @@ ui <- navbarPage(
                 )
               ),
               
-              # Right tag selector
               div(
-                style = "flex: 1 1 55%; min-width: 350px; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 10px; text-align: center;",
-                uiOutput("tag_selector")
+                style = "
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 4px;
+    padding: 0;
+  ",
+                radioButtons(
+                  inputId = "tag_logic",
+                  label = strong("Match items that have:"),
+                  choices = c(
+                    "Any selected tag (OR)" = "or",
+                    "All selected tags (AND)" = "and"
+                  ),
+                  selected = "or",
+                  inline = TRUE
+                )
               )
+              ,
+              
+              # Right tag selector
+              div(style = "flex: 1 1 55%; min-width: 350px; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 10px; text-align: center;", uiOutput("tag_selector"))
             )
           ),
           
-          div(style = "height: 16px;"),
+          div(style = "height: 2px;"),
           DTOutput("filtered_table")
         )
       )),

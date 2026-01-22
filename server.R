@@ -234,9 +234,15 @@ server <- function(input, output, session) {
       data <- data[sapply(data$tag_list, function(tags) {
         if (is.null(tags))
           return(FALSE)
-        any(tags %in% selected_tags())
+        
+        if (input$tag_logic == "and") {
+          all(selected_tags() %in% tags)
+        } else {
+          any(tags %in% selected_tags())
+        }
       }), ]
     }
+    
     
     # Select only relevant columns for display
     output_df <- data[, c(
