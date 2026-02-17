@@ -226,10 +226,13 @@ server <- function(input, output, session) {
   })
   
   # -------------------------
-  # Filter dataset based on selected tags
+  # Filter dataset based on selected tags and filters
   # -------------------------
   filtered_data <- reactive({
     data <- df
+    
+    # Filter based on selected tags
+    
     if (length(selected_tags()) > 0) {
       data <- data[sapply(data$tag_list, function(tags) {
         if (is.null(tags))
@@ -243,6 +246,48 @@ server <- function(input, output, session) {
       }), ]
     }
     
+    # Filter based on sidebar filters - Item (original language)
+    
+    if (input$filter_item_og != "") {
+      data <- data[grepl(input$filter_item_og, data$label, ignore.case = T),]
+    }
+    
+    # Sidebar filters - Item (English)
+    
+    if (input$filter_item_english != "") {
+      data <- data[grepl(input$filter_item_english, data$english, ignore.case = T),]
+    }
+    
+    # Sidebar filters - Description 
+    
+    if(input$filter_desc != "") {
+      data <- data[grepl(input$filter_desc, data$description, ignore.case = T),]
+    }
+    
+    # Sidebar filters - Dataset 
+    
+    if(input$filter_dataset != "") { 
+      data <- data[grepl(input$filter_dataset, data$dataset, ignore.case = T),]
+    }
+    
+    # Sidebar filters - Questionnaire type 
+    
+    if(!is.null(input$filter_qtype) && length(input$filter_qtype) > 0){
+      data <- data[data$q_type %in% input$filter_qtype,]
+    }
+
+    # Siderbar filters - Population 
+    
+    if(!is.null(input$filter_population) && length(input$filter_population) > 0){
+
+      if(input$filter_population_andor == "or"){
+        pattern <- paste(input$filter_population, collapse = "|")
+        data <- data[grepl(pattern, data$population, ignore.case = T),]
+      } else {
+        pattern <- paste0("(?=.*", input$filter_population, ")", collapse = "")
+        data <- data[grepl(pattern, data$population, ignore.case = T, perl = TRUE),]
+      }
+    }
     
     # Select only relevant columns for display
     output_df <- data[, c(
@@ -301,7 +346,7 @@ server <- function(input, output, session) {
   output$filtered_table <- renderDT({
     datatable(
       filtered_data(),
-      filter = "top",
+      filter = "none",
       escape = FALSE,
       # allows HTML tags in table (for badges)
       rownames = FALSE,
@@ -380,6 +425,14 @@ server <- function(input, output, session) {
       clearSearch()
     
     selected_tags(character(0))
+    
+    updateTextInput(session, "filter_item_og", value = "")
+    updateTextInput(session, "filter_item_english", value = "")
+    updateTextInput(session, "filter_desc", value = "")
+    updateTextInput(session, "filter_dataset", value = "")
+    updateSelectInput(session, "filter_qtype", selected = character(0))
+    updateSelectInput(session, "filter_population", selected = character(0))
+    updateRadioButtons(session, "filter_population_andor", selected = "or")
   })
   
   observeEvent(input$toggle_info, {

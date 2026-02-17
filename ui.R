@@ -135,8 +135,8 @@ ui <- navbarPage(
             .table-container { background-color: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 12px; margin-top: 8px; }
 
             /* DataTable styling */
-            table.dataTable { border-radius: 10px; border-collapse: separate; width: 100%; margin-top: 8px; font-size: 13.5px; font-family: 'Inter', sans-serif; }
-            table.dataTable th, table.dataTable td { padding: 8px; text-align: left; }
+            table.dataTable { border-radius: 10px; border-collapse: separate; width: 100% !important; margin-top: 8px; font-size: 13.5px; font-family: 'Inter', sans-serif; }
+            table.dataTable th, table.dataTable td { padding: 8px; text-align: left;}
             table.dataTable th { background-color: #2c3e50; color: white; font-size: 12px; }
             table.dataTable tbody tr:hover { background-color: #f1f1f1; }
             .dataTables_length select, .dataTables_filter input { font-size: 12px; }
@@ -184,12 +184,41 @@ ui <- navbarPage(
             summary::-webkit-details-marker {
             display: none;
             }
-            /* Constrain DataTable width inside container */
             .table-container .dataTables_wrapper {
-            max-width: 1760px;   /* adjust if needed */
-            margin: 0 auto;      /* center horizontally */
+              max-width: 1760px;
+              margin: 0 auto;
             }
-
+            /* Sidebar filter box */
+            .filter-sidebar {
+              background-color: #ffffff;
+              border-right: 6px solid #f0f0f0;
+              border-radius: 10px;
+              box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+              padding: 0;
+            }
+            
+            /* Sidebar header */
+            .filter-header {
+              padding: 10px 12px;
+              font-weight: 600;
+              font-size: 18px;
+              background-color: #f0f0f0;
+              border-top-left-radius: 10px;
+              border-top-right-radius: 10px;
+              list-style: none;
+            }
+            
+            /* Sidebar body */
+            .filter-body {
+              padding: 16px;
+            }
+            .filter-body-small {
+              font-weight: 400;
+              font-size: 13px;
+              display: block;
+              margin-top: 3px;
+              line-height: 1.4;
+            }
 
             "
           )
@@ -334,7 +363,78 @@ ui <- navbarPage(
           ),
           
           div(style = "height: 2px;"),
-          DTOutput("filtered_table")
+          fluidRow(
+            column(
+              width = 3,
+              
+              div(
+                class = "filter-sidebar",
+                
+                div(
+                  class = "filter-header",
+                  tags$h4("Filter items")
+                ),
+                
+                div(
+                  class = "filter-body",
+                
+                  textInput("filter_item_og", 
+                            label = HTML("<strong>Item (original language)</strong>"),
+                            placeholder = "Search original item wordings"),
+                  
+                  textInput("filter_item_english", 
+                            label = HTML("<strong>Item (English)</strong><br>
+                                         <span class='filter-body-small'>
+                                         Note that this might be blank if English is the original language of the item.
+                                         </span>"),
+                            placeholder = "Search item wordings in English"),
+                  
+                  textInput("filter_desc", 
+                            "Description",
+                            placeholder = "Search item descriptions"),
+                  
+                  textInput("filter_dataset", 
+                            "Dataset",
+                            placeholder = "Search the name of a dataset"),
+  
+                  selectInput(
+                    "filter_qtype",
+                    label = HTML("Questionnaire type <br>
+                                 <span class='filter-body-small'>
+                                 Multiple choices are possible: items that correspond to one of the choices will be shown.
+                                 </span>"),
+                    choices = list("regular (i.e., the questionnaire shown at every signal-contingent beep)" = "regular",
+                                "morning" = "morning",
+                                "evening" = "evening",
+                                "event" = "event"),
+                    multiple = TRUE
+                  ),
+  
+                  selectInput(
+                    "filter_population",
+                    label = HTML("Population<br>
+                                 <span class='filter-body-small'>
+                                 Multiple choices are possible: choose whether you want this to follow AND or OR logic below
+                                 </span>"),
+                    choices = c("children", "adolescents", "adults", "elderly", "general population", "outpatient", "inpatient"),
+                    multiple = TRUE
+                  ),
+                  
+                  radioButtons("filter_population_andor", 
+                               label = NULL,
+                               choices = c(
+                                 "OR - The item should have been applied in at least one of the selected populations" = "or",
+                                 "AND - The item should have been applied in all selected populations" = "and"),
+                               selected = "or")
+                )
+              )
+            ),
+            
+            column(
+              width = 9,
+              DTOutput("filtered_table")
+            )
+          )
         )
       )),
       
