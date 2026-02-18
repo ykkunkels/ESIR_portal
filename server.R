@@ -1,3 +1,14 @@
+
+#########################
+### Server - ESMIR    ###
+### 2026; MP, LP, YKK ###
+###~*~*~*~*~*~*~*~*~*~###
+
+## Part 0: Initiation ----------------------------------------------------------
+
+## Here, variables can be initiated to be used in the server function.
+## For example for adding or formatting tags.
+
 # Define all possible tags for items in the repository
 all_tags <- c(
   "activity",
