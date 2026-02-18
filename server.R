@@ -50,15 +50,25 @@ all_tags <- c(
 # Assign default color to all tags
 tag_colors <- setNames(rep("#5e7d6a", length(all_tags)), all_tags)
 
-# -------------------------
-# Server function
-# -------------------------
+
+## Part 1: Main body of server -------------------------------------------------
+
+## Here, the main server function is initiated. All the following code is run
+## within this server function.
+
 server <- function(input, output, session) {
-  # -------------------------
-  # Load main dataset
-  # -------------------------
-  df <- read.csv(url("https://osf.io/5ba2c/download"), stringsAsFactors = FALSE)[-(1:3), ]
   
+  ## Load main dataset --------------------------------------------------------- 
+  ## Here the main data is downloaded from OSF and read in as a .csv file. 
+  
+  # df <- read.csv(url("https://osf.io/5ba2c/download"), stringsAsFactors = FALSE)[-(1:3), ] #! Dit is nog niet juist! Toch?
+  #! waarom worden hier de eerste 3 items verwijderd?? (of ik zie iets over het hoofd)
+  #! Voor nu hieronder een versie waar dit niet gebeurd. 
+  
+  df <- read.csv(url("https://osf.io/5ba2c/download"), stringsAsFactors = FALSE)
+  
+  
+  ## Add column names ----------------------------------------------------------
   # Assign column names manually (ensures consistent names)
   colnames(df) <- c(
     "item_ID",
@@ -103,8 +113,23 @@ server <- function(input, output, session) {
     "item_other"
   )
   
+  
+  #! Ik snap niet wat hieronder gebeurd? ID's uit de dataset lijken al sequenteel?
+  # table(df$item_ID == 1:nrow(df))
+  
+  #! Bedoel je dat we soms de ID's uit de originele dataset niet kunnen vertrouwen?
+  #! If so, dan misschien handig om er een sanity check van te maken, bijv:
+  
+  ## Sanity Check
+  # if(!any(table(df$item_ID == 1:nrow(df)))){
+  #   
+  #   df$item_ID <- 1:nrow(df)
+  #   
+  # }
+  
   # Re-assign sequential numeric IDs to each row
   df$item_ID <- 1:nrow(df)
+  
   
   # -------------------------
   # Create 'q_type' column for questionnaire type
